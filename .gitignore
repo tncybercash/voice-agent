@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+agent/.venv/
+agent/venv/
+*.egg-info/
+dist/
+build/
+
+# Node
+front-end/node_modules/
+front-end/.next/
+front-end/out/
+front-end/.vercel/
+front-end/.turbo/
+
+# Environment files
+.env
+*.env
+.env.*
+
+# Logs
+*.log
+logs/
+
+# Docker
+docker-data/
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# Temporary
+*.tmp
+*.temp
+.cache/

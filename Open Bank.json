@@ -1,0 +1,2035 @@
+{
+	"info": {
+		"_postman_id": "f4af6443-bc49-4f42-958f-92affcc30fe0",
+		"name": "Open Bank - APIs Copy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "717728"
+	},
+	"item": [
+		{
+			"name": "Statements",
+			"item": [
+				{
+					"name": "mt940-statement",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{Bearer Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ1SDlVdmt6Tnd5emVZdnlTdjJ3S0lONlNpOV84RTU0c0dPVW9ZcGRmUHdVIn0.eyJleHAiOjE3NTAwNzIwNDcsImlhdCI6MTc1MDA3MDg0NywianRpIjoiYTVjNmIzYjAtMmZjNy00MGUyLWFiNGEtYTk4MmY3OWFiYmYxIiwiaXNzIjoiaHR0cDovLzE5Mi4xNjguMS4xMTY6OTAwMC9hdXRoL3JlYWxtcy9vbW5pY2hhbm5lbCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJlYjVjYWNkNS1jZmIzLTRlYWYtYjU2Ni1hMGQ5YzIzZWVmNzQiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJzaW5nbGVTaWduT24iLCJzZXNzaW9uX3N0YXRlIjoiZTk3N2IyMmYtYTA4Yy00ZTIyLThhOGMtNDNhNjk4MTdmNjQ5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsImRlZmF1bHQtcm9sZXMtb21uaWNoYW5uZWwgIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJzaWQiOiJlOTc3YjIyZi1hMDhjLTRlMjItOGE4Yy00M2E2OTgxN2Y2NDkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6IkdSRUdPUlkgU0hPTklXQSIsInByZWZlcnJlZF91c2VybmFtZSI6IjI2Mzc3Mjk5NjMzMCIsImdpdmVuX25hbWUiOiJHUkVHT1JZIiwiZmFtaWx5X25hbWUiOiJTSE9OSVdBIiwiZW1haWwiOiJncmVnb3J5c2hvbml3YUBnbWFpbC5jb20ifQ.UJAi92S3SAKkyWzz3AmKdJCjjyUsBb9n4b5lL9p3ZsIJKIgFEtue3yUC1tRrk_Tw_B7ALHjwQ1pPIOUAYRqhpzZkxuysM46N1eJkIOqXA2ttgOqSKTwJlH-pva4xJuLyRLKSSGCzuoLruHqE3OK63HtHm2LwU2oScqeW0QJ4rvSjjB9uejOd_mflgxaNWZ1TFXtM9vAxeXnGo2M_MVmKLq0eUUx241-8yymIToSh0pjC_AqdSobxMsGs1pHrVqbQ6Okj4iQrutcaxBR4jfn4xgdTG5aIhe1FWtdhX4J9hoNQ6cd8G7QxXOWOJLXpbW1I_MbD9sUDsQrwfqoZdbAQ_A"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": 1,\n    \"divisionId\": 2,\n    \"profile\": \"CORPORATE\",\n    \"currency\": \"ZWG\",\n    \"accountNo\": \"1007553109\",\n    \"tranType\": \"STATEMENT_MT940\",\n    \"debitEmail\":\"gregoryshoniwa@gmail.com\",\n    \"additionalData\": [\n        {\n            \"dateFrom\": \"20241201\",\n            \"dateTo\": \"20241205\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{develop_url}}/api/open-bank/v1/transaction",
+							"host": [
+								"{{develop_url}}"
+							],
+							"path": [
+								"api",
+								"open-bank",
+								"v1",
+								"transaction"
+							]
+						},
+						"description": "Generated from cURL: curl --location 'http://192.168.16.29:4055/v1/om/transaction' \\\n--header 'Content-Type: application/json' \\\n--header 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ1SDlVdmt6Tnd5emVZdnlTdjJ3S0lONlNpOV84RTU0c0dPVW9ZcGRmUHdVIn0.eyJleHAiOjE3NTAwNzIwNDcsImlhdCI6MTc1MDA3MDg0NywianRpIjoiYTVjNmIzYjAtMmZjNy00MGUyLWFiNGEtYTk4MmY3OWFiYmYxIiwiaXNzIjoiaHR0cDovLzE5Mi4xNjguMS4xMTY6OTAwMC9hdXRoL3JlYWxtcy9vbW5pY2hhbm5lbCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJlYjVjYWNkNS1jZmIzLTRlYWYtYjU2Ni1hMGQ5YzIzZWVmNzQiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJzaW5nbGVTaWduT24iLCJzZXNzaW9uX3N0YXRlIjoiZTk3N2IyMmYtYTA4Yy00ZTIyLThhOGMtNDNhNjk4MTdmNjQ5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsImRlZmF1bHQtcm9sZXMtb21uaWNoYW5uZWwgIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJzaWQiOiJlOTc3YjIyZi1hMDhjLTRlMjItOGE4Yy00M2E2OTgxN2Y2NDkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6IkdSRUdPUlkgU0hPTklXQSIsInByZWZlcnJlZF91c2VybmFtZSI6IjI2Mzc3Mjk5NjMzMCIsImdpdmVuX25hbWUiOiJHUkVHT1JZIiwiZmFtaWx5X25hbWUiOiJTSE9OSVdBIiwiZW1haWwiOiJncmVnb3J5c2hvbml3YUBnbWFpbC5jb20ifQ.UJAi92S3SAKkyWzz3AmKdJCjjyUsBb9n4b5lL9p3ZsIJKIgFEtue3yUC1tRrk_Tw_B7ALHjwQ1pPIOUAYRqhpzZkxuysM46N1eJkIOqXA2ttgOqSKTwJlH-pva4xJuLyRLKSSGCzuoLruHqE3OK63HtHm2LwU2oScqeW0QJ4rvSjjB9uejOd_mflgxaNWZ1TFXtM9vAxeXnGo2M_MVmKLq0eUUx241-8yymIToSh0pjC_AqdSobxMsGs1pHrVqbQ6Okj4iQrutcaxBR4jfn4xgdTG5aIhe1FWtdhX4J9hoNQ6cd8G7QxXOWOJLXpbW1I_MbD9sUDsQrwfqoZdbAQ_A' \\\n--data-raw '{\n    \"userId\": 97,\n    \"divisionId\": null,\n    \"profile\": \"INDIVIDUAL\",\n    \"action\": \"PROCESS\",\n    \"tranType\": \"STATEMENT_MT940\",\n    \"debitType\": \"ACCOUNT\",\n    \"mode\": \"SINGLE\",\n    \"requestType\": \"REQUEST\",\n    \"phone\": \"263772996330\",\n    \"debitEmail\":\"gregoryshoniwa@gmail.com\",\n    \"channel\": \"SQUARE\",\n    \"currency\": \"USD\",\n    \"accountNo\": \"1044712888\",\n    \"accountType\": \"T24\",\n    \"additionalData\": [\n        {\n            \"dateFrom\": \"20241201\",\n            \"dateTo\": \"20241210\"\n        }\n    ]\n}\n'"
+					},
+					"response": [
+						{
+							"name": "mt940-statement",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ1SDlVdmt6Tnd5emVZdnlTdjJ3S0lONlNpOV84RTU0c0dPVW9ZcGRmUHdVIn0.eyJleHAiOjE3NTAwNzIwNDcsImlhdCI6MTc1MDA3MDg0NywianRpIjoiYTVjNmIzYjAtMmZjNy00MGUyLWFiNGEtYTk4MmY3OWFiYmYxIiwiaXNzIjoiaHR0cDovLzE5Mi4xNjguMS4xMTY6OTAwMC9hdXRoL3JlYWxtcy9vbW5pY2hhbm5lbCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJlYjVjYWNkNS1jZmIzLTRlYWYtYjU2Ni1hMGQ5YzIzZWVmNzQiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJzaW5nbGVTaWduT24iLCJzZXNzaW9uX3N0YXRlIjoiZTk3N2IyMmYtYTA4Yy00ZTIyLThhOGMtNDNhNjk4MTdmNjQ5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsImRlZmF1bHQtcm9sZXMtb21uaWNoYW5uZWwgIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJzaWQiOiJlOTc3YjIyZi1hMDhjLTRlMjItOGE4Yy00M2E2OTgxN2Y2NDkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6IkdSRUdPUlkgU0hPTklXQSIsInByZWZlcnJlZF91c2VybmFtZSI6IjI2Mzc3Mjk5NjMzMCIsImdpdmVuX25hbWUiOiJHUkVHT1JZIiwiZmFtaWx5X25hbWUiOiJTSE9OSVdBIiwiZW1haWwiOiJncmVnb3J5c2hvbml3YUBnbWFpbC5jb20ifQ.UJAi92S3SAKkyWzz3AmKdJCjjyUsBb9n4b5lL9p3ZsIJKIgFEtue3yUC1tRrk_Tw_B7ALHjwQ1pPIOUAYRqhpzZkxuysM46N1eJkIOqXA2ttgOqSKTwJlH-pva4xJuLyRLKSSGCzuoLruHqE3OK63HtHm2LwU2oScqeW0QJ4rvSjjB9uejOd_mflgxaNWZ1TFXtM9vAxeXnGo2M_MVmKLq0eUUx241-8yymIToSh0pjC_AqdSobxMsGs1pHrVqbQ6Okj4iQrutcaxBR4jfn4xgdTG5aIhe1FWtdhX4J9hoNQ6cd8G7QxXOWOJLXpbW1I_MbD9sUDsQrwfqoZdbAQ_A"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"userId\": 1,\n    \"divisionId\": 2,\n    \"profile\": \"CORPORATE\",\n    \"currency\": \"ZWG\",\n    \"accountNo\": \"1007553109\",\n    \"tranType\": \"STATEMENT_MT940\",\n    \"debitEmail\":\"gregoryshoniwa@gmail.com\",\n    \"additionalData\": [\n        {\n            \"dateFrom\": \"20241201\",\n            \"dateTo\": \"20241205\"\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8000/api/open-bank/v1/transaction",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"open-bank",
+										"v1",
+										"transaction"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.13"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 30 Jun 2025 18:19:22 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"status\": 200,\n    \"data\": {\n        \"trace\": \"a5b285aa-9abb-4b72-bc1a-cf021c5d60c4\",\n        \"uid\": \"77d007b1-e851-464b-97e7-cb7a6719d83e\",\n        \"status\": \"COMPLETE\",\n        \"tranTypeName\": \"MT940 Account Statement\",\n        \"accountNo\": \"1007553109\",\n        \"currency\": \"ZWG\",\n        \"authorizationStatus\": \"PENDING\",\n        \"rrnId\": 21322\n    }\n}"
+						},
+						{
+							"name": "mt940-statement",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ1SDlVdmt6Tnd5emVZdnlTdjJ3S0lONlNpOV84RTU0c0dPVW9ZcGRmUHdVIn0.eyJleHAiOjE3NTAwNzIwNDcsImlhdCI6MTc1MDA3MDg0NywianRpIjoiYTVjNmIzYjAtMmZjNy00MGUyLWFiNGEtYTk4MmY3OWFiYmYxIiwiaXNzIjoiaHR0cDovLzE5Mi4xNjguMS4xMTY6OTAwMC9hdXRoL3JlYWxtcy9vbW5pY2hhbm5lbCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJlYjVjYWNkNS1jZmIzLTRlYWYtYjU2Ni1hMGQ5YzIzZWVmNzQiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJzaW5nbGVTaWduT24iLCJzZXNzaW9uX3N0YXRlIjoiZTk3N2IyMmYtYTA4Yy00ZTIyLThhOGMtNDNhNjk4MTdmNjQ5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsImRlZmF1bHQtcm9sZXMtb21uaWNoYW5uZWwgIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJzaWQiOiJlOTc3YjIyZi1hMDhjLTRlMjItOGE4Yy00M2E2OTgxN2Y2NDkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6IkdSRUdPUlkgU0hPTklXQSIsInByZWZlcnJlZF91c2VybmFtZSI6IjI2Mzc3Mjk5NjMzMCIsImdpdmVuX25hbWUiOiJHUkVHT1JZIiwiZmFtaWx5X25hbWUiOiJTSE9OSVdBIiwiZW1haWwiOiJncmVnb3J5c2hvbml3YUBnbWFpbC5jb20ifQ.UJAi92S3SAKkyWzz3AmKdJCjjyUsBb9n4b5lL9p3ZsIJKIgFEtue3yUC1tRrk_Tw_B7ALHjwQ1pPIOUAYRqhpzZkxuysM46N1eJkIOqXA2ttgOqSKTwJlH-pva4xJuLyRLKSSGCzuoLruHqE3OK63HtHm2LwU2oScqeW0QJ4rvSjjB9uejOd_mflgxaNWZ1TFXtM9vAxeXnGo2M_MVmKLq0eUUx241-8yymIToSh0pjC_AqdSobxMsGs1pHrVqbQ6Okj4iQrutcaxBR4jfn4xgdTG5aIhe1FWtdhX4J9hoNQ6cd8G7QxXOWOJLXpbW1I_MbD9sUDsQrwfqoZdbAQ_A"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"userId\": 1,\n    \"divisionId\": 2,\n    \"profile\": \"CORPORATE\",\n    \"currency\": \"ZWG\",\n    \"accountNo\": \"1007553109\",\n    \"tranType\": \"STATEMENT_MT940\",\n    \"debitEmail\":\"gregoryshoniwa@gmail.com\",\n    \"additionalData\": [\n        {\n            \"dateFrom\": \"20241201\",\n            \"dateTo\": \"20241205\"\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{develop_url}}/api/open-bank/v1/transaction",
+									"host": [
+										"{{develop_url}}"
+									],
+									"path": [
+										"api",
+										"open-bank",
+										"v1",
+										"transaction"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.25.5"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 25 Sep 2025 18:20:52 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "private, must-revalidate"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "max-age=0, no-cache, no-store, must-revalidate"
+								},
+								{
+									"key": "pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "expires",
+									"value": "-1"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "-1"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"status\": 200,\n    \"data\": {\n        \"id\": 54684,\n        \"trace\": \"623a8148-e217-4f7e-aec5-442a564370ef\",\n        \"uid\": \"f53b2659-c642-4eb5-aed1-de722c3890ab\",\n        \"status\": \"COMPLETE\",\n        \"tranTypeName\": \"MT940 Account Statement\",\n        \"accountNo\": \"1007553109\",\n        \"currency\": \"ZWG\",\n        \"authorizationStatus\": \"PENDING\",\n        \"rrnId\": 54684\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "statement",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{Bearer Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ1SDlVdmt6Tnd5emVZdnlTdjJ3S0lONlNpOV84RTU0c0dPVW9ZcGRmUHdVIn0.eyJleHAiOjE3NTAwNzIwNDcsImlhdCI6MTc1MDA3MDg0NywianRpIjoiYTVjNmIzYjAtMmZjNy00MGUyLWFiNGEtYTk4MmY3OWFiYmYxIiwiaXNzIjoiaHR0cDovLzE5Mi4xNjguMS4xMTY6OTAwMC9hdXRoL3JlYWxtcy9vbW5pY2hhbm5lbCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJlYjVjYWNkNS1jZmIzLTRlYWYtYjU2Ni1hMGQ5YzIzZWVmNzQiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJzaW5nbGVTaWduT24iLCJzZXNzaW9uX3N0YXRlIjoiZTk3N2IyMmYtYTA4Yy00ZTIyLThhOGMtNDNhNjk4MTdmNjQ5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsImRlZmF1bHQtcm9sZXMtb21uaWNoYW5uZWwgIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJzaWQiOiJlOTc3YjIyZi1hMDhjLTRlMjItOGE4Yy00M2E2OTgxN2Y2NDkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6IkdSRUdPUlkgU0hPTklXQSIsInByZWZlcnJlZF91c2VybmFtZSI6IjI2Mzc3Mjk5NjMzMCIsImdpdmVuX25hbWUiOiJHUkVHT1JZIiwiZmFtaWx5X25hbWUiOiJTSE9OSVdBIiwiZW1haWwiOiJncmVnb3J5c2hvbml3YUBnbWFpbC5jb20ifQ.UJAi92S3SAKkyWzz3AmKdJCjjyUsBb9n4b5lL9p3ZsIJKIgFEtue3yUC1tRrk_Tw_B7ALHjwQ1pPIOUAYRqhpzZkxuysM46N1eJkIOqXA2ttgOqSKTwJlH-pva4xJuLyRLKSSGCzuoLruHqE3OK63HtHm2LwU2oScqeW0QJ4rvSjjB9uejOd_mflgxaNWZ1TFXtM9vAxeXnGo2M_MVmKLq0eUUx241-8yymIToSh0pjC_AqdSobxMsGs1pHrVqbQ6Okj4iQrutcaxBR4jfn4xgdTG5aIhe1FWtdhX4J9hoNQ6cd8G7QxXOWOJLXpbW1I_MbD9sUDsQrwfqoZdbAQ_A"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": 1,\n    \"divisionId\": 2,\n    \"profile\": \"CORPORATE\",\n    \"currency\": \"ZWG\",\n    \"accountNo\": \"1007553109\",\n    \"tranType\": \"STATEMENT\",\n    \"phone\": \"263772996330\",\n    \"additionalData\": [\n        {\n            \"dateFrom\": \"20241201\",\n            \"dateTo\": \"20241205\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{develop_url}}/api/open-bank/v1/transaction",
+							"host": [
+								"{{develop_url}}"
+							],
+							"path": [
+								"api",
+								"open-bank",
+								"v1",
+								"transaction"
+							]
+						},
+						"description": "Generated from cURL: curl --location 'http://192.168.16.29:4055/v1/om/transaction' \\\n--header 'Content-Type: application/json' \\\n--header 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ1SDlVdmt6Tnd5emVZdnlTdjJ3S0lONlNpOV84RTU0c0dPVW9ZcGRmUHdVIn0.eyJleHAiOjE3NTAwNzIwNDcsImlhdCI6MTc1MDA3MDg0NywianRpIjoiYTVjNmIzYjAtMmZjNy00MGUyLWFiNGEtYTk4MmY3OWFiYmYxIiwiaXNzIjoiaHR0cDovLzE5Mi4xNjguMS4xMTY6OTAwMC9hdXRoL3JlYWxtcy9vbW5pY2hhbm5lbCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJlYjVjYWNkNS1jZmIzLTRlYWYtYjU2Ni1hMGQ5YzIzZWVmNzQiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJzaW5nbGVTaWduT24iLCJzZXNzaW9uX3N0YXRlIjoiZTk3N2IyMmYtYTA4Yy00ZTIyLThhOGMtNDNhNjk4MTdmNjQ5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsImRlZmF1bHQtcm9sZXMtb21uaWNoYW5uZWwgIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJzaWQiOiJlOTc3YjIyZi1hMDhjLTRlMjItOGE4Yy00M2E2OTgxN2Y2NDkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6IkdSRUdPUlkgU0hPTklXQSIsInByZWZlcnJlZF91c2VybmFtZSI6IjI2Mzc3Mjk5NjMzMCIsImdpdmVuX25hbWUiOiJHUkVHT1JZIiwiZmFtaWx5X25hbWUiOiJTSE9OSVdBIiwiZW1haWwiOiJncmVnb3J5c2hvbml3YUBnbWFpbC5jb20ifQ.UJAi92S3SAKkyWzz3AmKdJCjjyUsBb9n4b5lL9p3ZsIJKIgFEtue3yUC1tRrk_Tw_B7ALHjwQ1pPIOUAYRqhpzZkxuysM46N1eJkIOqXA2ttgOqSKTwJlH-pva4xJuLyRLKSSGCzuoLruHqE3OK63HtHm2LwU2oScqeW0QJ4rvSjjB9uejOd_mflgxaNWZ1TFXtM9vAxeXnGo2M_MVmKLq0eUUx241-8yymIToSh0pjC_AqdSobxMsGs1pHrVqbQ6Okj4iQrutcaxBR4jfn4xgdTG5aIhe1FWtdhX4J9hoNQ6cd8G7QxXOWOJLXpbW1I_MbD9sUDsQrwfqoZdbAQ_A' \\\n--data-raw '{\n    \"userId\": 97,\n    \"divisionId\": null,\n    \"profile\": \"INDIVIDUAL\",\n    \"action\": \"PROCESS\",\n    \"tranType\": \"STATEMENT_MT940\",\n    \"debitType\": \"ACCOUNT\",\n    \"mode\": \"SINGLE\",\n    \"requestType\": \"REQUEST\",\n    \"phone\": \"263772996330\",\n    \"debitEmail\":\"gregoryshoniwa@gmail.com\",\n    \"channel\": \"SQUARE\",\n    \"currency\": \"USD\",\n    \"accountNo\": \"1044712888\",\n    \"accountType\": \"T24\",\n    \"additionalData\": [\n        {\n            \"dateFrom\": \"20241201\",\n            \"dateTo\": \"20241210\"\n        }\n    ]\n}\n'"
+					},
+					"response": [
+						{
+							"name": "statement",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ1SDlVdmt6Tnd5emVZdnlTdjJ3S0lONlNpOV84RTU0c0dPVW9ZcGRmUHdVIn0.eyJleHAiOjE3NTAwNzIwNDcsImlhdCI6MTc1MDA3MDg0NywianRpIjoiYTVjNmIzYjAtMmZjNy00MGUyLWFiNGEtYTk4MmY3OWFiYmYxIiwiaXNzIjoiaHR0cDovLzE5Mi4xNjguMS4xMTY6OTAwMC9hdXRoL3JlYWxtcy9vbW5pY2hhbm5lbCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJlYjVjYWNkNS1jZmIzLTRlYWYtYjU2Ni1hMGQ5YzIzZWVmNzQiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJzaW5nbGVTaWduT24iLCJzZXNzaW9uX3N0YXRlIjoiZTk3N2IyMmYtYTA4Yy00ZTIyLThhOGMtNDNhNjk4MTdmNjQ5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsImRlZmF1bHQtcm9sZXMtb21uaWNoYW5uZWwgIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJzaWQiOiJlOTc3YjIyZi1hMDhjLTRlMjItOGE4Yy00M2E2OTgxN2Y2NDkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6IkdSRUdPUlkgU0hPTklXQSIsInByZWZlcnJlZF91c2VybmFtZSI6IjI2Mzc3Mjk5NjMzMCIsImdpdmVuX25hbWUiOiJHUkVHT1JZIiwiZmFtaWx5X25hbWUiOiJTSE9OSVdBIiwiZW1haWwiOiJncmVnb3J5c2hvbml3YUBnbWFpbC5jb20ifQ.UJAi92S3SAKkyWzz3AmKdJCjjyUsBb9n4b5lL9p3ZsIJKIgFEtue3yUC1tRrk_Tw_B7ALHjwQ1pPIOUAYRqhpzZkxuysM46N1eJkIOqXA2ttgOqSKTwJlH-pva4xJuLyRLKSSGCzuoLruHqE3OK63HtHm2LwU2oScqeW0QJ4rvSjjB9uejOd_mflgxaNWZ1TFXtM9vAxeXnGo2M_MVmKLq0eUUx241-8yymIToSh0pjC_AqdSobxMsGs1pHrVqbQ6Okj4iQrutcaxBR4jfn4xgdTG5aIhe1FWtdhX4J9hoNQ6cd8G7QxXOWOJLXpbW1I_MbD9sUDsQrwfqoZdbAQ_A"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"userId\": 1,\n    \"divisionId\": 2,\n    \"profile\": \"CORPORATE\",\n    \"currency\": \"ZWG\",\n    \"accountNo\": \"1007553109\",\n    \"tranType\": \"STATEMENT\",\n    \"phone\": \"263772996330\",\n    \"additionalData\": [\n        {\n            \"dateFrom\": \"20241201\",\n            \"dateTo\": \"20241205\"\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8000/api/open-bank/v1/transaction",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"open-bank",
+										"v1",
+										"transaction"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "localhost:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.13"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 30 Jun 2025 15:03:09 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"status\": 200,\n    \"data\": {\n        \"trace\": \"28688a1f-200b-4636-a6a4-14e79fd7bfea\",\n        \"status\": \"COMPLETE\",\n        \"tranTypeName\": \"Account Statement\",\n        \"accountNo\": \"1007553109\",\n        \"currency\": \"ZWG\",\n        \"authorizationStatus\": \"PENDING\",\n        \"rrnId\": 21307,\n        \"miniStatement\": {\n            \"startBalance\": 1153807.25,\n            \"endBalance\": 100218.62,\n            \"account\": \"1007553109\",\n            \"currency\": \"ZWG\",\n            \"customer\": \"116446\",\n            \"name\": \"ECONET WIRELESS PVT LTD\",\n            \"transactions\": [\n                {\n                    \"postDate\": \"02 DEC 24\",\n                    \"reference\": \"FT243371NDTG\\\\CAS\",\n                    \"narrative\": \"IB IFT Charge\",\n                    \"valueDate\": \"02 DEC 24\",\n                    \"debitAmount\": 361.27,\n                    \"creditAmount\": 0,\n                    \"balance\": 1153445.98,\n                    \"location\": \"AC-1050875101\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"02 DEC 24\",\n                    \"reference\": \"FT243371NDTG\\\\CAS\",\n                    \"narrative\": \"IB IFT\",\n                    \"valueDate\": \"02 DEC 24\",\n                    \"debitAmount\": 9000,\n                    \"creditAmount\": 0,\n                    \"balance\": 1144445.98,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243388HVM9\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 161.97,\n                    \"creditAmount\": 0,\n                    \"balance\": 1144284.01,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243388HVM9\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 3034.03,\n                    \"creditAmount\": 0,\n                    \"balance\": 1141249.98,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243387QTQP\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 177.14,\n                    \"creditAmount\": 0,\n                    \"balance\": 1141072.84,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243387QTQP\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 3792.54,\n                    \"creditAmount\": 0,\n                    \"balance\": 1137280.3,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243387PJRD\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 1275.58,\n                    \"creditAmount\": 0,\n                    \"balance\": 1136004.72,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243387PJRD\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 31857.34,\n                    \"creditAmount\": 0,\n                    \"balance\": 1104147.38,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243383KY58\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 279.4,\n                    \"creditAmount\": 0,\n                    \"balance\": 1103867.98,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243383KY58\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 6952.99,\n                    \"creditAmount\": 0,\n                    \"balance\": 1096914.99,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338MM36Y\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 304.7,\n                    \"creditAmount\": 0,\n                    \"balance\": 1096610.29,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338MM36Y\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 7585.08,\n                    \"creditAmount\": 0,\n                    \"balance\": 1089025.21,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338HG9WL\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 1706.42,\n                    \"creditAmount\": 0,\n                    \"balance\": 1087318.79,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338HG9WL\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 42628.15,\n                    \"creditAmount\": 0,\n                    \"balance\": 1044690.64,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243389YH07\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 161.97,\n                    \"creditAmount\": 0,\n                    \"balance\": 1044528.67,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243389YH07\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 3034.03,\n                    \"creditAmount\": 0,\n                    \"balance\": 1041494.64,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338NF89R\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 426.06,\n                    \"creditAmount\": 0,\n                    \"balance\": 1041068.58,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338NF89R\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 10619.11,\n                    \"creditAmount\": 0,\n                    \"balance\": 1030449.47,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338T1GHM\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 324.92,\n                    \"creditAmount\": 0,\n                    \"balance\": 1030124.55,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338T1GHM\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 8090.75,\n                    \"creditAmount\": 0,\n                    \"balance\": 1022033.8,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338LZFKH\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 911.5,\n                    \"creditAmount\": 0,\n                    \"balance\": 1021122.3,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338LZFKH\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 22755.24,\n                    \"creditAmount\": 0,\n                    \"balance\": 998367.06,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338SPCS5\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 304.7,\n                    \"creditAmount\": 0,\n                    \"balance\": 998062.36,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338SPCS5\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 7585.08,\n                    \"creditAmount\": 0,\n                    \"balance\": 990477.28,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338DXWWS\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 517.08,\n                    \"creditAmount\": 0,\n                    \"balance\": 989960.2,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338DXWWS\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 12894.64,\n                    \"creditAmount\": 0,\n                    \"balance\": 977065.56,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338W8SVV\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 496.84,\n                    \"creditAmount\": 0,\n                    \"balance\": 976568.72,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338W8SVV\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 12388.96,\n                    \"creditAmount\": 0,\n                    \"balance\": 964179.76,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338ZLJTF\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 1721.58,\n                    \"creditAmount\": 0,\n                    \"balance\": 962458.18,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338ZLJTF\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 43007.4,\n                    \"creditAmount\": 0,\n                    \"balance\": 919450.78,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243388Y43V\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 3116.22,\n                    \"creditAmount\": 0,\n                    \"balance\": 916334.56,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243388Y43V\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 77873.49,\n                    \"creditAmount\": 0,\n                    \"balance\": 838461.07,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338MFH87\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 1967.34,\n                    \"creditAmount\": 0,\n                    \"balance\": 836493.73,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338MFH87\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 49151.32,\n                    \"creditAmount\": 0,\n                    \"balance\": 787342.41,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243386J228\\\\CAS\",\n                    \"narrative\": \"IB IFT Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 184.64,\n                    \"creditAmount\": 0,\n                    \"balance\": 787157.77,\n                    \"location\": \"AC-1049285732\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243386J228\\\\CAS\",\n                    \"narrative\": \"IB IFT\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 4584,\n                    \"creditAmount\": 0,\n                    \"balance\": 782573.77,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243380W9R2\\\\CAS\",\n                    \"narrative\": \"IB IFT Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 401.28,\n                    \"creditAmount\": 0,\n                    \"balance\": 782172.49,\n                    \"location\": \"AC-1049285732\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243380W9R2\\\\CAS\",\n                    \"narrative\": \"IB IFT\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 10000,\n                    \"creditAmount\": 0,\n                    \"balance\": 772172.49,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338L4X4X\\\\CAS\",\n                    \"narrative\": \"IB IFT Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 1755.28,\n                    \"creditAmount\": 0,\n                    \"balance\": 770417.21,\n                    \"location\": \"AC-1049285732\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338L4X4X\\\\CAS\",\n                    \"narrative\": \"IB IFT\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 43850,\n                    \"creditAmount\": 0,\n                    \"balance\": 726567.21,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243382PK7Y\\\\CAS\",\n                    \"narrative\": \"IB IFT Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 1832.86,\n                    \"creditAmount\": 0,\n                    \"balance\": 724734.35,\n                    \"location\": \"AC-1001438847\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243382PK7Y\\\\CAS\",\n                    \"narrative\": \"IB IFT\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 45789.04,\n                    \"creditAmount\": 0,\n                    \"balance\": 678945.31,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338M50DM\\\\CAS\",\n                    \"narrative\": \"IB IFT Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 155.28,\n                    \"creditAmount\": 0,\n                    \"balance\": 678790.03,\n                    \"location\": \"AC-1043051071\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338M50DM\\\\CAS\",\n                    \"narrative\": \"IB IFT\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 3850,\n                    \"creditAmount\": 0,\n                    \"balance\": 674940.03,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338KKP7C\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 669.06,\n                    \"creditAmount\": 0,\n                    \"balance\": 674270.97,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338KKP7C\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 16694.17,\n                    \"creditAmount\": 0,\n                    \"balance\": 657576.8,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338YSD1T\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 406,\n                    \"creditAmount\": 0,\n                    \"balance\": 657170.8,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338YSD1T\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 10117.68,\n                    \"creditAmount\": 0,\n                    \"balance\": 647053.12,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338GLPQX\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 567.88,\n                    \"creditAmount\": 0,\n                    \"balance\": 646485.24,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338GLPQX\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 14164.75,\n                    \"creditAmount\": 0,\n                    \"balance\": 632320.49,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338WNW66\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 156.93,\n                    \"creditAmount\": 0,\n                    \"balance\": 632163.56,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338WNW66\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 2782.36,\n                    \"creditAmount\": 0,\n                    \"balance\": 629381.2,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338DHYLP\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 126.58,\n                    \"creditAmount\": 0,\n                    \"balance\": 629254.62,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338DHYLP\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 1264.71,\n                    \"creditAmount\": 0,\n                    \"balance\": 627989.91,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338ZJRKX\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 1316.58,\n                    \"creditAmount\": 0,\n                    \"balance\": 626673.33,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338ZJRKX\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 32882.46,\n                    \"creditAmount\": 0,\n                    \"balance\": 593790.87,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243387072K\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 172.11,\n                    \"creditAmount\": 0,\n                    \"balance\": 593618.76,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243387072K\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 3541.19,\n                    \"creditAmount\": 0,\n                    \"balance\": 590077.57,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243389BF8V\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 131.64,\n                    \"creditAmount\": 0,\n                    \"balance\": 589945.93,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243389BF8V\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 1517.65,\n                    \"creditAmount\": 0,\n                    \"balance\": 588428.28,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338101VJ\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 197.4,\n                    \"creditAmount\": 0,\n                    \"balance\": 588230.88,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338101VJ\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 4805.9,\n                    \"creditAmount\": 0,\n                    \"balance\": 583424.98,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338PDM9Z\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 203.64,\n                    \"creditAmount\": 0,\n                    \"balance\": 583221.34,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338PDM9Z\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 5058.84,\n                    \"creditAmount\": 0,\n                    \"balance\": 578162.5,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT2433834J6D\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 502.12,\n                    \"creditAmount\": 0,\n                    \"balance\": 577660.38,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT2433834J6D\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 12520.63,\n                    \"creditAmount\": 0,\n                    \"balance\": 565139.75,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338CKG1N\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 126.58,\n                    \"creditAmount\": 0,\n                    \"balance\": 565013.17,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338CKG1N\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 1264.71,\n                    \"creditAmount\": 0,\n                    \"balance\": 563748.46,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338W3TBF\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 1004.96,\n                    \"creditAmount\": 0,\n                    \"balance\": 562743.5,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338W3TBF\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 25091.85,\n                    \"creditAmount\": 0,\n                    \"balance\": 537651.65,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338NMC1D\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 192.34,\n                    \"creditAmount\": 0,\n                    \"balance\": 537459.31,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338NMC1D\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 4552.96,\n                    \"creditAmount\": 0,\n                    \"balance\": 532906.35,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338D8YCN\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 121.52,\n                    \"creditAmount\": 0,\n                    \"balance\": 532784.83,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338D8YCN\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 1011.77,\n                    \"creditAmount\": 0,\n                    \"balance\": 531773.06,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243384WNWB\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 126.58,\n                    \"creditAmount\": 0,\n                    \"balance\": 531646.48,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT243384WNWB\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 1264.71,\n                    \"creditAmount\": 0,\n                    \"balance\": 530381.77,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338PV7QW\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 182.23,\n                    \"creditAmount\": 0,\n                    \"balance\": 530199.54,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"03 DEC 24\",\n                    \"reference\": \"FT24338PV7QW\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"03 DEC 24\",\n                    \"debitAmount\": 4047.07,\n                    \"creditAmount\": 0,\n                    \"balance\": 526152.47,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"04 DEC 24\",\n                    \"reference\": \"FT24339FLD1T\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"04 DEC 24\",\n                    \"debitAmount\": 1277.38,\n                    \"creditAmount\": 0,\n                    \"balance\": 524875.09,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"04 DEC 24\",\n                    \"reference\": \"FT24339FLD1T\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"04 DEC 24\",\n                    \"debitAmount\": 31902.1,\n                    \"creditAmount\": 0,\n                    \"balance\": 492972.99,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"04 DEC 24\",\n                    \"reference\": \"FT243390WHXJ\\\\CAS\",\n                    \"narrative\": \"IB IFT Charge\",\n                    \"valueDate\": \"04 DEC 24\",\n                    \"debitAmount\": 4020.77,\n                    \"creditAmount\": 0,\n                    \"balance\": 488952.22,\n                    \"location\": \"AC-1049285732\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"04 DEC 24\",\n                    \"reference\": \"FT243390WHXJ\\\\CAS\",\n                    \"narrative\": \"IB IFT\",\n                    \"valueDate\": \"04 DEC 24\",\n                    \"debitAmount\": 100974.44,\n                    \"creditAmount\": 0,\n                    \"balance\": 387977.78,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"04 DEC 24\",\n                    \"reference\": \"FT24339Y82NP\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"04 DEC 24\",\n                    \"debitAmount\": 256.12,\n                    \"creditAmount\": 0,\n                    \"balance\": 387721.66,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"04 DEC 24\",\n                    \"reference\": \"FT24339Y82NP\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"04 DEC 24\",\n                    \"debitAmount\": 6370.85,\n                    \"creditAmount\": 0,\n                    \"balance\": 381350.81,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"04 DEC 24\",\n                    \"reference\": \"FT24339B5PQ3\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"04 DEC 24\",\n                    \"debitAmount\": 261.48,\n                    \"creditAmount\": 0,\n                    \"balance\": 381089.33,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"04 DEC 24\",\n                    \"reference\": \"FT24339B5PQ3\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"04 DEC 24\",\n                    \"debitAmount\": 6505,\n                    \"creditAmount\": 0,\n                    \"balance\": 374584.33,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"04 DEC 24\",\n                    \"reference\": \"FT24339197HR\\\\CAS\",\n                    \"narrative\": \"IB IFT Charge\",\n                    \"valueDate\": \"04 DEC 24\",\n                    \"debitAmount\": 330.08,\n                    \"creditAmount\": 0,\n                    \"balance\": 374254.25,\n                    \"location\": \"AC-1037482079\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"04 DEC 24\",\n                    \"reference\": \"FT24339197HR\\\\CAS\",\n                    \"narrative\": \"IB IFT\",\n                    \"valueDate\": \"04 DEC 24\",\n                    \"debitAmount\": 8220,\n                    \"creditAmount\": 0,\n                    \"balance\": 366034.25,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"04 DEC 24\",\n                    \"reference\": \"FT24339LLD4L\\\\CAS\",\n                    \"narrative\": \"IB IFT Charge\",\n                    \"valueDate\": \"04 DEC 24\",\n                    \"debitAmount\": 73.88,\n                    \"creditAmount\": 0,\n                    \"balance\": 365960.37,\n                    \"location\": \"AC-1037482079\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"04 DEC 24\",\n                    \"reference\": \"FT24339LLD4L\\\\CAS\",\n                    \"narrative\": \"IB IFT\",\n                    \"valueDate\": \"04 DEC 24\",\n                    \"debitAmount\": 1380,\n                    \"creditAmount\": 0,\n                    \"balance\": 364580.37,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"04 DEC 24\",\n                    \"reference\": \"FT243396WL0B\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"04 DEC 24\",\n                    \"debitAmount\": 790.14,\n                    \"creditAmount\": 0,\n                    \"balance\": 363790.23,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"04 DEC 24\",\n                    \"reference\": \"FT243396WL0B\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"04 DEC 24\",\n                    \"debitAmount\": 19721.4,\n                    \"creditAmount\": 0,\n                    \"balance\": 344068.83,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340MVLC6\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 931.82,\n                    \"creditAmount\": 0,\n                    \"balance\": 343137.01,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340MVLC6\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 23263.15,\n                    \"creditAmount\": 0,\n                    \"balance\": 319873.86,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340ZWD7S\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 2203.02,\n                    \"creditAmount\": 0,\n                    \"balance\": 317670.84,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340ZWD7S\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 55043.01,\n                    \"creditAmount\": 0,\n                    \"balance\": 262627.83,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340LMP7C\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 573.92,\n                    \"creditAmount\": 0,\n                    \"balance\": 262053.91,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340LMP7C\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 14315.78,\n                    \"creditAmount\": 0,\n                    \"balance\": 247738.13,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340JK3FD\\\\CAS\",\n                    \"narrative\": \"IB IFT Charge\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 441.28,\n                    \"creditAmount\": 0,\n                    \"balance\": 247296.85,\n                    \"location\": \"AC-1046102882\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340JK3FD\\\\CAS\",\n                    \"narrative\": \"IB IFT\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 11000,\n                    \"creditAmount\": 0,\n                    \"balance\": 236296.85,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340JKL11\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 1201.28,\n                    \"creditAmount\": 0,\n                    \"balance\": 235095.57,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340JKL11\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 30000,\n                    \"creditAmount\": 0,\n                    \"balance\": 205095.57,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340SNH15\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 116.64,\n                    \"creditAmount\": 0,\n                    \"balance\": 204978.93,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340SNH15\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 768,\n                    \"creditAmount\": 0,\n                    \"balance\": 204210.93,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340FQ4BF\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 731.16,\n                    \"creditAmount\": 0,\n                    \"balance\": 203479.77,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340FQ4BF\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 18246.52,\n                    \"creditAmount\": 0,\n                    \"balance\": 185233.25,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT243407QY7X\\\\BNK\",\n                    \"narrative\": \"RTGS In Payment\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 0,\n                    \"creditAmount\": 14134.32,\n                    \"balance\": 199367.57,\n                    \"location\": \"ABCZ\",\n                    \"extra\": \"FMBZP24340A00357\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340DVRDF\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 179.28,\n                    \"creditAmount\": 0,\n                    \"balance\": 199188.29,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340DVRDF\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 3900,\n                    \"creditAmount\": 0,\n                    \"balance\": 195288.29,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT243406DDD7\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 179.28,\n                    \"creditAmount\": 0,\n                    \"balance\": 195109.01,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT243406DDD7\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 3900,\n                    \"creditAmount\": 0,\n                    \"balance\": 191209.01,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340TXBLP\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 313.28,\n                    \"creditAmount\": 0,\n                    \"balance\": 190895.73,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340TXBLP\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 7800,\n                    \"creditAmount\": 0,\n                    \"balance\": 183095.73,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340MDZ0F\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 1249.28,\n                    \"creditAmount\": 0,\n                    \"balance\": 181846.45,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340MDZ0F\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 31200,\n                    \"creditAmount\": 0,\n                    \"balance\": 150646.45,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT243401RVZ3\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 375.68,\n                    \"creditAmount\": 0,\n                    \"balance\": 150270.77,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT243401RVZ3\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 9360,\n                    \"creditAmount\": 0,\n                    \"balance\": 140910.77,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340MBBR6\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 781.28,\n                    \"creditAmount\": 0,\n                    \"balance\": 140129.49,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340MBBR6\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 19500,\n                    \"creditAmount\": 0,\n                    \"balance\": 120629.49,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340QS6TT\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 179.28,\n                    \"creditAmount\": 0,\n                    \"balance\": 120450.21,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340QS6TT\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 3900,\n                    \"creditAmount\": 0,\n                    \"balance\": 116550.21,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340CZ714\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 498.18,\n                    \"creditAmount\": 0,\n                    \"balance\": 116052.03,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340CZ714\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 12422.27,\n                    \"creditAmount\": 0,\n                    \"balance\": 103629.76,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340SKD82\\\\CAS\",\n                    \"narrative\": \"IB IFT Charge\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 54.38,\n                    \"creditAmount\": 0,\n                    \"balance\": 103575.38,\n                    \"location\": \"AC-1040052948\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340SKD82\\\\CAS\",\n                    \"narrative\": \"IB IFT\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 405,\n                    \"creditAmount\": 0,\n                    \"balance\": 103170.38,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340DW9XX\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 122.48,\n                    \"creditAmount\": 0,\n                    \"balance\": 103047.9,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340DW9XX\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 1060,\n                    \"creditAmount\": 0,\n                    \"balance\": 101987.9,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340SWF6N\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 116.64,\n                    \"creditAmount\": 0,\n                    \"balance\": 101871.26,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT24340SWF6N\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 768,\n                    \"creditAmount\": 0,\n                    \"balance\": 101103.26,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT243409JLW2\\\\CAS\",\n                    \"narrative\": \"IB RTGS Charge\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 116.64,\n                    \"creditAmount\": 0,\n                    \"balance\": 100986.62,\n                    \"location\": \"AC-1001132217\",\n                    \"extra\": \"\"\n                },\n                {\n                    \"postDate\": \"05 DEC 24\",\n                    \"reference\": \"FT243409JLW2\\\\CAS\",\n                    \"narrative\": \"IB RTGS\",\n                    \"valueDate\": \"05 DEC 24\",\n                    \"debitAmount\": 768,\n                    \"creditAmount\": 0,\n                    \"balance\": 100218.62,\n                    \"location\": \"OM Internet Banking Harare AFZW -\",\n                    \"extra\": \"ZSS26377\"\n                }\n            ]\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "download-mt940",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{Bearer Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{develop_url}}/api/open-bank/v1/download-mt940/3bba2f8c-eb07-4287-8f30-4dfd46569b7f",
+							"host": [
+								"{{develop_url}}"
+							],
+							"path": [
+								"api",
+								"open-bank",
+								"v1",
+								"download-mt940",
+								"3bba2f8c-eb07-4287-8f30-4dfd46569b7f"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "http://192.168.16.29:4055/v1/om/download-mt940/0982a602-2d96-40b6-9dcf-16d3f48e7200",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://192.168.16.29:4055/v1/om/transaction/download-mt940/a2f8c66c-5b42-4a4f-a864-4efb9d292209",
+									"protocol": "http",
+									"host": [
+										"192",
+										"168",
+										"16",
+										"29"
+									],
+									"port": "4055",
+									"path": [
+										"v1",
+										"om",
+										"transaction",
+										"download-mt940",
+										"a2f8c66c-5b42-4a4f-a864-4efb9d292209"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Access-Control-Max-Age",
+									"value": "3600"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "*"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Disposition",
+									"value": "attachment; filename=\"mt940Statement_a2f8c66c-5b42-4a4f-a864-4efb9d292209_2025-06-30_20-02-41.txt\""
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/plain"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 30 Jun 2025 18:04:48 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{1:F01STBLZWHXAXXX0000000000}{2:I940TESTARZZXXXXN}{4:\r\n:20:9649270817524541\r\n:25:1007553109\r\n:28C:1\r\n:60F:C241202ZWG1153807,25\r\n:61:2412021202D361,27FFTAFT243371NDTG\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412021202D9000,00FFTAFT243371NDTG\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D161,97FFTAFT243388HVM9\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D3034,03FFTAFT243388HVM9\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1275,58FFTAFT243387PJRD\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D31857,34FFTAFT243387PJRD\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D177,14FFTAFT243387QTQP\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D3792,54FFTAFT243387QTQP\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D279,40FFTAFT243383KY58\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D6952,99FFTAFT243383KY58\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D161,97FFTAFT243389YH07\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D3034,03FFTAFT243389YH07\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D324,92FFTAFT24338T1GHM\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D8090,75FFTAFT24338T1GHM\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D911,50FFTAFT24338LZFKH\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D22755,24FFTAFT24338LZFKH\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1706,42FFTAFT24338HG9WL\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D42628,15FFTAFT24338HG9WL\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D304,70FFTAFT24338MM36Y\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D7585,08FFTAFT24338MM36Y\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D304,70FFTAFT24338SPCS5\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D7585,08FFTAFT24338SPCS5\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D426,06FFTAFT24338NF89R\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D10619,11FFTAFT24338NF89R\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1967,34FFTAFT24338MFH87\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D49151,32FFTAFT24338MFH87\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D517,08FFTAFT24338DXWWS\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D12894,64FFTAFT24338DXWWS\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D496,84FFTAFT24338W8SVV\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D12388,96FFTAFT24338W8SVV\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D3116,22FFTAFT243388Y43V\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D77873,49FFTAFT243388Y43V\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1721,58FFTAFT24338ZLJTF\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D43007,40FFTAFT24338ZLJTF\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D184,64FFTAFT243386J228\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D4584,00FFTAFT243386J228\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D401,28FFTAFT243380W9R2\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D10000,00FFTAFT243380W9R2\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1755,28FFTAFT24338L4X4X\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D43850,00FFTAFT24338L4X4X\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1832,86FFTAFT243382PK7Y\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D45789,04FFTAFT243382PK7Y\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D155,28FFTAFT24338M50DM\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D3850,00FFTAFT24338M50DM\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D126,58FFTAFT24338DHYLP\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1264,71FFTAFT24338DHYLP\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D669,06FFTAFT24338KKP7C\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D16694,17FFTAFT24338KKP7C\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D567,88FFTAFT24338GLPQX\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D14164,75FFTAFT24338GLPQX\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D406,00FFTAFT24338YSD1T\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D10117,68FFTAFT24338YSD1T\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D156,93FFTAFT24338WNW66\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D2782,36FFTAFT24338WNW66\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1316,58FFTAFT24338ZJRKX\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D32882,46FFTAFT24338ZJRKX\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D182,23FFTAFT24338PV7QW\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D4047,07FFTAFT24338PV7QW\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D126,58FFTAFT24338CKG1N\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1264,71FFTAFT24338CKG1N\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D172,11FFTAFT243387072K\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D3541,19FFTAFT243387072K\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D197,40FFTAFT24338101VJ\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D4805,90FFTAFT24338101VJ\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D121,52FFTAFT24338D8YCN\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1011,77FFTAFT24338D8YCN\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D131,64FFTAFT243389BF8V\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1517,65FFTAFT243389BF8V\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D126,58FFTAFT243384WNWB\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1264,71FFTAFT243384WNWB\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1004,96FFTAFT24338W3TBF\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D25091,85FFTAFT24338W3TBF\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D502,12FFTAFT2433834J6D\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D12520,63FFTAFT2433834J6D\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D203,64FFTAFT24338PDM9Z\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D5058,84FFTAFT24338PDM9Z\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D192,34FFTAFT24338NMC1D\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D4552,96FFTAFT24338NMC1D\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D1277,38FFTAFT24339FLD1T\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D31902,10FFTAFT24339FLD1T\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D4020,77FFTAFT243390WHXJ\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D100974,44FFTAFT243390WHXJ\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D256,12FFTAFT24339Y82NP\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D6370,85FFTAFT24339Y82NP\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D261,48FFTAFT24339B5PQ3\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D6505,00FFTAFT24339B5PQ3\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D330,08FFTAFT24339197HR\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D8220,00FFTAFT24339197HR\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D73,88FFTAFT24339LLD4L\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D1380,00FFTAFT24339LLD4L\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D790,14FFTAFT243396WL0B\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D19721,40FFTAFT243396WL0B\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D931,82FFTAFT24340MVLC6\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D23263,15FFTAFT24340MVLC6\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D2203,02FFTAFT24340ZWD7S\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D55043,01FFTAFT24340ZWD7S\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D573,92FFTAFT24340LMP7C\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D14315,78FFTAFT24340LMP7C\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D441,28FFTAFT24340JK3FD\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D11000,00FFTAFT24340JK3FD\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D1201,28FFTAFT24340JKL11\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D30000,00FFTAFT24340JKL11\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D116,64FFTAFT24340SNH15\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D768,00FFTAFT24340SNH15\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D731,16FFTAFT24340FQ4BF\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D18246,52FFTAFT24340FQ4BF\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205C14134,32FFTAFT243407QY7X//RTGS In Payment\r\n:86:FMBZP24340A00357\r\n:61:2412051205D1249,28FFTAFT24340MDZ0F\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D31200,00FFTAFT24340MDZ0F\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D313,28FFTAFT24340TXBLP\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D7800,00FFTAFT24340TXBLP\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D375,68FFTAFT243401RVZ3\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D9360,00FFTAFT243401RVZ3\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D179,28FFTAFT24340DVRDF\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D3900,00FFTAFT24340DVRDF\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D179,28FFTAFT243406DDD7\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D3900,00FFTAFT243406DDD7\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D179,28FFTAFT24340QS6TT\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D3900,00FFTAFT24340QS6TT\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D781,28FFTAFT24340MBBR6\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D19500,00FFTAFT24340MBBR6\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D498,18FFTAFT24340CZ714\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D12422,27FFTAFT24340CZ714\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D54,38FFTAFT24340SKD82\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D405,00FFTAFT24340SKD82\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D122,48FFTAFT24340DW9XX\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D1060,00FFTAFT24340DW9XX\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D116,64FFTAFT243409JLW2\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D768,00FFTAFT243409JLW2\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D116,64FFTAFT24340SWF6N\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D768,00FFTAFT24340SWF6N\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:62F:C241205ZWG100218,62\r\n-}"
+						},
+						{
+							"name": "download-mt940",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{develop_url}}/api/open-bank/v1/download-mt940/f53b2659-c642-4eb5-aed1-de722c3890ab",
+									"host": [
+										"{{develop_url}}"
+									],
+									"path": [
+										"api",
+										"open-bank",
+										"v1",
+										"download-mt940",
+										"f53b2659-c642-4eb5-aed1-de722c3890ab"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.25.5"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 25 Sep 2025 18:23:10 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=UTF-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "private, must-revalidate"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "max-age=0, no-cache, no-store, must-revalidate"
+								},
+								{
+									"key": "Content-Disposition",
+									"value": "attachment; filename=\"mt940Statement_f53b2659-c642-4eb5-aed1-de722c3890ab_2025-09-25_18-34-20.txt\""
+								},
+								{
+									"key": "pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "expires",
+									"value": "-1"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "-1"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								}
+							],
+							"cookie": [],
+							"body": "{1:F01STBLZWHXAXXX0000000000}{2:I940TESTARZZXXXXN}{4:\r\n:20:57EDAE6D101143A7\r\n:25:1007553109\r\n:28C:1\r\n:60F:C241202ZWG1153807,25\r\n:61:2412021202D361,27FFTAFT243371NDTG\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412021202D9000,00FFTAFT243371NDTG\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D161,97FFTAFT243388HVM9\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D3034,03FFTAFT243388HVM9\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1275,58FFTAFT243387PJRD\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D31857,34FFTAFT243387PJRD\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D177,14FFTAFT243387QTQP\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D3792,54FFTAFT243387QTQP\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D279,40FFTAFT243383KY58\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D6952,99FFTAFT243383KY58\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D161,97FFTAFT243389YH07\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D3034,03FFTAFT243389YH07\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D324,92FFTAFT24338T1GHM\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D8090,75FFTAFT24338T1GHM\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D911,50FFTAFT24338LZFKH\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D22755,24FFTAFT24338LZFKH\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1706,42FFTAFT24338HG9WL\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D42628,15FFTAFT24338HG9WL\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D304,70FFTAFT24338MM36Y\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D7585,08FFTAFT24338MM36Y\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D304,70FFTAFT24338SPCS5\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D7585,08FFTAFT24338SPCS5\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D426,06FFTAFT24338NF89R\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D10619,11FFTAFT24338NF89R\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1967,34FFTAFT24338MFH87\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D49151,32FFTAFT24338MFH87\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D517,08FFTAFT24338DXWWS\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D12894,64FFTAFT24338DXWWS\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D496,84FFTAFT24338W8SVV\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D12388,96FFTAFT24338W8SVV\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D3116,22FFTAFT243388Y43V\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D77873,49FFTAFT243388Y43V\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1721,58FFTAFT24338ZLJTF\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D43007,40FFTAFT24338ZLJTF\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D184,64FFTAFT243386J228\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D4584,00FFTAFT243386J228\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D401,28FFTAFT243380W9R2\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D10000,00FFTAFT243380W9R2\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1755,28FFTAFT24338L4X4X\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D43850,00FFTAFT24338L4X4X\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1832,86FFTAFT243382PK7Y\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D45789,04FFTAFT243382PK7Y\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D155,28FFTAFT24338M50DM\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D3850,00FFTAFT24338M50DM\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D126,58FFTAFT24338DHYLP\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1264,71FFTAFT24338DHYLP\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D669,06FFTAFT24338KKP7C\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D16694,17FFTAFT24338KKP7C\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D567,88FFTAFT24338GLPQX\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D14164,75FFTAFT24338GLPQX\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D406,00FFTAFT24338YSD1T\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D10117,68FFTAFT24338YSD1T\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D156,93FFTAFT24338WNW66\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D2782,36FFTAFT24338WNW66\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1316,58FFTAFT24338ZJRKX\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D32882,46FFTAFT24338ZJRKX\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D182,23FFTAFT24338PV7QW\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D4047,07FFTAFT24338PV7QW\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D126,58FFTAFT24338CKG1N\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1264,71FFTAFT24338CKG1N\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D172,11FFTAFT243387072K\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D3541,19FFTAFT243387072K\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D197,40FFTAFT24338101VJ\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D4805,90FFTAFT24338101VJ\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D121,52FFTAFT24338D8YCN\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1011,77FFTAFT24338D8YCN\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D131,64FFTAFT243389BF8V\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1517,65FFTAFT243389BF8V\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D126,58FFTAFT243384WNWB\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1264,71FFTAFT243384WNWB\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1004,96FFTAFT24338W3TBF\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D25091,85FFTAFT24338W3TBF\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D502,12FFTAFT2433834J6D\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D12520,63FFTAFT2433834J6D\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D203,64FFTAFT24338PDM9Z\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D5058,84FFTAFT24338PDM9Z\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D192,34FFTAFT24338NMC1D\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D4552,96FFTAFT24338NMC1D\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D1277,38FFTAFT24339FLD1T\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D31902,10FFTAFT24339FLD1T\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D4020,77FFTAFT243390WHXJ\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D100974,44FFTAFT243390WHXJ\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D256,12FFTAFT24339Y82NP\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D6370,85FFTAFT24339Y82NP\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D261,48FFTAFT24339B5PQ3\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D6505,00FFTAFT24339B5PQ3\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D330,08FFTAFT24339197HR\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D8220,00FFTAFT24339197HR\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D73,88FFTAFT24339LLD4L\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D1380,00FFTAFT24339LLD4L\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D790,14FFTAFT243396WL0B\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D19721,40FFTAFT243396WL0B\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D931,82FFTAFT24340MVLC6\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D23263,15FFTAFT24340MVLC6\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D2203,02FFTAFT24340ZWD7S\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D55043,01FFTAFT24340ZWD7S\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D573,92FFTAFT24340LMP7C\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D14315,78FFTAFT24340LMP7C\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D441,28FFTAFT24340JK3FD\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D11000,00FFTAFT24340JK3FD\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D1201,28FFTAFT24340JKL11\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D30000,00FFTAFT24340JKL11\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D116,64FFTAFT24340SNH15\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D768,00FFTAFT24340SNH15\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D731,16FFTAFT24340FQ4BF\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D18246,52FFTAFT24340FQ4BF\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205C14134,32FFTAFT243407QY7X//RTGS In Payment\r\n:86:FMBZP24340A00357\r\n:61:2412051205D1249,28FFTAFT24340MDZ0F\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D31200,00FFTAFT24340MDZ0F\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D313,28FFTAFT24340TXBLP\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D7800,00FFTAFT24340TXBLP\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D375,68FFTAFT243401RVZ3\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D9360,00FFTAFT243401RVZ3\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D179,28FFTAFT24340DVRDF\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D3900,00FFTAFT24340DVRDF\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D179,28FFTAFT243406DDD7\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D3900,00FFTAFT243406DDD7\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D179,28FFTAFT24340QS6TT\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D3900,00FFTAFT24340QS6TT\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D781,28FFTAFT24340MBBR6\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D19500,00FFTAFT24340MBBR6\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D498,18FFTAFT24340CZ714\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D12422,27FFTAFT24340CZ714\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D54,38FFTAFT24340SKD82\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D405,00FFTAFT24340SKD82\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D122,48FFTAFT24340DW9XX\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D1060,00FFTAFT24340DW9XX\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D116,64FFTAFT243409JLW2\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D768,00FFTAFT243409JLW2\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D116,64FFTAFT24340SWF6N\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D768,00FFTAFT24340SWF6N\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:62F:C241205ZWG100218,62\r\n-}"
+						}
+					]
+				},
+				{
+					"name": "mt940-statement-auto",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{Bearer Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ1SDlVdmt6Tnd5emVZdnlTdjJ3S0lONlNpOV84RTU0c0dPVW9ZcGRmUHdVIn0.eyJleHAiOjE3NTAwNzIwNDcsImlhdCI6MTc1MDA3MDg0NywianRpIjoiYTVjNmIzYjAtMmZjNy00MGUyLWFiNGEtYTk4MmY3OWFiYmYxIiwiaXNzIjoiaHR0cDovLzE5Mi4xNjguMS4xMTY6OTAwMC9hdXRoL3JlYWxtcy9vbW5pY2hhbm5lbCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJlYjVjYWNkNS1jZmIzLTRlYWYtYjU2Ni1hMGQ5YzIzZWVmNzQiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJzaW5nbGVTaWduT24iLCJzZXNzaW9uX3N0YXRlIjoiZTk3N2IyMmYtYTA4Yy00ZTIyLThhOGMtNDNhNjk4MTdmNjQ5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsImRlZmF1bHQtcm9sZXMtb21uaWNoYW5uZWwgIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJzaWQiOiJlOTc3YjIyZi1hMDhjLTRlMjItOGE4Yy00M2E2OTgxN2Y2NDkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6IkdSRUdPUlkgU0hPTklXQSIsInByZWZlcnJlZF91c2VybmFtZSI6IjI2Mzc3Mjk5NjMzMCIsImdpdmVuX25hbWUiOiJHUkVHT1JZIiwiZmFtaWx5X25hbWUiOiJTSE9OSVdBIiwiZW1haWwiOiJncmVnb3J5c2hvbml3YUBnbWFpbC5jb20ifQ.UJAi92S3SAKkyWzz3AmKdJCjjyUsBb9n4b5lL9p3ZsIJKIgFEtue3yUC1tRrk_Tw_B7ALHjwQ1pPIOUAYRqhpzZkxuysM46N1eJkIOqXA2ttgOqSKTwJlH-pva4xJuLyRLKSSGCzuoLruHqE3OK63HtHm2LwU2oScqeW0QJ4rvSjjB9uejOd_mflgxaNWZ1TFXtM9vAxeXnGo2M_MVmKLq0eUUx241-8yymIToSh0pjC_AqdSobxMsGs1pHrVqbQ6Okj4iQrutcaxBR4jfn4xgdTG5aIhe1FWtdhX4J9hoNQ6cd8G7QxXOWOJLXpbW1I_MbD9sUDsQrwfqoZdbAQ_A"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": 1,\n    \"divisionId\": 2,\n    \"profile\": \"CORPORATE\",\n    \"currency\": \"USD\",\n    \"accountNo\": \"1035367237\",\n    \"tranType\": \"STATEMENT_MT940\",\n    \"processor\": \"A\",\n    \"debitEmail\":\"gregoryshoniwa@gmail.com\",\n    \"additionalData\": [\n        {\n            \"dateFrom\": \"20241201\",\n            \"dateTo\": \"20241205\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{develop_ip}}/api/open-bank/v1/transaction",
+							"host": [
+								"{{develop_ip}}"
+							],
+							"path": [
+								"api",
+								"open-bank",
+								"v1",
+								"transaction"
+							]
+						},
+						"description": "Generated from cURL: curl --location 'http://192.168.16.29:4055/v1/om/transaction' \\\n--header 'Content-Type: application/json' \\\n--header 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ1SDlVdmt6Tnd5emVZdnlTdjJ3S0lONlNpOV84RTU0c0dPVW9ZcGRmUHdVIn0.eyJleHAiOjE3NTAwNzIwNDcsImlhdCI6MTc1MDA3MDg0NywianRpIjoiYTVjNmIzYjAtMmZjNy00MGUyLWFiNGEtYTk4MmY3OWFiYmYxIiwiaXNzIjoiaHR0cDovLzE5Mi4xNjguMS4xMTY6OTAwMC9hdXRoL3JlYWxtcy9vbW5pY2hhbm5lbCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJlYjVjYWNkNS1jZmIzLTRlYWYtYjU2Ni1hMGQ5YzIzZWVmNzQiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJzaW5nbGVTaWduT24iLCJzZXNzaW9uX3N0YXRlIjoiZTk3N2IyMmYtYTA4Yy00ZTIyLThhOGMtNDNhNjk4MTdmNjQ5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsImRlZmF1bHQtcm9sZXMtb21uaWNoYW5uZWwgIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJzaWQiOiJlOTc3YjIyZi1hMDhjLTRlMjItOGE4Yy00M2E2OTgxN2Y2NDkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6IkdSRUdPUlkgU0hPTklXQSIsInByZWZlcnJlZF91c2VybmFtZSI6IjI2Mzc3Mjk5NjMzMCIsImdpdmVuX25hbWUiOiJHUkVHT1JZIiwiZmFtaWx5X25hbWUiOiJTSE9OSVdBIiwiZW1haWwiOiJncmVnb3J5c2hvbml3YUBnbWFpbC5jb20ifQ.UJAi92S3SAKkyWzz3AmKdJCjjyUsBb9n4b5lL9p3ZsIJKIgFEtue3yUC1tRrk_Tw_B7ALHjwQ1pPIOUAYRqhpzZkxuysM46N1eJkIOqXA2ttgOqSKTwJlH-pva4xJuLyRLKSSGCzuoLruHqE3OK63HtHm2LwU2oScqeW0QJ4rvSjjB9uejOd_mflgxaNWZ1TFXtM9vAxeXnGo2M_MVmKLq0eUUx241-8yymIToSh0pjC_AqdSobxMsGs1pHrVqbQ6Okj4iQrutcaxBR4jfn4xgdTG5aIhe1FWtdhX4J9hoNQ6cd8G7QxXOWOJLXpbW1I_MbD9sUDsQrwfqoZdbAQ_A' \\\n--data-raw '{\n    \"userId\": 97,\n    \"divisionId\": null,\n    \"profile\": \"INDIVIDUAL\",\n    \"action\": \"PROCESS\",\n    \"tranType\": \"STATEMENT_MT940\",\n    \"debitType\": \"ACCOUNT\",\n    \"mode\": \"SINGLE\",\n    \"requestType\": \"REQUEST\",\n    \"phone\": \"263772996330\",\n    \"debitEmail\":\"gregoryshoniwa@gmail.com\",\n    \"channel\": \"SQUARE\",\n    \"currency\": \"USD\",\n    \"accountNo\": \"1044712888\",\n    \"accountType\": \"T24\",\n    \"additionalData\": [\n        {\n            \"dateFrom\": \"20241201\",\n            \"dateTo\": \"20241210\"\n        }\n    ]\n}\n'"
+					},
+					"response": [
+						{
+							"name": "mt940-statement-auto",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ1SDlVdmt6Tnd5emVZdnlTdjJ3S0lONlNpOV84RTU0c0dPVW9ZcGRmUHdVIn0.eyJleHAiOjE3NTAwNzIwNDcsImlhdCI6MTc1MDA3MDg0NywianRpIjoiYTVjNmIzYjAtMmZjNy00MGUyLWFiNGEtYTk4MmY3OWFiYmYxIiwiaXNzIjoiaHR0cDovLzE5Mi4xNjguMS4xMTY6OTAwMC9hdXRoL3JlYWxtcy9vbW5pY2hhbm5lbCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJlYjVjYWNkNS1jZmIzLTRlYWYtYjU2Ni1hMGQ5YzIzZWVmNzQiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJzaW5nbGVTaWduT24iLCJzZXNzaW9uX3N0YXRlIjoiZTk3N2IyMmYtYTA4Yy00ZTIyLThhOGMtNDNhNjk4MTdmNjQ5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsImRlZmF1bHQtcm9sZXMtb21uaWNoYW5uZWwgIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJzaWQiOiJlOTc3YjIyZi1hMDhjLTRlMjItOGE4Yy00M2E2OTgxN2Y2NDkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6IkdSRUdPUlkgU0hPTklXQSIsInByZWZlcnJlZF91c2VybmFtZSI6IjI2Mzc3Mjk5NjMzMCIsImdpdmVuX25hbWUiOiJHUkVHT1JZIiwiZmFtaWx5X25hbWUiOiJTSE9OSVdBIiwiZW1haWwiOiJncmVnb3J5c2hvbml3YUBnbWFpbC5jb20ifQ.UJAi92S3SAKkyWzz3AmKdJCjjyUsBb9n4b5lL9p3ZsIJKIgFEtue3yUC1tRrk_Tw_B7ALHjwQ1pPIOUAYRqhpzZkxuysM46N1eJkIOqXA2ttgOqSKTwJlH-pva4xJuLyRLKSSGCzuoLruHqE3OK63HtHm2LwU2oScqeW0QJ4rvSjjB9uejOd_mflgxaNWZ1TFXtM9vAxeXnGo2M_MVmKLq0eUUx241-8yymIToSh0pjC_AqdSobxMsGs1pHrVqbQ6Okj4iQrutcaxBR4jfn4xgdTG5aIhe1FWtdhX4J9hoNQ6cd8G7QxXOWOJLXpbW1I_MbD9sUDsQrwfqoZdbAQ_A"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"userId\": 1,\n    \"divisionId\": 2,\n    \"profile\": \"CORPORATE\",\n    \"currency\": \"ZWG\",\n    \"accountNo\": \"1007553109\",\n    \"tranType\": \"STATEMENT_MT940\",\n    \"processor\": \"A\",\n    \"debitEmail\":\"gregoryshoniwa@gmail.com\",\n    \"additionalData\": [\n        {\n            \"dateFrom\": \"20241201\",\n            \"dateTo\": \"20241205\"\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{develop_ip}}/api/open-bank/v1/transaction",
+									"host": [
+										"{{develop_ip}}"
+									],
+									"path": [
+										"api",
+										"open-bank",
+										"v1",
+										"transaction"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.18.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=UTF-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.1"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 17 Nov 2025 07:17:07 GMT"
+								},
+								{
+									"key": "Content-Disposition",
+									"value": "attachment; filename=\"mt940Statement_83e6b54f-0cad-420d-be18-fff33d68e3ef_2025-11-17_09-17-05.txt\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								}
+							],
+							"cookie": [],
+							"body": "{1:F01STBLZWHXAXXX0000000000}{2:I940TESTARZZXXXXN}{4:\r\n:20:BF64B26F40944552\r\n:25:1007553109\r\n:28C:1\r\n:60F:C241202ZWG1153807,25\r\n:61:2412021202D361,27FFTAFT243371NDTG\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412021202D9000,00FFTAFT243371NDTG\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D161,97FFTAFT243388HVM9\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D3034,03FFTAFT243388HVM9\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1275,58FFTAFT243387PJRD\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D31857,34FFTAFT243387PJRD\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D177,14FFTAFT243387QTQP\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D3792,54FFTAFT243387QTQP\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D279,40FFTAFT243383KY58\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D6952,99FFTAFT243383KY58\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D161,97FFTAFT243389YH07\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D3034,03FFTAFT243389YH07\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D324,92FFTAFT24338T1GHM\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D8090,75FFTAFT24338T1GHM\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D911,50FFTAFT24338LZFKH\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D22755,24FFTAFT24338LZFKH\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1706,42FFTAFT24338HG9WL\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D42628,15FFTAFT24338HG9WL\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D304,70FFTAFT24338MM36Y\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D7585,08FFTAFT24338MM36Y\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D304,70FFTAFT24338SPCS5\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D7585,08FFTAFT24338SPCS5\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D426,06FFTAFT24338NF89R\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D10619,11FFTAFT24338NF89R\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1967,34FFTAFT24338MFH87\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D49151,32FFTAFT24338MFH87\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D517,08FFTAFT24338DXWWS\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D12894,64FFTAFT24338DXWWS\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D496,84FFTAFT24338W8SVV\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D12388,96FFTAFT24338W8SVV\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D3116,22FFTAFT243388Y43V\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D77873,49FFTAFT243388Y43V\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1721,58FFTAFT24338ZLJTF\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D43007,40FFTAFT24338ZLJTF\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D184,64FFTAFT243386J228\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D4584,00FFTAFT243386J228\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D401,28FFTAFT243380W9R2\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D10000,00FFTAFT243380W9R2\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1755,28FFTAFT24338L4X4X\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D43850,00FFTAFT24338L4X4X\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1832,86FFTAFT243382PK7Y\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D45789,04FFTAFT243382PK7Y\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D155,28FFTAFT24338M50DM\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D3850,00FFTAFT24338M50DM\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D126,58FFTAFT24338DHYLP\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1264,71FFTAFT24338DHYLP\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D669,06FFTAFT24338KKP7C\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D16694,17FFTAFT24338KKP7C\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D567,88FFTAFT24338GLPQX\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D14164,75FFTAFT24338GLPQX\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D406,00FFTAFT24338YSD1T\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D10117,68FFTAFT24338YSD1T\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D156,93FFTAFT24338WNW66\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D2782,36FFTAFT24338WNW66\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1316,58FFTAFT24338ZJRKX\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D32882,46FFTAFT24338ZJRKX\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D182,23FFTAFT24338PV7QW\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D4047,07FFTAFT24338PV7QW\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D126,58FFTAFT24338CKG1N\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1264,71FFTAFT24338CKG1N\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D172,11FFTAFT243387072K\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D3541,19FFTAFT243387072K\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D197,40FFTAFT24338101VJ\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D4805,90FFTAFT24338101VJ\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D121,52FFTAFT24338D8YCN\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1011,77FFTAFT24338D8YCN\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D131,64FFTAFT243389BF8V\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1517,65FFTAFT243389BF8V\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D126,58FFTAFT243384WNWB\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1264,71FFTAFT243384WNWB\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1004,96FFTAFT24338W3TBF\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D25091,85FFTAFT24338W3TBF\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D502,12FFTAFT2433834J6D\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D12520,63FFTAFT2433834J6D\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D203,64FFTAFT24338PDM9Z\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D5058,84FFTAFT24338PDM9Z\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D192,34FFTAFT24338NMC1D\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D4552,96FFTAFT24338NMC1D\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D1277,38FFTAFT24339FLD1T\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D31902,10FFTAFT24339FLD1T\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D4020,77FFTAFT243390WHXJ\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D100974,44FFTAFT243390WHXJ\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D256,12FFTAFT24339Y82NP\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D6370,85FFTAFT24339Y82NP\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D261,48FFTAFT24339B5PQ3\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D6505,00FFTAFT24339B5PQ3\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D330,08FFTAFT24339197HR\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D8220,00FFTAFT24339197HR\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D73,88FFTAFT24339LLD4L\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D1380,00FFTAFT24339LLD4L\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D790,14FFTAFT243396WL0B\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D19721,40FFTAFT243396WL0B\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D931,82FFTAFT24340MVLC6\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D23263,15FFTAFT24340MVLC6\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D2203,02FFTAFT24340ZWD7S\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D55043,01FFTAFT24340ZWD7S\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D573,92FFTAFT24340LMP7C\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D14315,78FFTAFT24340LMP7C\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D441,28FFTAFT24340JK3FD\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D11000,00FFTAFT24340JK3FD\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D1201,28FFTAFT24340JKL11\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D30000,00FFTAFT24340JKL11\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D116,64FFTAFT24340SNH15\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D768,00FFTAFT24340SNH15\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D731,16FFTAFT24340FQ4BF\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D18246,52FFTAFT24340FQ4BF\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205C14134,32FFTAFT243407QY7X//RTGS In Payment\r\n:86:FMBZP24340A00357\r\n:61:2412051205D1249,28FFTAFT24340MDZ0F\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D31200,00FFTAFT24340MDZ0F\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D313,28FFTAFT24340TXBLP\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D7800,00FFTAFT24340TXBLP\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D375,68FFTAFT243401RVZ3\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D9360,00FFTAFT243401RVZ3\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D179,28FFTAFT24340DVRDF\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D3900,00FFTAFT24340DVRDF\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D179,28FFTAFT243406DDD7\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D3900,00FFTAFT243406DDD7\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D179,28FFTAFT24340QS6TT\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D3900,00FFTAFT24340QS6TT\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D781,28FFTAFT24340MBBR6\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D19500,00FFTAFT24340MBBR6\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D498,18FFTAFT24340CZ714\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D12422,27FFTAFT24340CZ714\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D54,38FFTAFT24340SKD82\\CAS//IB IFT Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D405,00FFTAFT24340SKD82\\CAS//IB IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D122,48FFTAFT24340DW9XX\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D1060,00FFTAFT24340DW9XX\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D116,64FFTAFT243409JLW2\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D768,00FFTAFT243409JLW2\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D116,64FFTAFT24340SWF6N\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D768,00FFTAFT24340SWF6N\\CAS//IB RTGS\r\n:86:OM Internet Banking Harare AFZW -\r\n:62F:C241205ZWG100218,62\r\n-}"
+						},
+						{
+							"name": "mt940-statement-auto",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ1SDlVdmt6Tnd5emVZdnlTdjJ3S0lONlNpOV84RTU0c0dPVW9ZcGRmUHdVIn0.eyJleHAiOjE3NTAwNzIwNDcsImlhdCI6MTc1MDA3MDg0NywianRpIjoiYTVjNmIzYjAtMmZjNy00MGUyLWFiNGEtYTk4MmY3OWFiYmYxIiwiaXNzIjoiaHR0cDovLzE5Mi4xNjguMS4xMTY6OTAwMC9hdXRoL3JlYWxtcy9vbW5pY2hhbm5lbCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJlYjVjYWNkNS1jZmIzLTRlYWYtYjU2Ni1hMGQ5YzIzZWVmNzQiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJzaW5nbGVTaWduT24iLCJzZXNzaW9uX3N0YXRlIjoiZTk3N2IyMmYtYTA4Yy00ZTIyLThhOGMtNDNhNjk4MTdmNjQ5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsImRlZmF1bHQtcm9sZXMtb21uaWNoYW5uZWwgIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJzaWQiOiJlOTc3YjIyZi1hMDhjLTRlMjItOGE4Yy00M2E2OTgxN2Y2NDkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6IkdSRUdPUlkgU0hPTklXQSIsInByZWZlcnJlZF91c2VybmFtZSI6IjI2Mzc3Mjk5NjMzMCIsImdpdmVuX25hbWUiOiJHUkVHT1JZIiwiZmFtaWx5X25hbWUiOiJTSE9OSVdBIiwiZW1haWwiOiJncmVnb3J5c2hvbml3YUBnbWFpbC5jb20ifQ.UJAi92S3SAKkyWzz3AmKdJCjjyUsBb9n4b5lL9p3ZsIJKIgFEtue3yUC1tRrk_Tw_B7ALHjwQ1pPIOUAYRqhpzZkxuysM46N1eJkIOqXA2ttgOqSKTwJlH-pva4xJuLyRLKSSGCzuoLruHqE3OK63HtHm2LwU2oScqeW0QJ4rvSjjB9uejOd_mflgxaNWZ1TFXtM9vAxeXnGo2M_MVmKLq0eUUx241-8yymIToSh0pjC_AqdSobxMsGs1pHrVqbQ6Okj4iQrutcaxBR4jfn4xgdTG5aIhe1FWtdhX4J9hoNQ6cd8G7QxXOWOJLXpbW1I_MbD9sUDsQrwfqoZdbAQ_A"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"userId\": 1,\n    \"divisionId\": 2,\n    \"profile\": \"CORPORATE\",\n    \"currency\": \"USD\",\n    \"accountNo\": \"1043265087\",\n    \"tranType\": \"STATEMENT_MT940\",\n    \"processor\": \"A\",\n    \"debitEmail\":\"gregoryshoniwa@gmail.com\",\n    \"additionalData\": [\n        {\n            \"dateFrom\": \"20241201\",\n            \"dateTo\": \"20241205\"\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{develop_ip}}/api/open-bank/v1/transaction",
+									"host": [
+										"{{develop_ip}}"
+									],
+									"path": [
+										"api",
+										"open-bank",
+										"v1",
+										"transaction"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.18.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=UTF-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.1"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 17 Nov 2025 07:19:15 GMT"
+								},
+								{
+									"key": "Content-Disposition",
+									"value": "attachment; filename=\"mt940Statement_a3aff289-c821-44eb-948f-49867a62c8e7_2025-11-17_09-19-13.txt\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								}
+							],
+							"cookie": [],
+							"body": "{1:F01STBLZWHXAXXX0000000000}{2:I940TESTARZZXXXXN}{4:\r\n:20:8381D5E7D7E24B87\r\n:25:1043265087\r\n:28C:1\r\n:60F:D241130USD-3,35\r\n:61:2411301204C0,12FFTAAAACT24335GW4XKZ2Y//Interest - Capit\r\n:86:Debit Interest\r\n:61:2411301204D0,12FFTAAAACT24339WXSHKRS4//Interest - Capit\r\n:86:Debit Interest\r\n:62F:D241130USD-3,35\r\n-}"
+						},
+						{
+							"name": "mt940-statement-auto",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ1SDlVdmt6Tnd5emVZdnlTdjJ3S0lONlNpOV84RTU0c0dPVW9ZcGRmUHdVIn0.eyJleHAiOjE3NTAwNzIwNDcsImlhdCI6MTc1MDA3MDg0NywianRpIjoiYTVjNmIzYjAtMmZjNy00MGUyLWFiNGEtYTk4MmY3OWFiYmYxIiwiaXNzIjoiaHR0cDovLzE5Mi4xNjguMS4xMTY6OTAwMC9hdXRoL3JlYWxtcy9vbW5pY2hhbm5lbCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJlYjVjYWNkNS1jZmIzLTRlYWYtYjU2Ni1hMGQ5YzIzZWVmNzQiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJzaW5nbGVTaWduT24iLCJzZXNzaW9uX3N0YXRlIjoiZTk3N2IyMmYtYTA4Yy00ZTIyLThhOGMtNDNhNjk4MTdmNjQ5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsImRlZmF1bHQtcm9sZXMtb21uaWNoYW5uZWwgIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJzaWQiOiJlOTc3YjIyZi1hMDhjLTRlMjItOGE4Yy00M2E2OTgxN2Y2NDkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6IkdSRUdPUlkgU0hPTklXQSIsInByZWZlcnJlZF91c2VybmFtZSI6IjI2Mzc3Mjk5NjMzMCIsImdpdmVuX25hbWUiOiJHUkVHT1JZIiwiZmFtaWx5X25hbWUiOiJTSE9OSVdBIiwiZW1haWwiOiJncmVnb3J5c2hvbml3YUBnbWFpbC5jb20ifQ.UJAi92S3SAKkyWzz3AmKdJCjjyUsBb9n4b5lL9p3ZsIJKIgFEtue3yUC1tRrk_Tw_B7ALHjwQ1pPIOUAYRqhpzZkxuysM46N1eJkIOqXA2ttgOqSKTwJlH-pva4xJuLyRLKSSGCzuoLruHqE3OK63HtHm2LwU2oScqeW0QJ4rvSjjB9uejOd_mflgxaNWZ1TFXtM9vAxeXnGo2M_MVmKLq0eUUx241-8yymIToSh0pjC_AqdSobxMsGs1pHrVqbQ6Okj4iQrutcaxBR4jfn4xgdTG5aIhe1FWtdhX4J9hoNQ6cd8G7QxXOWOJLXpbW1I_MbD9sUDsQrwfqoZdbAQ_A"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"userId\": 1,\n    \"divisionId\": 2,\n    \"profile\": \"CORPORATE\",\n    \"currency\": \"USD\",\n    \"accountNo\": \"1035367237\",\n    \"tranType\": \"STATEMENT_MT940\",\n    \"processor\": \"A\",\n    \"debitEmail\":\"gregoryshoniwa@gmail.com\",\n    \"additionalData\": [\n        {\n            \"dateFrom\": \"20241201\",\n            \"dateTo\": \"20241205\"\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{develop_ip}}/api/open-bank/v1/transaction",
+									"host": [
+										"{{develop_ip}}"
+									],
+									"path": [
+										"api",
+										"open-bank",
+										"v1",
+										"transaction"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.18.0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=UTF-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.1"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 17 Nov 2025 07:19:51 GMT"
+								},
+								{
+									"key": "Content-Disposition",
+									"value": "attachment; filename=\"mt940Statement_8dfdd5ac-8221-40b0-a1b5-1b03d93b5684_2025-11-17_09-19-49.txt\""
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								}
+							],
+							"cookie": [],
+							"body": "{1:F01STBLZWHXAXXX0000000000}{2:I940TESTARZZXXXXN}{4:\r\n:20:C1B1387904F24388\r\n:25:1035367237\r\n:28C:1\r\n:60F:C241202USD382244,56\r\n:61:2412021202C416467,00FFTAFT24337L4K5F//ECOCASH LIQUIDAT\r\n:86:-\r\n:61:2412021202C673918,34FFTAFT24337ZZPR0//ECOCASH LIQUIDAT\r\n:86:-\r\n:61:2412021202D3,96FFTAFT24337BQ9KN\\CAS//IB USD IFT CHARG\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412021202D390,50FFTAFT24337BQ9KN\\CAS//IB USD IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412021202D7,81FFTAAAACT24337M3NZSBTZ//Charge\r\n:86:Intermediated Money Transfer Tax\r\n:61:2412021202C800,00FFTAFT24337K6CCL\\CAS//IB USD IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412021202C972000,00FFTAFT24337XCV97\\AVO//Internal Transfe\r\n:86:From Acc.No. - 1017305747\r\n:61:2412021202D30,05FFTAFT243371Q7R9\\CAS//IB RTGS Charge\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412021202D200000,00FFTAFT243371Q7R9\\CAS//IB RTGS USD\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412021202D4000,00FFTAAAACT243374N62MMY2//Charge\r\n:86:Intermediated Money Transfer Tax\r\n:61:2412021202D100,00FFTAFT24337LXSBC\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412031203C242264,76FFTAFT24338X3TBS//ECOCASH LIQUIDAT\r\n:86:-\r\n:61:2412031203C191942,25FFTAFT24338WJ7TG//ECOCASH LIQUIDAT\r\n:86:-\r\n:61:2412031203C189,00FFTATT24338CGD1G\\JCI//Cash Deposit-For\r\n:86:ECOREC\r\n:61:2412031203C256,00FFTAFT24338NWHDK//RTGS Incoming FX\r\n:86:-\r\n:61:2412031203C19,59FFTAFT24338SW679\\CAS//Transfer In CPO\r\n:86:-\r\n:61:2412031203D15,05FFTAFT24338D1WNJ\\CAS//IB USD IFT CHARG\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1000000,00FFTAFT24338D1WNJ\\CAS//IB USD IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D15,05FFTAFT24338B8QY8\\CAS//IB USD IFT CHARG\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D500000,00FFTAFT24338B8QY8\\CAS//IB USD IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D7,00FFTAFT24338QGCK5\\IBA//Outward Swift Ch\r\n:86:AC-1035367237\r\n:61:2412031203D400000,00FFTAFT24338QGCK5\\IBA//Outward Swift Pa\r\n:86:-\r\n:61:2412031203D280,00FFTAFT2433856YCG\\IBA//Zimtrade Charge\r\n:86:To Acc.No.- 1035928468\r\n:61:2412031203D300,00FFTAFT24338DXHST\\IBA//OTT Commission\r\n:86:To Acc.No.- PL54084\r\n:61:2412031203D100,00FFTAFT24338RPV7B\\IBA//FCY Charge\r\n:86:To Acc.No.- USD1428800010006\r\n:61:2412031203D120,00FFTAFT24338316YG\\IBA//Competition Tari\r\n:86:To Acc.No.- 1036349383\r\n:61:2412031203D10,06FFTAFT24338SJ28Z\\CAS//IB USD IFT CHARG\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D1000,50FFTAFT24338SJ28Z\\CAS//IB USD IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D20,01FFTAAAACT24338SJBWNDYF//Charge\r\n:86:Intermediated Money Transfer Tax\r\n:61:2412031203D15,05FFTAFT24338M90N8\\CAS//IB USD IFT CHARG\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D200000,00FFTAFT24338M90N8\\CAS//IB USD IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D4000,00FFTAAAACT24338QWFS8R2D//Charge\r\n:86:Intermediated Money Transfer Tax\r\n:61:2412031203C26067,91FFTAFT243386MTSB//Transfer In CPO\r\n:86:-\r\n:61:2412031203D15,05FFTAFT2433838WTY\\CAS//IB USD IFT CHARG\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D126072,10FFTAFT2433838WTY\\CAS//IB USD IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D2521,44FFTAAAACT24338J837NBNW//Charge\r\n:86:Intermediated Money Transfer Tax\r\n:61:2412031203D4000,00FFTAFT24338Q0CMJ\\TRY//Transfer Out\r\n:86:To Acc.No.- PL53002\r\n:61:2412031203D15,05FFTAFT24338RHX50\\CAS//IB USD IFT CHARG\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D4250,00FFTAFT24338RHX50\\CAS//IB USD IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412031203D85,00FFTAAAACT243381S4P94G4//Charge\r\n:86:Intermediated Money Transfer Tax\r\n:61:2412041204C238673,47FFTAFT2433990KQ4//ECOCASH LIQUIDAT\r\n:86:-\r\n:61:2412041204C308850,00FFTAFT24339QC3RS//ECOCASH LIQUIDAT\r\n:86:-\r\n:61:2412041204C500,00FFTAFT243392BW8V\\CAS//IB USD IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D300,00FFTAAAACT243393WWQ0CPP//Charge\r\n:86:OC Cash Withdrawal FCA\r\n:61:2412041204D0,05FFTAAAACT243393WWQ0CSV//Charge\r\n:86:Automated Financial Transaction Tax\r\n:61:2412041204C30000,00FFTAFT24339D8ZR9//ERP SBZ Supplier\r\n:86:ERP - FT243380J9HD\r\n:61:2412041204D5,00FFTAFT24339VQ1GB\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT24339RPDL3\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT243398VM0C\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT24339W07HW\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT243393FLWP\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT24339FJMVT\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT24339Z08CK\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT24339LMX0S\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT24339DDQRT\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT24339DB6TL\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT24339QJJYN\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT243390CZWC\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT24339RL6HQ\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT243398BGRR\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT24339ZH4BN\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT243393MQ6Y\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT243396D801\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT24339CRKW7\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT24339ZW0HT\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT243390Y28D\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT243398FLDJ\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT243392DTQW\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT243391F8WY\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT243397SXHG\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT24339XYXYK\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D5,00FFTAFT24339JJBR7\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204D15,05FFTAFT24339LSVTP\\CAS//IB USD IFT CHARG\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D3200,00FFTAFT24339LSVTP\\CAS//IB USD IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412041204D64,00FFTAAAACT243395037WMVS//Charge\r\n:86:Intermediated Money Transfer Tax\r\n:61:2412041204C5,00FFTAFT24339FMV3F\\IBA//Transfer In\r\n:86:-\r\n:61:2412041204D5,00FFTAFT24339W1WZR\\IBA//Transfer Out\r\n:86:To Acc.No.- PL54087\r\n:61:2412041204C100,94FFTA1035367237-202412-SW\\CAS//Surplus Sweep (C\r\n:86:ECONET ASCOT\r\n:61:2412051205D15,05FFTAFT24340JC0NM\\CAS//IB USD IFT CHARG\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D700000,00FFTAFT24340JC0NM\\CAS//IB USD IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D15,05FFTAFT24340Y8K5P\\CAS//IB USD IFT CHARG\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D100000,00FFTAFT24340Y8K5P\\CAS//IB USD IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D2000,00FFTAAAACT24340HPMSSY6R//Charge\r\n:86:Intermediated Money Transfer Tax\r\n:61:2412051205D300,00FFTAAAACT243404ZBCYS4M//Charge\r\n:86:OC Cash Withdrawal FCA\r\n:61:2412051205D0,05FFTAAAACT243404ZBCYS7T//Charge\r\n:86:Automated Financial Transaction Tax\r\n:61:2412051205C298526,80FFTAFT24340FYPRZ//ECOCASH LIQUIDAT\r\n:86:-\r\n:61:2412051205C113861,00FFTAFT24340PGSPY//ECOCASH LIQUIDAT\r\n:86:-\r\n:61:2412051205D15,05FFTAFT24340TG4DF\\CAS//IB USD IFT CHARG\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D2975,00FFTAFT24340TG4DF\\CAS//IB USD IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D59,50FFTAAAACT24340NZL2XTMY//Charge\r\n:86:Intermediated Money Transfer Tax\r\n:61:2412051205D12,25FFTAFT24340TQJGJ\\CAS//IB USD IFT CHARG\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D1220,00FFTAFT24340TQJGJ\\CAS//IB USD IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D24,40FFTAAAACT24340FFZJ8C4J//Charge\r\n:86:Intermediated Money Transfer Tax\r\n:61:2412051205D9,93FFTAFT24340B6RNC\\CAS//IB USD IFT CHARG\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D987,50FFTAFT24340B6RNC\\CAS//IB USD IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:61:2412051205D19,75FFTAAAACT243403KP8F495//Charge\r\n:86:Intermediated Money Transfer Tax\r\n:61:2412051205C3170,61FFTAFT24340PVH8L\\CAS//IB USD IFT\r\n:86:OM Internet Banking Harare AFZW -\r\n:62F:C241205USD633544,92\r\n-}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Security-Questions",
+			"item": [
+				{
+					"name": "send-otp",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n     \"username\" : \"263776660427\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{square_lab}}/v1/omnisquare/password/otp",
+							"host": [
+								"{{square_lab}}"
+							],
+							"path": [
+								"v1",
+								"omnisquare",
+								"password",
+								"otp"
+							]
+						},
+						"description": "Generated from cURL: curl --location 'https://square.stewardbank.co.zw/lab/v1/omnisquare/password/otp' \\\n--header 'Content-Type: application/json' \\\n--data '{\n     \"username\" : \"263776660427\"\n}'"
+					},
+					"response": [
+						{
+							"name": "send-otp",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n     \"username\" : \"263772996330\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{square_lab}}/v1/omnisquare/password/otp",
+									"host": [
+										"{{square_lab}}"
+									],
+									"path": [
+										"v1",
+										"omnisquare",
+										"password",
+										"otp"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.25.5"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 21 Dec 2025 13:51:50 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "max-age=0, no-cache, no-store, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "Expires",
+									"value": "-1"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Your OTP Was Sent to ********6330 gregory*******@gmail.com \",\n    \"success\": true,\n    \"body\": {\n        \"uuid\": \"a1b808bf-5c03-497b-a365-9b5d3e77dc32\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "verify-otp",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uuid\" : \"d6336c51-2b46-4e0b-81c8-6b210feaba99\",\n    \"otp\" : \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{square_lab}}/v1/omnisquare/password/verify",
+							"host": [
+								"{{square_lab}}"
+							],
+							"path": [
+								"v1",
+								"omnisquare",
+								"password",
+								"verify"
+							]
+						},
+						"description": "Generated from cURL: curl --location 'https://square.stewardbank.co.zw/lab/v1/omnisquare/password/verify' \\\n--header 'Content-Type: application/json' \\\n--data '{\n    \"uuid\" : \"d6336c51-2b46-4e0b-81c8-6b210feaba99\",\n    \"otp\" : \"123456\"\n}'"
+					},
+					"response": [
+						{
+							"name": "verify-otp",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"uuid\" : \"a1b808bf-5c03-497b-a365-9b5d3e77dc32\",\n    \"otp\" : \"123456\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{square_lab}}/v1/omnisquare/password/verify",
+									"host": [
+										"{{square_lab}}"
+									],
+									"path": [
+										"v1",
+										"omnisquare",
+										"password",
+										"verify"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.25.5"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 21 Dec 2025 13:52:38 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "max-age=0, no-cache, no-store, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "Expires",
+									"value": "-1"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"OTP verification was successfully\",\n    \"success\": true,\n    \"body\": {\n        \"uuid\": \"a1b808bf-5c03-497b-a365-9b5d3e77dc32\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "get-question",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uuid\":\"d6336c51-2b46-4e0b-81c8-6b210feaba99\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{square_lab}}/v1/omnisquare/password/get-question",
+							"host": [
+								"{{square_lab}}"
+							],
+							"path": [
+								"v1",
+								"omnisquare",
+								"password",
+								"get-question"
+							]
+						},
+						"description": "Generated from cURL: curl --location 'https://square.stewardbank.co.zw/lab/v1/omnisquare/password/get-question' \\\n--header 'Content-Type: application/json' \\\n--data '{\n    \"uuid\":\"d6336c51-2b46-4e0b-81c8-6b210feaba99\"\n}'"
+					},
+					"response": [
+						{
+							"name": "get-question",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"uuid\":\"a1b808bf-5c03-497b-a365-9b5d3e77dc32\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{square_lab}}/v1/omnisquare/password/get-question",
+									"host": [
+										"{{square_lab}}"
+									],
+									"path": [
+										"v1",
+										"omnisquare",
+										"password",
+										"get-question"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.25.5"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 21 Dec 2025 13:53:52 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "max-age=0, no-cache, no-store, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "Expires",
+									"value": "-1"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"\",\n    \"success\": true,\n    \"body\": {\n        \"questions\": [\n            {\n                \"id\": 2,\n                \"question\": \"What is your favorite color?\",\n                \"type\": \"open\",\n                \"uuid\": \"c953eb44-4cf3-4303-b226-fb6cad85dad2\",\n                \"options\": null,\n                \"created_at\": \"2024-01-26T11:10:30.000000Z\",\n                \"updated_at\": \"2024-01-26T11:10:30.000000Z\"\n            },\n            {\n                \"id\": 3,\n                \"question\": \"What is your favorite food?\",\n                \"type\": \"open\",\n                \"uuid\": \"c26b4a87-d8e6-4aa0-91cb-7dbe907f60cd\",\n                \"options\": null,\n                \"created_at\": \"2024-01-26T11:10:30.000000Z\",\n                \"updated_at\": \"2024-01-26T11:10:30.000000Z\"\n            }\n        ],\n        \"uuid\": \"a1b808bf-5c03-497b-a365-9b5d3e77dc32\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "reset-pin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uuid\" : \"b9e2e3e7-7be8-4a4b-9b8b-d9e55c55e0d9\",\n    \"channel\" : \"MOBILE\",\n    \"password\" : \"1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{square_lab}}/v1/omnisquare/password/reset-pin",
+							"host": [
+								"{{square_lab}}"
+							],
+							"path": [
+								"v1",
+								"omnisquare",
+								"password",
+								"reset-pin"
+							]
+						},
+						"description": "Generated from cURL: curl --location 'https://square.stewardbank.co.zw/lab/v1/omnisquare/password/reset-pin' \\\n--header 'Content-Type: application/json' \\\n--data '{\n    \"uuid\" : \"b9e2e3e7-7be8-4a4b-9b8b-d9e55c55e0d9\",\n    \"channel\" : \"MOBILE\",\n    \"password\" : \"1234\"\n}'"
+					},
+					"response": [
+						{
+							"name": "reset-pin",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"uuid\" : \"a1b808bf-5c03-497b-a365-9b5d3e77dc32\",\n    \"channel\" : \"MOBILE\",\n    \"password\" : \"1111\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{square_lab}}/v1/omnisquare/password/reset-pin",
+									"host": [
+										"{{square_lab}}"
+									],
+									"path": [
+										"v1",
+										"omnisquare",
+										"password",
+										"reset-pin"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.25.5"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 21 Dec 2025 13:56:02 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "max-age=0, no-cache, no-store, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "Expires",
+									"value": "-1"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Password reset was successfully\",\n    \"success\": true,\n    \"body\": {\n        \"uuid\": \"a1b808bf-5c03-497b-a365-9b5d3e77dc32\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "answer-question",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uuid\" : \"b9e2e3e7-7be8-4a4b-9b8b-d9e55c55e0d9\",\n    \"question_id\" : 1,\n    \"answer\" : \"test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{square_lab}}/v1/omnisquare/password/answer-question",
+							"host": [
+								"{{square_lab}}"
+							],
+							"path": [
+								"v1",
+								"omnisquare",
+								"password",
+								"answer-question"
+							]
+						},
+						"description": "Generated from cURL: curl --location 'https://square.stewardbank.co.zw/lab/v1/omnisquare/password/answer-question' \\\n--header 'Content-Type: application/json' \\\n--data '{\n    \"uuid\" : \"b9e2e3e7-7be8-4a4b-9b8b-d9e55c55e0d9\",\n    \"question_id\" : 1,\n    \"answer\" : \"test\"\n}'"
+					},
+					"response": [
+						{
+							"name": "answer-question",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"uuid\" : \"a1b808bf-5c03-497b-a365-9b5d3e77dc32\",\n    \"question_id\" : 2,\n    \"answer\" : \"Blue\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{square_lab}}/v1/omnisquare/password/answer-question",
+									"host": [
+										"{{square_lab}}"
+									],
+									"path": [
+										"v1",
+										"omnisquare",
+										"password",
+										"answer-question"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.25.5"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 21 Dec 2025 13:55:28 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "max-age=0, no-cache, no-store, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "Expires",
+									"value": "-1"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=31536000"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Security question verification successful\",\n    \"success\": true,\n    \"body\": {\n        \"uuid\": \"a1b808bf-5c03-497b-a365-9b5d3e77dc32\"\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "login-auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							" var responseJson = pm.response.json();",
+							"pm.collectionVariables.set(\"access_token\", responseJson.auth_tokens.access_token);"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"prince@system.com\",\n    \"password\": \"Password@03\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{develop_url}}/api/open-bank/v1/auth",
+					"host": [
+						"{{develop_url}}"
+					],
+					"path": [
+						"api",
+						"open-bank",
+						"v1",
+						"auth"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "auth failure",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"gregoryshoniwa@gmail.com\",\n    \"password\": \"123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/open-bank/v1/auth",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"open-bank",
+								"v1",
+								"auth"
+							]
+						}
+					},
+					"status": "Unprocessable Content",
+					"code": 422,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Host",
+							"value": "localhost:8000"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "PHP/8.3.13"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, private"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 28 Jun 2025 18:52:34 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": false,\n    \"status\": 422,\n    \"message\": \"Authentication failed\",\n    \"data\": {\n        \"message\": \"Your login credentials are incorrect\",\n        \"errors\": {\n            \"username\": [\n                \"Your login credentials are incorrect\"\n            ]\n        }\n    }\n}"
+				},
+				{
+					"name": "login-auth",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"prince@system.com\",\n    \"password\": \"Password@03\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/open-bank/v1/auth",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"open-bank",
+								"v1",
+								"auth"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Host",
+							"value": "localhost:8000"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "PHP/8.3.13"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, private"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 30 Jun 2025 12:15:43 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"status\": 200,\n    \"divisions\": [\n        {\n            \"id\": 1,\n            \"name\": \"Finance\",\n            \"number_of_authorizers\": 1\n        },\n        {\n            \"id\": 2,\n            \"name\": \"Marketing\",\n            \"number_of_authorizers\": 2\n        },\n        {\n            \"id\": 10,\n            \"name\": \"Main - CX Corp\",\n            \"number_of_authorizers\": 1\n        },\n        {\n            \"id\": 11,\n            \"name\": \"Finance\",\n            \"number_of_authorizers\": 1\n        },\n        {\n            \"id\": 3,\n            \"name\": \"Main - Khoza Empire\",\n            \"number_of_authorizers\": 2\n        }\n    ],\n    \"user\": {\n        \"id\": 1,\n        \"name\": \"Prince\",\n        \"last_name\": \"Gurajena\",\n        \"phone\": \"263771222081\",\n        \"email\": \"prince@system.com\",\n        \"national_id\": \"702010479S18\"\n    },\n    \"auth_tokens\": {\n        \"access_token\": \"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ1SDlVdmt6Tnd5emVZdnlTdjJ3S0lONlNpOV84RTU0c0dPVW9ZcGRmUHdVIn0.eyJleHAiOjE3NTEyODY5NDAsImlhdCI6MTc1MTI4NTc0MCwianRpIjoiYzgxYmI3ZjQtYTg3YS00ZDI1LTk5ZWItYWEzOGVjNjY3NWQzIiwiaXNzIjoiaHR0cDovLzE5Mi4xNjguMS4xMTY6OTAwMC9hdXRoL3JlYWxtcy9vbW5pY2hhbm5lbCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJjOGQyYzdiNS04MGIxLTQ5ZGEtOGU2Ny0yNWY5YzM2ZWMwZjUiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJzaW5nbGVTaWduT24iLCJzZXNzaW9uX3N0YXRlIjoiZjdiNDM5ZDItZTE4MC00ZmQ5LWJmZDEtN2EwZWViNTAwNWQyIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsImRlZmF1bHQtcm9sZXMtb21uaWNoYW5uZWwgIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJzaWQiOiJmN2I0MzlkMi1lMTgwLTRmZDktYmZkMS03YTBlZWI1MDA1ZDIiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6IlJvb3QgU3lzdGVtIiwicHJlZmVycmVkX3VzZXJuYW1lIjoicHJpbmNlQHN5c3RlbS5jb20iLCJnaXZlbl9uYW1lIjoiUm9vdCIsImZhbWlseV9uYW1lIjoiU3lzdGVtIiwiZW1haWwiOiJwcmluY2VAc3lzdGVtLmNvbSJ9.C7yix5vyIT0YJaZuNf5DBmiPGUzRWkNSDrA71ZZ_KIBbgbbNU9IXCwh2S4rHHyvz_rK6z1skJGmAnprWybxwgLCaex3sPxG69X35SIIUjwhHLLglWOfxTtNkTVsXhdJhX3KWgkmAW5-Q-q1KR2EGTrp4Jo6ZY5DMYMmC3JdOfLKoYEgTuCxFXmfwgQzBepZ6_Mi_7mb0QhcSmhYh-xoyKz6KTaPkx-dt7Y2cJgdnVBx6epK6YAnhfJlWvC7g3ATWih6HP1Q9BxZyqFgYrx9XmTCfmv80bw33H4_KJTmn4PFcndjSITGPfKS2dkkjc_IcpX0QBxhcCVfyIb6YzRX6TQ\",\n        \"expires_in\": 1200,\n        \"refresh_expires_in\": 5400,\n        \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIxNmE0ZjYwYi03N2MzLTQ2M2MtODZjZS0xNmU1ZjI1NTk3ZGUifQ.eyJleHAiOjE3NTEyOTExNDAsImlhdCI6MTc1MTI4NTc0MCwianRpIjoiYmYzNDFiMDAtY2Y3Yi00MjUyLWFjMTgtZDY5OGEyMzI1ZGNkIiwiaXNzIjoiaHR0cDovLzE5Mi4xNjguMS4xMTY6OTAwMC9hdXRoL3JlYWxtcy9vbW5pY2hhbm5lbCIsImF1ZCI6Imh0dHA6Ly8xOTIuMTY4LjEuMTE2OjkwMDAvYXV0aC9yZWFsbXMvb21uaWNoYW5uZWwiLCJzdWIiOiJjOGQyYzdiNS04MGIxLTQ5ZGEtOGU2Ny0yNWY5YzM2ZWMwZjUiLCJ0eXAiOiJSZWZyZXNoIiwiYXpwIjoic2luZ2xlU2lnbk9uIiwic2Vzc2lvbl9zdGF0ZSI6ImY3YjQzOWQyLWUxODAtNGZkOS1iZmQxLTdhMGVlYjUwMDVkMiIsInNjb3BlIjoiZW1haWwgcHJvZmlsZSIsInNpZCI6ImY3YjQzOWQyLWUxODAtNGZkOS1iZmQxLTdhMGVlYjUwMDVkMiJ9.Lm3f9R3pv4aGJ5UXmKOqjXqq11aXn5zEhsBu18Ew7Cc\",\n        \"token_type\": \"Bearer\",\n        \"scope\": \"email profile\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "balance",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer your_access_token_here"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": 1,\n    \"divisionId\": 2,\n    \"profile\": \"CORPORATE\",\n    \"tranType\": \"BALANCE\",\n    \"currency\": \"ZWG\",\n    \"accountNo\": \"1007553109\"\n   \n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{develop_url}}/api/open-bank/v1/transaction",
+					"host": [
+						"{{develop_url}}"
+					],
+					"path": [
+						"api",
+						"open-bank",
+						"v1",
+						"transaction"
+					]
+				},
+				"description": "Generated from cURL: curl -X POST http://your-domain.com/api/open-bank/v1/transaction \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer your_access_token_here\" \\\n  -d '{\n    \"userId\": 1,\n    \"divisionId\": 2,\n    \"profile\": \"CORPORATE\",\n    \"action\": \"PROCESS\",\n    \"tranType\": \"BALANCE\",\n    \"debitType\": \"ACCOUNT\",\n    \"mode\": \"SINGLE\",\n    \"requestType\": \"REQUEST\",\n    \"phone\": \"263771111111\",\n    \"channel\": \"OPEN_BANK\",\n    \"currency\": \"ZWG\",\n    \"accountNo\": \"1007553109\",\n    \"accountType\": \"T24\"\n  }'"
+			},
+			"response": [
+				{
+					"name": "balance",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer your_access_token_here"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": 1,\n    \"divisionId\": 2,\n    \"profile\": \"CORPORATE\",\n    \"tranType\": \"BALANCE\",\n    \"currency\": \"ZWG\",\n    \"accountNo\": \"1007553109\"\n   \n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/api/open-bank/v1/transaction",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"api",
+								"open-bank",
+								"v1",
+								"transaction"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Host",
+							"value": "localhost:8000"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "PHP/8.4.12"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, private"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 07 Oct 2025 11:30:17 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Origin"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"status\": 200,\n    \"data\": {\n        \"id\": 412271,\n        \"trace\": \"ee828c0a-a5af-4e2b-b804-b4e4075e97ef\",\n        \"uid\": \"44b39c17-66df-4d0a-a025-e053d7dc6830\",\n        \"status\": \"COMPLETE\",\n        \"tranTypeName\": \"Balance enquiry\",\n        \"accountNo\": \"1007553109\",\n        \"currency\": \"ZWG\",\n        \"debitReference\": \"OM0000412271\",\n        \"responseCode\": \"00\",\n        \"balanceAvailable\": \"3605309.53\",\n        \"debitAccountDetails\": {\n            \"firstName\": \"ECONET WIRELESS PVT LTD\",\n            \"lastName\": null,\n            \"phone\": null,\n            \"email\": null,\n            \"identityDocNo\": null,\n            \"dob\": \"19800101\",\n            \"address\": null,\n            \"number\": \"1007553109\",\n            \"currency\": \"ZWG\",\n            \"accountType\": \"T24\",\n            \"product\": \"1011\",\n            \"officer\": \"9004\"\n        },\n        \"receiptData\": [\n            {\n                \"name\": \"available\",\n                \"value\": \"3605309.53\"\n            }\n        ]\n    }\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "access_token",
+			"value": ""
+		},
+		{
+			"key": "develop_url",
+			"value": "https://api.stewardbank.co.zw"
+		},
+		{
+			"key": "localhost",
+			"value": ""
+		},
+		{
+			"key": "develop_ip",
+			"value": ""
+		},
+		{
+			"key": "local_domain",
+			"value": ""
+		},
+		{
+			"key": "square_lab",
+			"value": ""
+		}
+	]
+}

@@ -1,0 +1,219 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(0.98 0.01 85);
+  --foreground: oklch(0.25 0.02 60);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.25 0.02 60);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.25 0.02 60);
+  /* Gold primary color - #DAC256 */
+  --primary: oklch(0.81 0.097 85);
+  --primary-foreground: oklch(0.15 0.02 60);
+  --secondary: oklch(0.95 0.02 85);
+  --secondary-foreground: oklch(0.25 0.02 60);
+  --muted: oklch(0.95 0.02 85);
+  --muted-foreground: oklch(0.5 0.03 60);
+  /* Gold accent color */
+  --accent: oklch(0.84 0.09 88);
+  --accent-foreground: oklch(0.2 0.02 60);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.85 0.04 85);
+  --input: oklch(0.9 0.03 85);
+  --ring: oklch(0.81 0.097 85);
+  /* Gold chart colors */
+  --chart-1: oklch(0.81 0.097 85);
+  --chart-2: oklch(0.75 0.09 82);
+  --chart-3: oklch(0.7 0.085 80);
+  --chart-4: oklch(0.84 0.1 88);
+  --chart-5: oklch(0.88 0.08 90);
+  --sidebar: oklch(0.97 0.01 85);
+  --sidebar-foreground: oklch(0.25 0.02 60);
+  --sidebar-primary: oklch(0.81 0.097 85);
+  --sidebar-primary-foreground: oklch(0.15 0.02 60);
+  --sidebar-accent: oklch(0.9 0.05 85);
+  --sidebar-accent-foreground: oklch(0.25 0.02 60);
+  --sidebar-border: oklch(0.85 0.04 85);
+  --sidebar-ring: oklch(0.81 0.097 85);
+  /* Custom gold variables - #DAC256 base */
+  --gold: oklch(0.81 0.097 85);
+  --gold-light: oklch(0.88 0.08 88);
+  --gold-dark: oklch(0.72 0.105 82);
+  --gold-glow: oklch(0.81 0.097 85 / 50%);
+}
+
+.dark {
+  --background: oklch(0.12 0.01 60);
+  --foreground: oklch(0.95 0.02 85);
+  --card: oklch(0.18 0.01 60);
+  --card-foreground: oklch(0.95 0.02 85);
+  --popover: oklch(0.2 0.01 60);
+  --popover-foreground: oklch(0.95 0.02 85);
+  /* Gold primary color - #DAC256 brighter in dark mode */
+  --primary: oklch(0.84 0.1 85);
+  --primary-foreground: oklch(0.12 0.01 60);
+  --secondary: oklch(0.22 0.02 60);
+  --secondary-foreground: oklch(0.95 0.02 85);
+  --muted: oklch(0.25 0.02 60);
+  --muted-foreground: oklch(0.65 0.03 80);
+  /* Gold accent color - brighter in dark mode */
+  --accent: oklch(0.81 0.097 85);
+  --accent-foreground: oklch(0.95 0.02 85);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(0.35 0.03 70 / 30%);
+  --input: oklch(0.4 0.03 70 / 25%);
+  --ring: oklch(0.81 0.097 85);
+  /* Gold chart colors */
+  --chart-1: oklch(0.84 0.1 85);
+  --chart-2: oklch(0.78 0.095 82);
+  --chart-3: oklch(0.74 0.09 80);
+  --chart-4: oklch(0.88 0.095 88);
+  --chart-5: oklch(0.92 0.085 90);
+  --sidebar: oklch(0.15 0.01 60);
+  --sidebar-foreground: oklch(0.95 0.02 85);
+  --sidebar-primary: oklch(0.84 0.1 85);
+  --sidebar-primary-foreground: oklch(0.95 0.02 85);
+  --sidebar-accent: oklch(0.25 0.03 70);
+  --sidebar-accent-foreground: oklch(0.95 0.02 85);
+  --sidebar-border: oklch(0.35 0.03 70 / 30%);
+  --sidebar-ring: oklch(0.81 0.097 85);
+  /* Custom gold variables - #DAC256 adjusted for dark mode */
+  --gold: oklch(0.84 0.1 85);
+  --gold-light: oklch(0.9 0.09 88);
+  --gold-dark: oklch(0.75 0.108 82);
+  --gold-glow: oklch(0.84 0.1 85 / 60%);
+}
+
+@theme inline {
+  --font-sans:
+    var(--font-beausite), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-mono:
+    var(--font-commit-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  /* Gold colors */
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --color-gold-dark: var(--gold-dark);
+  --color-gold-glow: var(--gold-glow);
+}
+
+@layer base {
+  * {
+    @apply border-foreground/20 outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utils {
+  .animate-text-shimmer {
+    animation-delay: 0.5s;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-name: text-shimmer;
+    background: var(--muted-foreground)
+      gradient(
+        linear,
+        100% 0,
+        0 0,
+        from(var(--muted-foreground)),
+        color-stop(0.5, var(--secondary-foreground)),
+        to(var(--muted-foreground))
+      );
+    background: var(--muted-foreground) -webkit-gradient(
+        linear,
+        100% 0,
+        0 0,
+        from(var(--muted-foreground)),
+        color-stop(0.5, var(--secondary-foreground)),
+        to(var(--muted-foreground))
+      );
+    background-repeat: no-repeat;
+    background-size: 50% 200%;
+    display: inline-block;
+  }
+
+  @keyframes text-shimmer {
+    0% {
+      background-position: -100% 0;
+    }
+    100% {
+      background-position: 250% 0;
+    }
+  }
+
+  /* Gold breathing animation for AI - calming and professional */
+  .animate-gold-pulse {
+    animation: gold-breathe 3s ease-in-out infinite;
+  }
+
+  .animate-gold-pulse-fast {
+    animation: gold-breathe-active 2s ease-in-out infinite;
+  }
+
+  @keyframes gold-breathe {
+    0%, 100% {
+      opacity: 0.6;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.02);
+    }
+  }
+
+  @keyframes gold-breathe-active {
+    0%, 100% {
+      opacity: 0.7;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.03);
+    }
+  }
+
+  /* Gold gradient background - linear and professional */
+  .bg-gold-gradient {
+    background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dark) 100%);
+    box-shadow: 0 0 40px 0 var(--gold-glow), inset 0 0 20px 0 var(--gold-glow);
+  }
+}

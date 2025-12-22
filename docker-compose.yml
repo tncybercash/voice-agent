@@ -1,0 +1,27 @@
+services:
+  speaches:
+    image: ghcr.io/speaches-ai/speaches:latest-cpu
+    ports:
+      - "8000:8000"
+    volumes:
+      - hf-hub-cache:/home/ubuntu/.cache/huggingface/hub
+      - ./speaches-init.sh:/home/ubuntu/speaches-init.sh:ro
+    networks:
+      - agent_network
+    entrypoint: ["/bin/bash", "/home/ubuntu/speaches-init.sh"]
+
+  livekit:
+    image: livekit/livekit-server:latest
+    ports:
+      - "7880:7880"
+      - "7881:7881"
+    command: --dev --bind "0.0.0.0"
+    networks:
+      - agent_network
+
+volumes:
+  hf-hub-cache:
+
+networks:
+  agent_network:
+    driver: bridge

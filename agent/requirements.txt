@@ -1,0 +1,23 @@
+livekit
+livekit-api
+livekit-agents[silero]
+livekit-plugins-openai
+livekit-plugins-silero
+python-dotenv>=0.19.0
+requests>=2.26.0
+
+# Enhanced features (optional - uncomment to enable)
+# LangChain for conversation memory and RAG
+# langchain>=0.1.0
+# langchain-community>=0.1.0
+# chromadb>=0.4.0
+# sentence-transformers>=2.2.0
+
+# Premium STT/TTS providers (require API keys)
+# livekit-plugins-deepgram    # Better noise handling
+# livekit-plugins-elevenlabs  # High-quality TTS
+# livekit-plugins-google      # Google Speech
+# livekit-plugins-azure       # Azure Speech
+# livekit-plugins-cartesia    # Fast TTS
+# livekit-plugins-assemblyai  # Real-time STT
+# livekit-plugins-anthropic   # Claude LLM
