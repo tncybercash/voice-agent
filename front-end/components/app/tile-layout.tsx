@@ -34,11 +34,7 @@ interface TileLayoutProps {
 }
 
 export function TileLayout({ chatOpen }: TileLayoutProps) {
-  const {
-    state: agentState,
-    audioTrack: agentAudioTrack,
-    videoTrack: agentVideoTrack,
-  } = useVoiceAssistant();
+  const { state: agentState, videoTrack: agentVideoTrack } = useVoiceAssistant();
   const [screenShareTrack] = useTracks([Track.Source.ScreenShare]);
   const cameraTrack: TrackReference | undefined = useLocalTrackRef(Track.Source.Camera);
 
@@ -83,13 +79,13 @@ export function TileLayout({ chatOpen }: TileLayoutProps) {
                   ...ANIMATION_TRANSITION,
                   delay: animationDelay,
                 }}
-                className="drop-shadow-xl rounded-xl overflow-hidden border-2 border-gold/30"
+                className="border-gold/30 overflow-hidden rounded-xl border-2 drop-shadow-xl"
               >
                 <VideoTrack
                   trackRef={cameraTrack || screenShareTrack}
                   width={(cameraTrack || screenShareTrack)?.publication.dimensions?.width ?? 0}
                   height={(cameraTrack || screenShareTrack)?.publication.dimensions?.height ?? 0}
-                  className="aspect-video w-[180px] md:w-[240px] rounded-xl object-cover"
+                  className="aspect-video w-[180px] rounded-xl object-cover md:w-[240px]"
                 />
               </MotionContainer>
             )}
@@ -127,13 +123,13 @@ export function TileLayout({ chatOpen }: TileLayoutProps) {
                   duration: 1,
                 },
               }}
-              className="overflow-hidden rounded-xl drop-shadow-xl border-2 border-gold/30"
+              className="border-gold/30 overflow-hidden rounded-xl border-2 drop-shadow-xl"
             >
               <VideoTrack
                 width={videoWidth}
                 height={videoHeight}
                 trackRef={agentVideoTrack}
-                className="aspect-video w-[180px] md:w-[240px] object-cover"
+                className="aspect-video w-[180px] object-cover md:w-[240px]"
               />
             </MotionContainer>
           </AnimatePresence>
@@ -142,7 +138,7 @@ export function TileLayout({ chatOpen }: TileLayoutProps) {
 
       {/* Pulsating Gold Circle - Centered in content area */}
       {!isAvatar && (
-        <div className="fixed inset-0 right-[350px] md:right-[400px] lg:right-[450px] flex items-center justify-center pointer-events-none">
+        <div className="pointer-events-none fixed inset-0 right-[350px] flex items-center justify-center md:right-[400px] lg:right-[450px]">
           <AnimatePresence mode="popLayout">
             <MotionContainer
               key="agent-circle"
@@ -164,8 +160,8 @@ export function TileLayout({ chatOpen }: TileLayoutProps) {
               {/* Outer glow rings */}
               <div
                 className={cn(
-                  'absolute rounded-full bg-gold/20',
-                  'w-[200px] h-[200px] md:w-[280px] md:h-[280px]',
+                  'bg-gold/20 absolute rounded-full',
+                  'h-[200px] w-[200px] md:h-[280px] md:w-[280px]',
                   isSpeaking && 'animate-gold-pulse-fast',
                   isListening && 'animate-gold-pulse',
                   isThinking && 'animate-pulse'
@@ -173,22 +169,21 @@ export function TileLayout({ chatOpen }: TileLayoutProps) {
               />
               <div
                 className={cn(
-                  'absolute rounded-full bg-gold/30',
-                  'w-[160px] h-[160px] md:w-[220px] md:h-[220px]',
+                  'bg-gold/30 absolute rounded-full',
+                  'h-[160px] w-[160px] md:h-[220px] md:w-[220px]',
                   isSpeaking && 'animate-gold-pulse-fast',
                   isListening && 'animate-gold-pulse'
                 )}
                 style={{ animationDelay: '0.2s' }}
               />
-              
               {/* Main circle - no icon inside */}
               <div
                 className={cn(
-                  'relative rounded-full bg-gold-gradient',
-                  'w-[120px] h-[120px] md:w-[160px] md:h-[160px]',
+                  'bg-gold-gradient relative rounded-full',
+                  'h-[120px] w-[120px] md:h-[160px] md:w-[160px]',
                   'flex items-center justify-center',
-                  'shadow-lg shadow-gold/40',
-                  'border-2 border-gold-light/50',
+                  'shadow-gold/40 shadow-lg',
+                  'border-gold-light/50 border-2',
                   isSpeaking && 'animate-gold-pulse-fast',
                   isListening && 'animate-gold-pulse'
                 )}
@@ -200,7 +195,7 @@ export function TileLayout({ chatOpen }: TileLayoutProps) {
                   {[...Array(3)].map((_, i) => (
                     <div
                       key={i}
-                      className="absolute rounded-full border-2 border-gold/40"
+                      className="border-gold/40 absolute rounded-full border-2"
                       style={{
                         width: `${180 + i * 40}px`,
                         height: `${180 + i * 40}px`,

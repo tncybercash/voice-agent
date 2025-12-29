@@ -81,11 +81,11 @@
   --sidebar-accent-foreground: oklch(0.95 0.02 85);
   --sidebar-border: oklch(0.35 0.03 70 / 30%);
   --sidebar-ring: oklch(0.81 0.097 85);
-  /* Custom gold variables - #DAC256 adjusted for dark mode */
-  --gold: oklch(0.84 0.1 85);
-  --gold-light: oklch(0.9 0.09 88);
-  --gold-dark: oklch(0.75 0.108 82);
-  --gold-glow: oklch(0.84 0.1 85 / 60%);
+  /* Custom gold variables - #DAC256 same in both modes */
+  --gold: oklch(0.81 0.097 85);
+  --gold-light: oklch(0.88 0.08 88);
+  --gold-dark: oklch(0.72 0.105 82);
+  --gold-glow: oklch(0.81 0.097 85 / 60%);
 }
 
 @theme inline {

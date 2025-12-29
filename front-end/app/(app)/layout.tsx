@@ -19,14 +19,14 @@ export default async function Layout({ children }: LayoutProps) {
           <img 
             src="/Icon_light.png" 
             alt={`${companyName} Icon`} 
-            className="block size-10 dark:hidden drop-shadow-sm" 
+            className="block size-10 dark:hidden" 
           />
           {/* Dark mode icon */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/Icon_dark.png"
             alt={`${companyName} Icon`}
-            className="hidden size-10 dark:block drop-shadow-sm"
+            className="hidden size-10 dark:block"
           />
           {/* Theme Toggle */}
           <ThemeToggle className="bg-background/80 backdrop-blur-sm rounded-full p-1 border border-border/50" />

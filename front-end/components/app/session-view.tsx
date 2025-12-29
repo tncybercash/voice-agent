@@ -98,37 +98,30 @@ export const SessionView = ({
       {/* Main Layout - Flex container */}
       <div className="flex h-full">
         {/* Left side - AI Circle and controls */}
-        <div className="flex-1 relative">
+        <div className="relative flex-1">
           {/* Tile Layout with pulsating circle */}
           <TileLayout chatOpen={chatOpen} />
         </div>
 
         {/* Right side - Always visible conversation panel */}
-        <div className="w-[350px] md:w-[400px] lg:w-[450px] fixed right-0 top-0 bottom-0 flex flex-col border-l border-gold/30 bg-card/50 backdrop-blur-sm">
+        <div className="border-gold/30 bg-card/50 fixed top-0 right-0 bottom-0 flex w-[350px] flex-col border-l backdrop-blur-sm md:w-[400px] lg:w-[450px]">
           {/* Conversation Header */}
-          <div className="px-4 py-3 border-b border-gold/30 bg-card/80">
-            <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
+          <div className="border-gold/30 bg-card/80 border-b px-4 py-3">
+            <h2 className="text-foreground flex items-center gap-2 text-sm font-semibold">
+              <span className="bg-gold h-2 w-2 animate-pulse rounded-full" />
               Conversation
             </h2>
-            <p className="text-xs text-muted-foreground mt-0.5">
+            <p className="text-muted-foreground mt-0.5 text-xs">
               {messages.length} message{messages.length !== 1 ? 's' : ''}
             </p>
           </div>
 
           {/* Chat Messages */}
-          <ScrollArea 
-            ref={scrollAreaRef} 
-            className="flex-1 px-4 pt-4 pb-[120px]"
-          >
-            <ChatTranscript
-              hidden={false}
-              messages={messages}
-              className="space-y-3"
-            />
+          <ScrollArea ref={scrollAreaRef} className="flex-1 px-4 pt-4 pb-[120px]">
+            <ChatTranscript hidden={false} messages={messages} className="space-y-3" />
             {messages.length === 0 && (
-              <div className="flex flex-col items-center justify-center h-full text-center py-8">
-                <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mb-3">
+              <div className="h-full flex-col items-center justify-center py-8 text-center">
+                <div className="bg-gold/20 mb-3 flex h-12 w-12 items-center justify-center rounded-full">
                   <span className="text-gold text-lg">💬</span>
                 </div>
                 <p className="text-muted-foreground text-sm">
@@ -143,12 +136,12 @@ export const SessionView = ({
       {/* Bottom Control Bar */}
       <MotionBottom
         {...BOTTOM_VIEW_MOTION_PROPS}
-        className="fixed bottom-0 left-0 right-[350px] md:right-[400px] lg:right-[450px] z-50 flex flex-col items-center justify-center px-6 md:px-12"
+        className="right-[350px] fixed bottom-0 left-0 z-50 flex flex-col items-center justify-center px-6 md:right-[400px] md:px-12 lg:right-[450px]"
       >
         {appConfig.isPreConnectBufferEnabled && (
           <PreConnectMessage messages={messages} className="pb-4" />
         )}
-        <div className="bg-transparent pb-3 md:pb-6 w-full max-w-2xl">
+        <div className="w-full max-w-2xl bg-transparent pb-3 md:pb-6">
           <AgentControlBar
             controls={controls}
             isConnected={session.isConnected}
