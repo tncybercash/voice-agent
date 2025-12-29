@@ -136,7 +136,7 @@ export const SessionView = ({
       {/* Bottom Control Bar */}
       <MotionBottom
         {...BOTTOM_VIEW_MOTION_PROPS}
-        className="right-[350px] fixed bottom-0 left-0 z-50 flex flex-col items-center justify-center px-6 md:right-[400px] md:px-12 lg:right-[450px]"
+        className="fixed right-[350px] bottom-0 left-0 z-50 flex flex-col items-center justify-center px-6 md:right-[400px] md:px-12 lg:right-[450px]"
       >
         {appConfig.isPreConnectBufferEnabled && (
           <PreConnectMessage messages={messages} className="pb-4" />

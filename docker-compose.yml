@@ -4,11 +4,33 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - hf-hub-cache:/home/ubuntu/.cache/huggingface/hub
+      - hf-hub-cache-cpu:/home/ubuntu/.cache/huggingface/hub
       - ./speaches-init.sh:/home/ubuntu/speaches-init.sh:ro
+    environment:
+      LOOPBACK_HOST_URL: "http://127.0.0.1:8000"
     networks:
       - agent_network
     entrypoint: ["/bin/bash", "/home/ubuntu/speaches-init.sh"]
+
+  speaches-gpu:
+    image: ghcr.io/speaches-ai/speaches:latest-cuda
+    ports:
+      - "8001:8000"
+    volumes:
+      - hf-hub-cache-gpu:/home/ubuntu/.cache/huggingface/hub
+      - ./speaches-gpu-init.sh:/home/ubuntu/speaches-init.sh:ro
+    environment:
+      LOOPBACK_HOST_URL: "http://127.0.0.1:8000"
+    networks:
+      - agent_network
+    entrypoint: ["/bin/bash", "/home/ubuntu/speaches-init.sh"]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
 
   livekit:
     image: livekit/livekit-server:latest
@@ -20,7 +42,8 @@ services:
       - agent_network
 
 volumes:
-  hf-hub-cache:
+  hf-hub-cache-cpu:
+  hf-hub-cache-gpu:
 
 networks:
   agent_network:
