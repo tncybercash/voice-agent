@@ -124,21 +124,22 @@ class SessionRepository:
         room_id: str,
         participant_id: str,
         agent_instruction_id: int,
-        llm_provider: LLMProvider
+        llm_provider: LLMProvider,
+        profile_id: str = None
     ) -> str:
         """Create a new session for a user"""
         session_id = str(uuid4())
         query = """
             INSERT INTO agent_sessions 
-            (id, room_id, participant_id, agent_instruction_id, llm_provider, status, context)
-            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            (id, room_id, participant_id, agent_instruction_id, llm_provider, status, context, profile_id)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
             RETURNING id
         """
         await self.pool.execute(
             query, session_id, room_id, participant_id, 
-            agent_instruction_id, llm_provider.value, SessionStatus.ACTIVE.value, '{}'
+            agent_instruction_id, llm_provider.value, SessionStatus.ACTIVE.value, '{}', profile_id
         )
-        logger.info(f"Created session {session_id} for participant {participant_id}")
+        logger.info(f"Created session {session_id} for participant {participant_id} (profile: {profile_id})")
         return session_id
     
     async def get_session(self, session_id: str) -> Optional[AgentSession]:
@@ -409,3 +410,268 @@ class ConfigRepository:
         """Get all config values"""
         rows = await self.pool.fetch("SELECT key, value FROM system_config")
         return {row['key']: row['value'] for row in rows}
+
+
+class ProfileRepository:
+    """Repository for user profiles (authenticated and anonymous)"""
+    
+    def __init__(self, pool: DatabasePool):
+        self.pool = pool
+    
+    async def create_anonymous_profile(self, anonymous_id: str, metadata: Dict[str, Any] = None) -> str:
+        """Create a new anonymous user profile"""
+        query = """
+            INSERT INTO user_profiles (profile_type, anonymous_id, profile_metadata)
+            VALUES ('anonymous', $1, $2)
+            RETURNING id
+        """
+        profile_id = await self.pool.fetchval(
+            query, 
+            anonymous_id, 
+            json.dumps(metadata or {})
+        )
+        logger.info(f"Created anonymous profile: {profile_id} (anonymous_id: {anonymous_id})")
+        return str(profile_id)
+    
+    async def create_authenticated_profile(
+        self,
+        username: str = None,
+        phone_number: str = None,
+        email: str = None,
+        metadata: Dict[str, Any] = None
+    ) -> str:
+        """Create a new authenticated user profile"""
+        query = """
+            INSERT INTO user_profiles (
+                profile_type, username, phone_number, email, 
+                is_authenticated, authenticated_at, profile_metadata
+            )
+            VALUES ('authenticated', $1, $2, $3, true, NOW(), $4)
+            RETURNING id
+        """
+        profile_id = await self.pool.fetchval(
+            query,
+            username,
+            phone_number,
+            email,
+            json.dumps(metadata or {})
+        )
+        logger.info(f"Created authenticated profile: {profile_id} (username: {username})")
+        return str(profile_id)
+    
+    async def get_by_id(self, profile_id: str) -> Optional[Dict[str, Any]]:
+        """Get profile by ID"""
+        query = """
+            SELECT id, profile_type, username, phone_number, email, anonymous_id,
+                   profile_metadata, total_sessions, total_messages, last_seen_at,
+                   is_authenticated, authenticated_at, created_at, updated_at
+            FROM user_profiles
+            WHERE id = $1 AND merged_into_profile_id IS NULL
+        """
+        row = await self.pool.fetchrow(query, profile_id)
+        if row:
+            return {
+                'id': str(row['id']),
+                'profile_type': row['profile_type'],
+                'username': row['username'],
+                'phone_number': row['phone_number'],
+                'email': row['email'],
+                'anonymous_id': row['anonymous_id'],
+                'profile_metadata': json.loads(row['profile_metadata']) if row['profile_metadata'] else {},
+                'total_sessions': row['total_sessions'],
+                'total_messages': row['total_messages'],
+                'last_seen_at': row['last_seen_at'],
+                'is_authenticated': row['is_authenticated'],
+                'authenticated_at': row['authenticated_at'],
+                'created_at': row['created_at'],
+                'updated_at': row['updated_at']
+            }
+        return None
+    
+    async def get_by_anonymous_id(self, anonymous_id: str) -> Optional[Dict[str, Any]]:
+        """Get profile by anonymous ID"""
+        query = """
+            SELECT id, profile_type, anonymous_id, profile_metadata, 
+                   total_sessions, total_messages, last_seen_at,
+                   created_at, updated_at
+            FROM user_profiles
+            WHERE anonymous_id = $1 AND merged_into_profile_id IS NULL
+            ORDER BY created_at DESC
+            LIMIT 1
+        """
+        row = await self.pool.fetchrow(query, anonymous_id)
+        if row:
+            return {
+                'id': str(row['id']),
+                'profile_type': row['profile_type'],
+                'anonymous_id': row['anonymous_id'],
+                'profile_metadata': json.loads(row['profile_metadata']) if row['profile_metadata'] else {},
+                'total_sessions': row['total_sessions'],
+                'total_messages': row['total_messages'],
+                'last_seen_at': row['last_seen_at'],
+                'created_at': row['created_at'],
+                'updated_at': row['updated_at']
+            }
+        return None
+    
+    async def get_by_username(self, username: str) -> Optional[Dict[str, Any]]:
+        """Get authenticated profile by username"""
+        query = """
+            SELECT id, profile_type, username, phone_number, email,
+                   profile_metadata, total_sessions, total_messages, last_seen_at,
+                   is_authenticated, authenticated_at, created_at, updated_at
+            FROM user_profiles
+            WHERE username = $1 AND merged_into_profile_id IS NULL
+            ORDER BY created_at DESC
+            LIMIT 1
+        """
+        row = await self.pool.fetchrow(query, username)
+        if row:
+            return {
+                'id': str(row['id']),
+                'profile_type': row['profile_type'],
+                'username': row['username'],
+                'phone_number': row['phone_number'],
+                'email': row['email'],
+                'profile_metadata': json.loads(row['profile_metadata']) if row['profile_metadata'] else {},
+                'total_sessions': row['total_sessions'],
+                'total_messages': row['total_messages'],
+                'last_seen_at': row['last_seen_at'],
+                'is_authenticated': row['is_authenticated'],
+                'authenticated_at': row['authenticated_at'],
+                'created_at': row['created_at'],
+                'updated_at': row['updated_at']
+            }
+        return None
+    
+    async def update_metadata(self, profile_id: str, metadata: Dict[str, Any]) -> bool:
+        """Update profile metadata (merge with existing)"""
+        query = """
+            UPDATE user_profiles
+            SET profile_metadata = profile_metadata || $2::jsonb,
+                updated_at = NOW()
+            WHERE id = $1
+        """
+        result = await self.pool.execute(query, profile_id, json.dumps(metadata))
+        return result == "UPDATE 1"
+    
+    async def merge_anonymous_to_authenticated(
+        self,
+        anonymous_profile_id: str,
+        authenticated_profile_id: str
+    ) -> bool:
+        """Merge an anonymous profile into an authenticated one"""
+        try:
+            await self.pool.execute(
+                "SELECT merge_profiles($1, $2)",
+                anonymous_profile_id,
+                authenticated_profile_id
+            )
+            logger.info(f"Merged profile {anonymous_profile_id} -> {authenticated_profile_id}")
+            return True
+        except Exception as e:
+            logger.error(f"Failed to merge profiles: {e}")
+            return False
+
+
+class ConversationSummaryRepository:
+    """Repository for conversation summaries"""
+    
+    def __init__(self, pool: DatabasePool):
+        self.pool = pool
+    
+    async def create_summary(
+        self,
+        session_id: str,
+        profile_id: str,
+        summary: str,
+        extracted_info: Dict[str, Any] = None,
+        message_count: int = 0,
+        duration_seconds: int = None,
+        sentiment: str = None,
+        resolution_status: str = None,
+        topics: List[str] = None
+    ) -> int:
+        """Create a conversation summary"""
+        query = """
+            INSERT INTO conversation_summaries (
+                session_id, profile_id, summary, extracted_info,
+                message_count, duration_seconds, sentiment, 
+                resolution_status, topics
+            )
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+            RETURNING id
+        """
+        summary_id = await self.pool.fetchval(
+            query,
+            session_id,
+            profile_id,
+            summary,
+            json.dumps(extracted_info or {}),
+            message_count,
+            duration_seconds,
+            sentiment,
+            resolution_status,
+            topics or []
+        )
+        logger.info(f"Created conversation summary {summary_id} for session {session_id}")
+        return summary_id
+    
+    async def get_by_session(self, session_id: str) -> Optional[Dict[str, Any]]:
+        """Get summary for a session"""
+        query = """
+            SELECT id, session_id, profile_id, summary, extracted_info,
+                   message_count, duration_seconds, sentiment, 
+                   resolution_status, topics, created_at
+            FROM conversation_summaries
+            WHERE session_id = $1
+        """
+        row = await self.pool.fetchrow(query, session_id)
+        if row:
+            return {
+                'id': row['id'],
+                'session_id': str(row['session_id']),
+                'profile_id': str(row['profile_id']),
+                'summary': row['summary'],
+                'extracted_info': json.loads(row['extracted_info']) if row['extracted_info'] else {},
+                'message_count': row['message_count'],
+                'duration_seconds': row['duration_seconds'],
+                'sentiment': row['sentiment'],
+                'resolution_status': row['resolution_status'],
+                'topics': row['topics'],
+                'created_at': row['created_at']
+            }
+        return None
+    
+    async def get_by_profile(
+        self,
+        profile_id: str,
+        limit: int = 10
+    ) -> List[Dict[str, Any]]:
+        """Get conversation summaries for a profile"""
+        query = """
+            SELECT id, session_id, profile_id, summary, extracted_info,
+                   message_count, duration_seconds, sentiment,
+                   resolution_status, topics, created_at
+            FROM conversation_summaries
+            WHERE profile_id = $1
+            ORDER BY created_at DESC
+            LIMIT $2
+        """
+        rows = await self.pool.fetch(query, profile_id, limit)
+        return [
+            {
+                'id': row['id'],
+                'session_id': str(row['session_id']),
+                'profile_id': str(row['profile_id']),
+                'summary': row['summary'],
+                'extracted_info': json.loads(row['extracted_info']) if row['extracted_info'] else {},
+                'message_count': row['message_count'],
+                'duration_seconds': row['duration_seconds'],
+                'sentiment': row['sentiment'],
+                'resolution_status': row['resolution_status'],
+                'topics': row['topics'],
+                'created_at': row['created_at']
+            }
+            for row in rows
+        ]

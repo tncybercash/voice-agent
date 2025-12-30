@@ -9,6 +9,10 @@ from .models import (
     SessionStatus
 )
 from .connection import DatabasePool, get_db_pool
+from .repository import (
+    ProfileRepository,
+    ConversationSummaryRepository
+)
 
 __all__ = [
     "AgentInstruction",
@@ -19,5 +23,7 @@ __all__ = [
     "LLMProvider",
     "SessionStatus",
     "DatabasePool",
-    "get_db_pool"
+    "get_db_pool",
+    "ProfileRepository",
+    "ConversationSummaryRepository"
 ]

@@ -248,6 +248,43 @@ class RAGIndexer:
             self._docling_converter = DocumentConverter()
             logger.info("Docling document converter initialized")
     
+    def _expand_query(self, query: str) -> str:
+        """
+        Expand query with synonyms and related terms for better semantic search.
+        Banking domain-specific expansions.
+        """
+        query_lower = query.lower()
+        expansions = []
+        
+        # USSD code variations
+        if any(term in query_lower for term in ['ussd', 'uss', 'code', 'decode', 'dial']):
+            expansions.append('USSD mobile banking code dial *236# star 236')
+        
+        # Account variations
+        if 'account' in query_lower:
+            expansions.append('bank account savings current checking')
+        
+        # Balance inquiry
+        if 'balance' in query_lower:
+            expansions.append('account balance check inquiry statement')
+        
+        # Transfer money
+        if any(term in query_lower for term in ['transfer', 'send']):
+            expansions.append('money transfer send payment remittance')
+        
+        # Cardless withdrawal
+        if 'cardless' in query_lower or 'without card' in query_lower:
+            expansions.append('cardless withdrawal ATM no card')
+        
+        # Digital channels
+        if any(term in query_lower for term in ['digital', 'online', 'mobile', 'app', 'website', 'channel']):
+            expansions.append('digital online mobile banking app website portal internet')
+        
+        # Combine original query with expansions
+        if expansions:
+            return query + ' ' + ' '.join(expansions)
+        return query
+    
     async def _calculate_file_hash(self, filepath: Path) -> str:
         """Calculate MD5 hash of file for change detection"""
         async with aiofiles.open(filepath, 'rb') as f:
@@ -418,30 +455,42 @@ class RAGIndexer:
         self,
         query: str,
         limit: int = 5,
-        similarity_threshold: float = 0.5
+        similarity_threshold: float = 0.3  # Lowered from 0.5 for better recall
     ) -> List[Dict[str, Any]]:
         """
         Hybrid search: combines semantic similarity with keyword matching.
-        Keyword matches get a boost to ensure relevant content ranks higher.
+        Keyword matches get a significant boost to ensure relevant content ranks higher.
+        Includes query expansion for better results.
         """
         from .repository import RAGDocumentRepository
         
-        # Generate query embedding
-        query_embedding = await self.embedding_service.embed(query)
+        # Query expansion: add synonyms and variations
+        expanded_query = self._expand_query(query)
+        
+        # Generate query embedding from expanded query
+        query_embedding = await self.embedding_service.embed(expanded_query)
         
         # Search in database - now returns dicts with similarity included
         repo = RAGDocumentRepository(self.db_pool)
         results = await repo.search_similar(
             query_embedding=query_embedding,
-            limit=limit * 2,  # Get more results for re-ranking
+            limit=limit * 3,  # Get more results for re-ranking (increased from 2x)
             similarity_threshold=similarity_threshold
         )
         
-        # Extract keywords from query for hybrid scoring
+        # Extract keywords from ORIGINAL query for hybrid scoring
         # Remove common question words and focus on meaningful terms
         query_lower = query.lower()
-        stop_words = {'what', 'is', 'the', 'are', 'how', 'do', 'can', 'your', 'my', 'a', 'an', 'to', 'of', 'for', 'and', 'or', 'in'}
+        stop_words = {'what', 'is', 'the', 'are', 'how', 'do', 'can', 'your', 'my', 'a', 'an', 'to', 'of', 'for', 'and', 'or', 'in', 'tell', 'me'}
         keywords = [word for word in query_lower.split() if len(word) > 2 and word not in stop_words]
+        
+        # Add special patterns (codes, etc.)
+        if '*' in query or 'star' in query_lower:
+            keywords.extend(['*236', '*236#', 'ussd', 'code'])
+        if 'ussd' in query_lower or 'uss' in query_lower or 'decode' in query_lower:
+            keywords.extend(['*236', '*236#', 'ussd', 'dial', 'code'])
+        if any(term in query_lower for term in ['digital', 'online', 'mobile', 'channel']):
+            keywords.extend(['digital', 'online', 'mobile', 'app', 'website', 'banking'])
         
         # Re-rank with keyword boost
         for result in results:
@@ -504,10 +553,10 @@ class RAGService:
     
     async def get_context(self, query: str, max_tokens: int = 2000) -> str:
         """Get relevant context for a query"""
-        # Use very low threshold to ensure results are returned
-        # Similarity values: 1.0 = perfect match, 0.0 = no similarity, -1.0 = opposite
+        # Use low threshold (0.2) for better recall, hybrid scoring will re-rank
+        # Similarity values: 1.0 = perfect match, 0.0 = no similarity
         logger.info(f"RAG searching for: '{query}'")
-        results = await self.indexer.search(query, limit=5, similarity_threshold=-1.0)  # Get all results
+        results = await self.indexer.search(query, limit=5, similarity_threshold=0.2)  # Lower threshold for better recall
         
         if not results:
             logger.info(f"❌ No RAG results found for query: '{query}'")

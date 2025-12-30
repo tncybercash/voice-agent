@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS rag_documents (
     content TEXT NOT NULL,
     chunk_index INT NOT NULL DEFAULT 0,
     total_chunks INT NOT NULL DEFAULT 1,
-    embedding vector(384), -- 384 dimensions for all-MiniLM-L6-v2
+    embedding vector(768), -- 768 dimensions for nomic-embed-text:latest
     metadata JSONB DEFAULT '{}',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

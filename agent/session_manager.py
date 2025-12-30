@@ -43,6 +43,10 @@ class UserSession:
     last_activity: datetime = field(default_factory=datetime.utcnow)
     message_count: int = 0
     
+    # User profile linking
+    profile_id: Optional[str] = None  # Links to user_profiles table
+    is_authenticated: bool = False
+    
     # Session-specific data (auth tokens, user data, etc)
     auth_token: Optional[str] = None
     user_data: Dict[str, Any] = field(default_factory=dict)
@@ -78,11 +82,20 @@ class SessionManager:
         room_id: str,
         participant_id: str,
         llm_provider: LLMProviderType = None,
-        is_local_mode: bool = True
+        is_local_mode: bool = True,
+        anonymous_id: str = None
     ) -> UserSession:
         """
         Create a new session for a user.
         Each room gets exactly one active session.
+        Creates or finds user profile (anonymous or authenticated).
+        
+        Args:
+            room_id: Room identifier
+            participant_id: Participant identifier
+            llm_provider: LLM provider to use
+            is_local_mode: Whether to use local mode instructions
+            anonymous_id: Optional anonymous user fingerprint (e.g., browser ID, device ID)
         """
         async with self._lock:
             # Check if room already has an active session
@@ -91,6 +104,26 @@ class SessionManager:
                 if existing_id in self._sessions:
                     logger.info(f"Returning existing session for room {room_id}")
                     return self._sessions[existing_id]
+            
+            # Create or find user profile
+            from database.repository import ProfileRepository
+            profile_repo = ProfileRepository(self._db_pool)
+            
+            # Use anonymous_id if provided, otherwise use participant_id as fallback
+            anon_id = anonymous_id or participant_id
+            
+            # Try to find existing anonymous profile
+            profile = await profile_repo.get_by_anonymous_id(anon_id)
+            if profile:
+                profile_id = profile['id']
+                logger.info(f"Found existing anonymous profile: {profile_id}")
+            else:
+                # Create new anonymous profile
+                profile_id = await profile_repo.create_anonymous_profile(
+                    anonymous_id=anon_id,
+                    metadata={"room_id": room_id, "participant_id": participant_id}
+                )
+                logger.info(f"Created new anonymous profile: {profile_id}")
             
             # Get instructions from database
             instruction_repo = AgentInstructionRepository(self._db_pool)
@@ -117,13 +150,14 @@ class SessionManager:
                 else:
                     llm_provider = LLMProviderType.OLLAMA
             
-            # Create session in database
+            # Create session in database WITH profile_id
             session_repo = SessionRepository(self._db_pool)
             session_id = await session_repo.create_session(
                 room_id=room_id,
                 participant_id=participant_id,
                 agent_instruction_id=instruction_id,
-                llm_provider=LLMProviderEnum(llm_provider.value)
+                llm_provider=LLMProviderEnum(llm_provider.value),
+                profile_id=profile_id  # Link to user profile
             )
             
             # Create in-memory session
@@ -133,13 +167,15 @@ class SessionManager:
                 participant_id=participant_id,
                 instructions=instructions,
                 initial_greeting=initial_greeting,
-                llm_provider=llm_provider
+                llm_provider=llm_provider,
+                profile_id=profile_id,  # Store profile ID in session
+                is_authenticated=False  # Start as anonymous
             )
             
             self._sessions[session_id] = session
             self._room_to_session[room_id] = session_id
             
-            logger.info(f"Created session {session_id} for room {room_id}, provider: {llm_provider.value}")
+            logger.info(f"Created session {session_id} for room {room_id}, provider: {llm_provider.value}, profile: {profile_id}")
             return session
     
     async def get_session(self, session_id: str) -> Optional[UserSession]:
@@ -205,11 +241,92 @@ class SessionManager:
             return session.conversation_history[-limit:]
         return []
     
-    async def end_session(self, session_id: str) -> None:
-        """End a session and cleanup"""
+    async def authenticate_user(
+        self,
+        session_id: str,
+        username: str = None,
+        phone_number: str = None,
+        email: str = None
+    ) -> bool:
+        """
+        Authenticate a user and merge anonymous profile with authenticated profile
+        
+        Args:
+            session_id: Current session ID
+            username: User's username
+            phone_number: User's phone number  
+            email: User's email
+        
+        Returns:
+            True if authentication successful
+        """
+        session = self._sessions.get(session_id)
+        if not session or not session.profile_id:
+            return False
+        
+        try:
+            from database.repository import ProfileRepository
+            profile_repo = ProfileRepository(self._db_pool)
+            
+            # Check if authenticated profile already exists
+            authenticated_profile = None
+            if username:
+                authenticated_profile = await profile_repo.get_by_username(username)
+            
+            if authenticated_profile:
+                # Merge anonymous profile into existing authenticated one
+                await profile_repo.merge_anonymous_to_authenticated(
+                    anonymous_profile_id=session.profile_id,
+                    authenticated_profile_id=authenticated_profile['id']
+                )
+                new_profile_id = authenticated_profile['id']
+                logger.info(f"Merged anonymous profile {session.profile_id} -> authenticated {new_profile_id}")
+            else:
+                # Create new authenticated profile
+                new_profile_id = await profile_repo.create_authenticated_profile(
+                    username=username,
+                    phone_number=phone_number,
+                    email=email,
+                    metadata={}
+                )
+                # Merge old anonymous profile
+                await profile_repo.merge_anonymous_to_authenticated(
+                    anonymous_profile_id=session.profile_id,
+                    authenticated_profile_id=new_profile_id
+                )
+                logger.info(f"Created new authenticated profile {new_profile_id} and merged anonymous {session.profile_id}")
+            
+            # Update session
+            session.profile_id = new_profile_id
+            session.is_authenticated = True
+            session.user_data['username'] = username
+            session.user_data['phone_number'] = phone_number
+            session.user_data['email'] = email
+            
+            return True
+            
+        except Exception as e:
+            logger.error(f"Authentication failed: {e}")
+            return False
+    
+    async def end_session(self, session_id: str, generate_summary: bool = True) -> None:
+        """
+        End a session, optionally generate conversation summary
+        
+        Args:
+            session_id: Session to end
+            generate_summary: Whether to generate AI summary of conversation
+        """
         async with self._lock:
             session = self._sessions.pop(session_id, None)
             if session:
+                # Generate conversation summary if requested
+                if generate_summary and session.conversation_history:
+                    try:
+                        await self._generate_and_save_summary(session)
+                    except Exception as e:
+                        logger.error(f"Failed to generate summary for session {session_id}: {e}")
+                
                 # Remove room mapping
                 if session.room_id in self._room_to_session:
                     del self._room_to_session[session.room_id]
@@ -218,13 +335,62 @@ class SessionManager:
                 session_repo = SessionRepository(self._db_pool)
                 await session_repo.end_session(session_id)
                 
-                logger.info(f"Ended session {session_id}")
+                logger.info(f"Ended session {session_id} (messages: {len(session.conversation_history)})")
     
-    async def end_session_by_room(self, room_id: str) -> None:
+    async def _generate_and_save_summary(self, session: UserSession) -> None:
+        """Generate and save conversation summary"""
+        try:
+            from database.conversation_summary import ConversationSummarizer
+            from database.repository import ConversationSummaryRepository, ProfileRepository
+            
+            # Create summarizer (without LLM for now - rule-based)
+            summarizer = ConversationSummarizer(llm_provider=None)
+            
+            # Calculate session duration
+            duration_seconds = int((session.last_activity - session.created_at).total_seconds())
+            
+            # Generate summary
+            summary_data = await summarizer.summarize_conversation(
+                messages=session.conversation_history,
+                session_duration_seconds=duration_seconds
+            )
+            
+            logger.info(f"Generated summary for session {session.session_id}: {summary_data['summary'][:100]}...")
+            
+            # Save to database
+            summary_repo = ConversationSummaryRepository(self._db_pool)
+            await summary_repo.create_summary(
+                session_id=session.session_id,
+                profile_id=session.profile_id,
+                summary=summary_data['summary'],
+                extracted_info=summary_data['extracted_info'],
+                message_count=len(session.conversation_history),
+                duration_seconds=duration_seconds,
+                sentiment=summary_data['sentiment'],
+                resolution_status=summary_data['resolution_status'],
+                topics=summary_data['topics']
+            )
+            
+            # Update profile metadata with extracted info
+            if summary_data['extracted_info']:
+                profile_repo = ProfileRepository(self._db_pool)
+                await profile_repo.update_metadata(
+                    profile_id=session.profile_id,
+                    metadata=summary_data['extracted_info']
+                )
+            
+            logger.info(f"✓ Saved conversation summary for session {session.session_id}")
+            
+        except Exception as e:
+            logger.error(f"Failed to generate/save summary: {e}")
+            import traceback
+            traceback.print_exc()
+    
+    async def end_session_by_room(self, room_id: str, generate_summary: bool = True) -> None:
         """End session for a room"""
         session_id = self._room_to_session.get(room_id)
         if session_id:
-            await self.end_session(session_id)
+            await self.end_session(session_id, generate_summary=generate_summary)
     
     async def get_active_session_count(self) -> int:
         """Get count of active sessions"""

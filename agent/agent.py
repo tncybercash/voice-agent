@@ -24,6 +24,65 @@ from database import get_db_pool
 from database.rag import RAGIndexer, RAGService, EmbeddingService
 
 
+def is_banking_question(text: str) -> bool:
+    """
+    Detect if a user's question is banking-related and requires RAG knowledge base.
+    Returns True only for banking-specific queries.
+    Uses fuzzy matching for common variations and misspellings.
+    """
+    text_lower = text.lower()
+    # Remove punctuation and extra spaces for better matching
+    text_normalized = ''.join(c if c.isalnum() or c.isspace() else ' ' for c in text_lower)
+    text_normalized = ' '.join(text_normalized.split())
+    
+    # Banking-related keywords with common variations
+    banking_keywords = [
+        # Account operations
+        'balance', 'account', 'transfer', 'deposit', 'withdraw', 'cardless',
+        'statement', 'transaction', 'money', 'payment', 'send money',
+        
+        # USSD and codes (all variations)
+        'ussd', 'uss d', 'us sd', 'u s s d', 'decode', 'de code',
+        '*236', '*236#', '*130', 'star 236', 'star 130', 'dial', 'code',
+        'short code', 'banking code', 'mobile code',
+        
+        # Digital banking channels
+        'digital', 'online', 'mobile', 'app', 'website', 'portal',
+        'internet banking', 'e-banking', 'channel', 'platform',
+        
+        # Banking services
+        'loan', 'interest', 'fee', 'charge', 'branch', 'atm',
+        'card', 'debit', 'credit', 'visa', 'mastercard',
+        'pin', 'password', 'otp', 'verification',
+        
+        # Account management
+        'open account', 'close account', 'new account', 'register',
+        'activate', 'deactivate', 'suspend', 'freeze',
+        
+        # Financial products
+        'limit', 'overdraft', 'savings', 'checking', 'current',
+        'fixed deposit', 'foreign exchange', 'forex', 'rate',
+        
+        # Service
+        'hours', 'contact', 'customer service', 'office', 'support',
+        'help', 'assistance', 'bank', 'banking'
+    ]
+    
+    # Check if any banking keyword is in the question
+    for keyword in banking_keywords:
+        if keyword in text_normalized:
+            logger.info(f"🏦 Banking question detected (keyword: '{keyword}'): {text[:50]}...")
+            return True
+    
+    # Additional pattern matching for codes
+    if '*' in text or 'star' in text_lower:
+        logger.info(f"🏦 Banking question detected (code pattern): {text[:50]}...")
+        return True
+    
+    logger.info(f"💬 General question detected (no RAG needed): {text[:50]}...")
+    return False
+
+
 # Global references for pre-initialized services
 _rag_service: RAGService = None
 _db_initialized: bool = False
@@ -187,12 +246,14 @@ class VoiceAgent(Agent):
         logger.info(f"👤 User turn completed: '{user_text}'")
         self._last_user_message = user_text
         
-        # Augment chat context with RAG context BEFORE LLM processes
-        # PASS turn_ctx so we can modify it directly!
-        if user_text:
+        # Only augment with RAG for banking-related questions
+        # General chat doesn't need knowledge base search
+        if user_text and is_banking_question(user_text):
             await self._augment_chat_context(turn_ctx, user_text)
+        elif user_text:
+            logger.info("⏭ Skipping RAG for general conversation")
         
-        # Save user message to database
+        # Save user message to database (now enabled with user profiles)
         try:
             session_mgr = await get_session_manager()
             await session_mgr.add_message(
@@ -440,6 +501,7 @@ When user is: chatting, asking questions, wanting information
     # Add callback to save assistant responses to database
     original_after_llm_cb = session.after_llm_cb if hasattr(session, 'after_llm_cb') else None
     
+    # Save assistant responses (now enabled with user profiles)
     async def save_assistant_response(agent_instance, chat_ctx):
         """Save assistant response to database"""
         try:
@@ -471,16 +533,17 @@ When user is: chatting, asking questions, wanting information
             logger.warning(f"Error in save response callback: {e}")
     
     session.after_llm_cb = save_assistant_response
-    logger.info("Message saving callbacks enabled")
+    logger.info("Message saving enabled (anonymous profile tracking)")
     
-    # Handle session end (must be synchronous, use create_task for async work)
+    # Handle session end with conversation summarization
     @ctx.room.on("participant_disconnected")
     def on_participant_disconnected(participant):
         async def end_session_async():
             try:
                 session_manager = await get_session_manager()
-                await session_manager.end_session_by_room(ctx.room.name)
-                logger.info(f"Participant disconnected, session ended for room: {ctx.room.name}")
+                # End session with summary generation enabled
+                await session_manager.end_session_by_room(ctx.room.name, generate_summary=True)
+                logger.info(f"✓ Participant disconnected, session ended with summary for room: {ctx.room.name}")
             except Exception as e:
                 logger.error(f"Error ending session: {e}")
         
@@ -499,7 +562,7 @@ When user is: chatting, asking questions, wanting information
         logger.info(f"Agent speaking initial greeting: {user_session.initial_greeting[:50]}...")
         await session.say(user_session.initial_greeting, allow_interruptions=True)
         
-        # Save the greeting as first assistant message in conversation history
+        # Save greeting to conversation history
         try:
             session_mgr = await get_session_manager()
             await session_mgr.add_message(
