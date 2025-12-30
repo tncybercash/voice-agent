@@ -13,6 +13,8 @@ class LLMProvider(str, Enum):
     OLLAMA = "ollama"
     VLLM = "vllm"
     OPENROUTER = "openrouter"
+    GOOGLE = "google"
+    GOOGLE_REALTIME = "google_realtime"
 
 
 class SessionStatus(str, Enum):

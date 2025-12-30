@@ -258,7 +258,7 @@ class RAGIndexer:
         
         # USSD code variations
         if any(term in query_lower for term in ['ussd', 'uss', 'code', 'decode', 'dial']):
-            expansions.append('USSD mobile banking code dial *236# star 236')
+            expansions.append('U S S D mobile banking code dial star 2 3 6 hash')
         
         # Account variations
         if 'account' in query_lower:
@@ -594,21 +594,22 @@ class RAGService:
         if context:
             return f"""{base_instructions}
 
-#CRITICAL: Knowledge Base Context (USE THIS INFORMATION)
+#CONTEXT: Banking Information Available
 The user asked: "{user_query}"
 
-You MUST use the following verified information from TN CyberTech Bank's official knowledge base to answer. DO NOT make up information - use ONLY what is provided below:
+From what I know about TN CyberTech Bank, here's the relevant information:
 
----BEGIN KNOWLEDGE BASE---
 {context}
----END KNOWLEDGE BASE---
 
-IMPORTANT RULES:
-1. Answer ONLY using the information from the knowledge base above
-2. If the knowledge base contains the answer, use it EXACTLY as stated
-3. DO NOT invent or guess information not in the knowledge base
-4. If the knowledge base doesn't contain the answer, say you'll need to check and get back to them
-5. Quote specific details (like codes, numbers, hours) exactly as they appear in the knowledge base
+IMPORTANT:
+- Use this information naturally in your response
+- Speak as if you're sharing information you know, not reading from a database
+- Use phrases like "Based on my understanding", "From what I know", "As far as I'm aware"
+- Be conversational and helpful
+- When mentioning USSD, say it as separate letters: "U S S D" (not as a word)
+- When mentioning *236#, say: "star 2 3 6 hash" (each digit separately)
+- If specific details like codes or numbers are provided, share them accurately
+- If you don't have enough information, just say so naturally
 """
         
         return base_instructions

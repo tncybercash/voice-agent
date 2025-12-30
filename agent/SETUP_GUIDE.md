@@ -269,6 +269,31 @@ OPENROUTER_MODEL=openai/gpt-4o
 - Latency: ~500-1000ms per request
 - Cost: Pay per token
 
+**Google Gemini (Cloud LLM):**
+```bash
+LLM_PROVIDER=google
+GOOGLE_API_KEY=your-google-api-key
+GOOGLE_MODEL=gemini-2.0-flash
+```
+- Best for: High-quality responses, large context windows
+- Latency: ~200-500ms per request
+- Cost: Pay per token (free tier available)
+- Get API key from: https://aistudio.google.com/apikey
+
+**Google Realtime API (Speech-to-Speech - Best Quality):**
+```bash
+LLM_PROVIDER=google_realtime
+GOOGLE_API_KEY=your-google-api-key
+GOOGLE_REALTIME_MODEL=gemini-2.0-flash-live-001
+GOOGLE_REALTIME_VOICE=Puck
+```
+- Best for: Most natural, human-like conversations
+- Features: Direct speech-to-speech, emotional understanding
+- Voice options: Puck, Charon, Kore, Fenrir, Aoede
+- Latency: Very low (~100-200ms)
+- Cost: Pay per audio minute
+- Note: When using this mode, STT and TTS are built-in (not needed separately)
+
 **Automatic Failover:**
 If primary provider fails, system automatically falls back to next available provider.
 

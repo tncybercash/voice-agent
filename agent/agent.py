@@ -9,8 +9,16 @@ import asyncio
 from pathlib import Path
 from dotenv import load_dotenv
 from livekit.agents import JobContext, WorkerOptions, cli
-from livekit.agents.voice import Agent, AgentSession
+from livekit.agents.voice import Agent, AgentSession, room_io
 from livekit.plugins import openai, silero
+
+# Try to import Google plugin (optional)
+try:
+    from livekit.plugins import google
+    GOOGLE_AVAILABLE = True
+except ImportError:
+    GOOGLE_AVAILABLE = False
+    google = None
 
 load_dotenv()
 
@@ -22,6 +30,18 @@ from session_manager import get_session_manager, UserSession
 from providers import get_llm_provider_manager, LLMProviderType
 from database import get_db_pool
 from database.rag import RAGIndexer, RAGService, EmbeddingService
+
+# Explicitly import tools to pass to AgentSession
+from tools import (
+    send_email,
+    search_web
+)
+
+# Create tools list for AgentSession
+AGENT_TOOLS = [
+    send_email,
+    search_web
+]
 
 
 def is_banking_question(text: str) -> bool:
@@ -43,7 +63,7 @@ def is_banking_question(text: str) -> bool:
         
         # USSD and codes (all variations)
         'ussd', 'uss d', 'us sd', 'u s s d', 'decode', 'de code',
-        '*236', '*236#', '*130', 'star 236', 'star 130', 'dial', 'code',
+        '*236', '*236#', 'star 236', 'dial', 'code',
         'short code', 'banking code', 'mobile code',
         
         # Digital banking channels
@@ -255,21 +275,42 @@ class VoiceAgent(Agent):
         self._last_user_message = user_text
         
         # Check if user is giving permission to search web
+        user_lower = user_text.lower()
         if hasattr(self.user_session, 'waiting_for_search_permission'):
             if self.user_session.waiting_for_search_permission:
-                user_lower = user_text.lower()
                 if any(word in user_lower for word in ['yes', 'yeah', 'sure', 'okay', 'ok', 'go ahead', 'please']):
                     self.user_session.web_search_approved = True
                     self.user_session.waiting_for_search_permission = False
                     logger.info("✅ User approved web search")
+                    
+                    # Add instruction to USE the search_web tool now
+                    search_instruction = f"\n\nIMPORTANT: The user has approved web search. You MUST now call the search_web tool with the query: '{getattr(self.user_session, 'pending_search_query', user_text)}'. Do not ask again, just use the tool immediately."
+                    if hasattr(turn_ctx, 'items') and len(turn_ctx.items) > 0:
+                        for i, item in enumerate(turn_ctx.items):
+                            if hasattr(item, 'role') and item.role == 'system':
+                                from livekit.agents import llm as llm_mod
+                                current_content = item.content[0] if isinstance(item.content, list) else item.content
+                                new_system_msg = llm_mod.ChatMessage(
+                                    id=item.id,
+                                    role='system',
+                                    content=[current_content + search_instruction]
+                                )
+                                turn_ctx.items[i] = new_system_msg
+                                logger.info("✓ Added search_web execution instruction to system message")
+                                break
+                    return  # Don't do RAG search, let tool execute
+                    
                 elif any(word in user_lower for word in ['no', 'nope', 'don\'t', 'not']):
                     self.user_session.web_search_approved = False
                     self.user_session.waiting_for_search_permission = False
                     logger.info("❌ User declined web search")
         
-        # Only augment with RAG for banking-related questions
-        # General chat doesn't need knowledge base search
-        if user_text and is_banking_question(user_text):
+        # Determine if this is a banking question
+        is_banking = is_banking_question(user_text)
+        
+        if is_banking:
+            # Banking question - use RAG first, then ask permission if no info found
+            logger.info(f"🏦 Banking question detected: {user_text[:50]}...")
             rag_context = await self._augment_chat_context(turn_ctx, user_text)
             
             # If RAG found nothing, ask permission to search web
@@ -278,11 +319,25 @@ class VoiceAgent(Agent):
                 self.user_session.waiting_for_search_permission = True
                 self.user_session.pending_search_query = user_text
                 # Add instruction to ask permission
-                permission_note = "\n\nIMPORTANT: The knowledge base doesn't have information about this question. You MUST politely say: 'I don't have that information in my knowledge base. Would you like me to search the internet for this information?' Then WAIT for user permission before using search_web tool."
-                if hasattr(turn_ctx, 'messages') and len(turn_ctx.messages) > 0:
-                    turn_ctx.messages[0].content = turn_ctx.messages[0].content + permission_note
-        elif user_text:
-            logger.info("⏭ Skipping RAG for general conversation")
+                permission_note = "\n\nIMPORTANT: I don't have information about this in my current knowledge. You MUST politely say: 'I'm not sure about that specific detail. Would you like me to search online for more information?' Then WAIT for user permission before using search_web tool."
+                if hasattr(turn_ctx, 'items') and len(turn_ctx.items) > 0:
+                    for i, item in enumerate(turn_ctx.items):
+                        if hasattr(item, 'role') and item.role == 'system':
+                            from livekit.agents import llm as llm_mod
+                            current_content = item.content[0] if isinstance(item.content, list) else item.content
+                            new_system_msg = llm_mod.ChatMessage(
+                                id=item.id,
+                                role='system',
+                                content=[current_content + permission_note]
+                            )
+                            turn_ctx.items[i] = new_system_msg
+                            break
+        else:
+            # Non-banking question - allow automatic web search
+            logger.info(f"💬 General question detected (no RAG needed): {user_text[:50]}...")
+            # Set web search as approved for general queries
+            self.user_session.web_search_approved = True
+            logger.info("✅ Auto-approved web search for general query")
         
         # Save user message to database (now enabled with user profiles)
         try:
@@ -380,6 +435,28 @@ async def setup_rag_service() -> RAGService:
         return None
 
 
+# ============================================
+# TTS TEXT PREPROCESSING
+# ============================================
+
+def preprocess_text_for_tts(text: str) -> str:
+    """
+    Preprocess text before sending to TTS to improve pronunciation.
+    - USSD -> U S S D (individual letters)
+    - *236# -> star 2 3 6 hash (phonetic)
+    """
+    import re
+    
+    # Replace *236# with phonetic version
+    # Match *236# or *236 (with or without hash)
+    text = re.sub(r'\*236#?', 'star 2 3 6 hash', text, flags=re.IGNORECASE)
+    
+    # Replace USSD with spaced letters (case insensitive)
+    text = re.sub(r'\bUSSD\b', 'U S S D', text, flags=re.IGNORECASE)
+    
+    return text
+
+
 async def entrypoint(ctx: JobContext):
     """
     Main entrypoint for the voice agent.
@@ -402,6 +479,18 @@ async def entrypoint(ctx: JobContext):
         llm_provider = LLMProviderType.VLLM
     elif llm_provider_env == "openrouter":
         llm_provider = LLMProviderType.OPENROUTER
+    elif llm_provider_env == "google":
+        if GOOGLE_AVAILABLE:
+            llm_provider = LLMProviderType.GOOGLE
+        else:
+            logger.warning("Google plugin not available, falling back to Ollama")
+            llm_provider = LLMProviderType.OLLAMA
+    elif llm_provider_env == "google_realtime":
+        if GOOGLE_AVAILABLE:
+            llm_provider = LLMProviderType.GOOGLE_REALTIME
+        else:
+            logger.warning("Google plugin not available, falling back to Ollama")
+            llm_provider = LLMProviderType.OLLAMA
     else:
         llm_provider = LLMProviderType.OLLAMA
     
@@ -415,24 +504,127 @@ async def entrypoint(ctx: JobContext):
             is_local_mode=is_local_mode
         )
         logger.info(f"Created session: {user_session.session_id}")
+        
+        # Add vision capabilities to instructions if using Google Realtime
+        if llm_provider == LLMProviderType.GOOGLE_REALTIME:
+            vision_instructions = """
+
+VISION CAPABILITIES:
+You can see the user through their camera and see their screen when shared.
+- If user shares their screen, describe what you see and help them with their task
+- If user turns on camera, you can see them and respond to visual cues
+- When asked about something on screen, look at the screen share and describe it
+- Be helpful with visual tasks: reading documents, analyzing images, navigating websites
+- If you notice the user seems confused or struggling, offer helpful observations
+"""
+            user_session.instructions += vision_instructions
+            logger.info("Added vision capabilities to instructions (Google Realtime)")
+            
     except Exception as e:
         logger.error(f"Failed to create session from database: {e}")
         import traceback
         traceback.print_exc()
         # Fallback to simple session with basic instructions
-        fallback_instructions = """You are Batsi, a friendly voice assistant for TN CyberTech Bank.
+        fallback_instructions = """You are Batsi, a helpful voice assistant for TN CyberTech Bank.
 
-STYLE:
-- Be conversational and friendly
-- Give SHORT responses (1-2 sentences)
+COMMUNICATION STYLE:
+- Be natural, conversational, and professional
+- Keep responses concise (1-2 sentences for simple questions)
+- Use human language: "Based on my understanding", "From what I know", "As far as I'm aware"
+- Never mention "knowledge base", "database", or technical systems
+- Speak as if you're a knowledgeable person helping a friend
 
-BANKING TRANSACTIONS (REQUIRE LOGIN):
-When user wants to: check balance, make transfer, get statement, cardless withdrawal or bank balance or account info
-→ Ask for username and PIN, then call authenticate_bank(username, password)
+YOUR CAPABILITIES:
+You have access to these resources to help users:
+1. Banking Knowledge Base - Comprehensive information about TN CyberTech Bank products, services, and policies
+2. send_email - Send emails to users
+3. search_web - Search the internet for general information
 
-GENERAL CHAT (NO LOGIN NEEDED):
-When user is: chatting, asking questions, wanting information
-→ Just respond naturally or use search_web"""
+AVAILABLE TOOLS & WHEN TO USE THEM:
+
+1. BANKING KNOWLEDGE (Your Primary Source):
+   For ALL banking questions (accounts, services, fees, hours, products):
+   - ALWAYS answer from the information you have FIRST
+   - Be confident and helpful with your banking knowledge
+   - Use natural phrases like "From what I know" or "Based on my understanding"
+   
+   ⚠️ IMPORTANT: If you DON'T have the banking information:
+   - Admit you don't have that specific information
+   - Say: "I don't have that information in my knowledge. Would you like me to search the internet for it?"
+   - Only search if user approves
+
+2. WEB SEARCH (search_web) - FALLBACK ONLY:
+   Use ONLY when:
+   - User asks about NON-banking topics (recipes, weather, news, travel, health)
+   - You DON'T have the answer in your banking knowledge AND user approves search
+   - User explicitly asks to "search the internet" or "look it up online"
+   
+   ❌ NEVER:
+   - Combine web results with banking knowledge
+   - Search for banking info if you already have the answer
+   - Use web search as your first choice for banking questions
+   
+   ✅ CORRECT PATTERN:
+   Banking question → Answer from knowledge OR admit you don't know
+   General question → Use search_web automatically
+
+3. EMAIL (send_email) - STRICT CONFIRMATION REQUIRED:
+   ⚠️ CRITICAL: You MUST follow this EXACT process. No shortcuts!
+   
+   MANDATORY STEPS (DO ALL 4):
+   Step 1: ASK - "What is your email address?"
+   Step 2: WAIT - Let the user speak their email
+   Step 3: CONFIRM - "Just to confirm, you said [email they said]. Is that correct?"
+   Step 4: ONLY after they confirm YES, then call send_email
+   
+   ⚠️ If the email sounds garbled, unclear, or unusual:
+   - Say "I didn't catch that clearly. Could you spell out your email address?"
+   - Wait for them to spell it: "J-O-H-N at gmail dot com"
+   - Then confirm: "So that's john@gmail.com, correct?"
+   
+   CORRECT EXAMPLE:
+   User: "Send me an email with the summary"
+   You: "Sure! What's your email address?"
+   User: "john at gmail dot com"
+   You: "Just to confirm, that's john@gmail.com - is that correct?"
+   User: "Yes"
+   You: "Great, what should the subject line be?"
+   User: "Meeting Summary"
+   You: "And what would you like the email to say?"
+   User: "Summarize our conversation"
+   NOW call: send_email(to_email="john@gmail.com", subject="Meeting Summary", body="...")
+   
+   ❌ NEVER DO THIS:
+   - send_email(to_email="your email address", ...)
+   - send_email(to_email="[email]", ...)
+   - send_email(to_email="", ...)
+   - send_email(to_email="bn/auser@...", ...) ← This is GARBLED, ask again!
+   - Calling the tool before asking AND confirming the email
+   - Guessing what the email address might be
+   - Using an email that sounds wrong or garbled
+
+EXAMPLES:
+- "How do I open an account?" → Answer from your banking knowledge
+- "What's your interest rate?" → Answer from your banking knowledge
+- "Find me a chicken recipe" → Use search_web automatically (non-banking)
+- "What's the weather today?" → Use search_web automatically (non-banking)
+- "How do I get a loan at another bank?" → "I don't have information about other banks. Would you like me to search online?"
+- "Tell me about your savings accounts" → Answer from your banking knowledge
+"""
+        
+        # Add vision capabilities to instructions if using Google Realtime
+        if llm_provider == LLMProviderType.GOOGLE_REALTIME:
+            vision_instructions = """
+
+VISION CAPABILITIES:
+You can see the user through their camera and see their screen when shared.
+- If user shares their screen, describe what you see and help them with their task
+- If user turns on camera, you can see them and respond to visual cues
+- When asked about something on screen, look at the screen share and describe it
+- Be helpful with visual tasks: reading documents, analyzing images, navigating websites
+- If you notice the user seems confused or struggling, offer helpful observations
+"""
+            fallback_instructions += vision_instructions
         
         user_session = UserSession(
             session_id=str(ctx.room.name),
@@ -452,6 +644,7 @@ When user is: chatting, asking questions, wanting information
         logger.warning("RAG service not available (not initialized at startup)")
     
     # Get LLM configuration from provider manager
+    use_google_realtime = False
     try:
         llm_manager = await get_llm_provider_manager()
         llm_config = llm_manager.get_openai_compatible_config(user_session.llm_provider)
@@ -459,6 +652,11 @@ When user is: chatting, asking questions, wanting information
         llm_model = llm_config["model"]
         llm_api_key = llm_config["api_key"]
         llm_timeout = llm_config["timeout"]
+        
+        # Check if using Google Realtime (speech-to-speech)
+        if user_session.llm_provider == LLMProviderType.GOOGLE_REALTIME:
+            use_google_realtime = True
+        
         logger.info(f"Using LLM provider: {user_session.llm_provider.value} - {llm_model}")
     except Exception as e:
         logger.warning(f"Failed to get LLM config from manager: {e}")
@@ -480,30 +678,72 @@ When user is: chatting, asking questions, wanting information
     tts_model = os.getenv("SPEACHES_TTS_MODEL", "speaches-ai/Kokoro-82M-v1.0-ONNX")
     tts_voice = os.getenv("SPEACHES_TTS_VOICE", "af_heart")
     
-    # Create STT
-    stt = openai.STT(
-        base_url=stt_url,
-        model=stt_model,
-        api_key="not-needed",
-        language="en"
-    )
+    # Create STT (not needed for Google Realtime mode)
+    stt = None
+    if not use_google_realtime:
+        stt = openai.STT(
+            base_url=stt_url,
+            model=stt_model,
+            api_key="not-needed",
+            language="en"
+        )
     
-    # Create LLM
-    llm = openai.LLM(
-        base_url=llm_base_url,
-        model=llm_model,
-        timeout=llm_timeout,
-        api_key=llm_api_key,
-        temperature=float(os.getenv("LLM_TEMPERATURE", "0.7"))
-    )
+    # Create LLM based on provider
+    llm = None
+    if use_google_realtime and GOOGLE_AVAILABLE:
+        # Google Realtime API - speech-to-speech model
+        google_realtime_model = os.getenv("GOOGLE_REALTIME_MODEL", "gemini-2.0-flash-live-001")
+        google_realtime_voice = os.getenv("GOOGLE_REALTIME_VOICE", "Puck")
+        llm = google.realtime.RealtimeModel(
+            model=google_realtime_model,
+            voice=google_realtime_voice,
+        )
+        logger.info(f"Using Google Realtime API: {google_realtime_model} (voice: {google_realtime_voice})")
+    elif user_session.llm_provider == LLMProviderType.GOOGLE and GOOGLE_AVAILABLE:
+        # Standard Google Gemini LLM
+        llm = google.LLM(
+            model=llm_model,
+            temperature=float(os.getenv("LLM_TEMPERATURE", "0.7"))
+        )
+        logger.info(f"Using Google Gemini LLM: {llm_model}")
+    else:
+        # OpenAI-compatible LLM (Ollama, vLLM, OpenRouter)
+        llm = openai.LLM(
+            base_url=llm_base_url,
+            model=llm_model,
+            timeout=llm_timeout,
+            api_key=llm_api_key,
+            temperature=float(os.getenv("LLM_TEMPERATURE", "0.7"))
+        )
     
-    # Create TTS
-    tts = openai.TTS(
-        base_url=tts_url,
-        model=tts_model,
-        voice=tts_voice,
-        api_key="not-needed"
-    )
+    # Create TTS (not needed for Google Realtime mode which has built-in TTS)
+    tts = None
+    if not use_google_realtime:
+        base_tts = openai.TTS(
+            base_url=tts_url,
+            model=tts_model,
+            voice=tts_voice,
+            api_key="not-needed"
+        )
+        
+        # Wrap TTS to preprocess text before synthesis
+        class PreprocessingTTS:
+            """TTS wrapper that preprocesses text for better pronunciation"""
+            def __init__(self, base_tts):
+                self._base_tts = base_tts
+                
+            def synthesize(self, text: str, **kwargs):
+                """Preprocess and synthesize"""
+                processed_text = preprocess_text_for_tts(text)
+                if processed_text != text:
+                    logger.info(f"TTS preprocessing: '{text[:50]}...' -> '{processed_text[:50]}...'")
+                return self._base_tts.synthesize(processed_text, **kwargs)
+            
+            def __getattr__(self, name):
+                """Delegate all other attributes to base TTS"""
+                return getattr(self._base_tts, name)
+        
+        tts = PreprocessingTTS(base_tts)
     
     # Load VAD with optimized settings
     vad = silero.VAD.load(
@@ -520,12 +760,13 @@ When user is: chatting, asking questions, wanting information
         agent.set_rag_service(rag_service)
         logger.info("✓ RAG service attached to agent (will augment on user speech)")
     
-    # Create session
+    # Create session with explicit tools list
     session = AgentSession(
         stt=stt,
         llm=llm,
         tts=tts,
         vad=vad,
+        tools=AGENT_TOOLS,  # Explicitly pass tools like agent_old.py
         allow_interruptions=True,
     )
     
@@ -580,18 +821,38 @@ When user is: chatting, asking questions, wanting information
         
         asyncio.create_task(end_session_async())
     
-    # Start the session
-    await session.start(
-        room=ctx.room,
-        agent=agent,
-    )
+    # Start the session with video input enabled for Google Realtime
+    if use_google_realtime:
+        # Google Realtime supports live video input from camera and screen share
+        logger.info("Starting session with video input enabled (Google Realtime)")
+        await session.start(
+            room=ctx.room,
+            agent=agent,
+            room_options=room_io.RoomOptions(
+                video_input=True,  # Enable video/screen share input for Gemini vision
+            ),
+        )
+    else:
+        # Standard STT-LLM-TTS pipeline without video
+        await session.start(
+            room=ctx.room,
+            agent=agent,
+        )
     
     logger.info(f"Agent session started for room: {ctx.room.name}")
     
     # Agent initiates conversation with greeting from database
     if user_session.initial_greeting:
         logger.info(f"Agent speaking initial greeting: {user_session.initial_greeting[:50]}...")
-        await session.say(user_session.initial_greeting, allow_interruptions=True)
+        
+        # For Google Realtime API, use generate_reply instead of say
+        # because it handles speech natively without separate TTS
+        if use_google_realtime:
+            await session.generate_reply(
+                instructions=f"Greet the user with exactly this message: {user_session.initial_greeting}"
+            )
+        else:
+            await session.say(user_session.initial_greeting, allow_interruptions=True)
         
         # Save greeting to conversation history
         try:

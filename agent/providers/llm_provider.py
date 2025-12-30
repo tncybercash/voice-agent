@@ -21,6 +21,8 @@ class LLMProviderType(str, Enum):
     OLLAMA = "ollama"
     VLLM = "vllm"
     OPENROUTER = "openrouter"
+    GOOGLE = "google"
+    GOOGLE_REALTIME = "google_realtime"
 
 
 @dataclass
@@ -215,6 +217,52 @@ class OpenRouterProvider(LLMProvider):
             return False
 
 
+class GoogleProvider(LLMProvider):
+    """Google Gemini LLM provider - standard chat completions"""
+    
+    async def chat_completion(
+        self,
+        messages: List[Dict[str, str]],
+        **kwargs
+    ) -> Dict[str, Any]:
+        # Google uses a different API format than OpenAI
+        # This provider is mainly for config storage - actual calls use livekit plugin
+        async with self._semaphore:
+            # Return empty - the actual LLM is created via livekit plugin in agent.py
+            return {"message": "Use livekit google plugin directly"}
+    
+    async def health_check(self) -> bool:
+        # Just check if API key is set
+        return bool(self.config.api_key)
+    
+    def get_openai_compatible_url(self) -> str:
+        # Google doesn't use OpenAI-compatible URL, return marker
+        return "google://gemini"
+
+
+class GoogleRealtimeProvider(LLMProvider):
+    """Google Gemini Live API provider - realtime speech-to-speech"""
+    
+    def __init__(self, config: LLMConfig, voice: str = "Puck"):
+        super().__init__(config)
+        self.voice = voice
+    
+    async def chat_completion(
+        self,
+        messages: List[Dict[str, str]],
+        **kwargs
+    ) -> Dict[str, Any]:
+        # Realtime API doesn't use standard chat completions
+        async with self._semaphore:
+            return {"message": "Use livekit google realtime plugin directly"}
+    
+    async def health_check(self) -> bool:
+        return bool(self.config.api_key)
+    
+    def get_openai_compatible_url(self) -> str:
+        return "google://realtime"
+
+
 class LLMProviderManager:
     """
     Manages multiple LLM providers with automatic failover and load balancing.
@@ -279,11 +327,45 @@ class LLMProviderManager:
             ))
             logger.info(f"Initialized OpenRouter provider: {openrouter_model}")
         
+        # Initialize Google if configured (for standard Gemini LLM)
+        google_key = os.getenv("GOOGLE_API_KEY")
+        google_model = os.getenv("GOOGLE_MODEL", "gemini-2.0-flash")
+        if google_key:
+            # Store config for Google - actual plugin will be created in agent.py
+            self._providers[LLMProviderType.GOOGLE] = GoogleProvider(LLMConfig(
+                provider=LLMProviderType.GOOGLE,
+                base_url="https://generativelanguage.googleapis.com",
+                model=google_model,
+                api_key=google_key,
+                timeout=int(os.getenv("LLM_TIMEOUT", "120")),
+                max_concurrent=int(os.getenv("LLM_MAX_CONCURRENT", "20")),
+                temperature=float(os.getenv("LLM_TEMPERATURE", "0.7")),
+            ))
+            logger.info(f"Initialized Google provider: {google_model}")
+            
+            # Also register for Google Realtime
+            google_realtime_model = os.getenv("GOOGLE_REALTIME_MODEL", "gemini-2.0-flash-live-001")
+            google_realtime_voice = os.getenv("GOOGLE_REALTIME_VOICE", "Puck")
+            self._providers[LLMProviderType.GOOGLE_REALTIME] = GoogleRealtimeProvider(LLMConfig(
+                provider=LLMProviderType.GOOGLE_REALTIME,
+                base_url="https://generativelanguage.googleapis.com",
+                model=google_realtime_model,
+                api_key=google_key,
+                timeout=int(os.getenv("LLM_TIMEOUT", "120")),
+                max_concurrent=int(os.getenv("LLM_MAX_CONCURRENT", "20")),
+                temperature=float(os.getenv("LLM_TEMPERATURE", "0.7")),
+            ), voice=google_realtime_voice)
+            logger.info(f"Initialized Google Realtime provider: {google_realtime_model} (voice: {google_realtime_voice})")
+        
         # Set primary provider
         if primary == "vllm" and LLMProviderType.VLLM in self._providers:
             self._primary_provider = LLMProviderType.VLLM
         elif primary == "openrouter" and LLMProviderType.OPENROUTER in self._providers:
             self._primary_provider = LLMProviderType.OPENROUTER
+        elif primary == "google" and LLMProviderType.GOOGLE in self._providers:
+            self._primary_provider = LLMProviderType.GOOGLE
+        elif primary == "google_realtime" and LLMProviderType.GOOGLE_REALTIME in self._providers:
+            self._primary_provider = LLMProviderType.GOOGLE_REALTIME
         elif LLMProviderType.OLLAMA in self._providers:
             self._primary_provider = LLMProviderType.OLLAMA
         elif self._providers:

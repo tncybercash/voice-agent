@@ -2,7 +2,6 @@
 
 import { useMemo } from 'react';
 import { TokenSource } from 'livekit-client';
-import { Toaster as SonnerToaster } from 'sonner';
 import {
   RoomAudioRenderer,
   SessionProvider,
@@ -24,11 +23,7 @@ function AppSetup() {
   useDebugMode({ enabled: IN_DEVELOPMENT });
   useAgentErrors();
 
-  return (
-    <>
-      <ToolNotificationListener />
-    </>
-  );
+  return <ToolNotificationListener />;
 }
 
 interface AppProps {
@@ -60,7 +55,6 @@ export function App({ appConfig }: AppProps) {
       <StartAudio label="Start Audio" />
       <RoomAudioRenderer />
       <Toaster />
-      <SonnerToaster position="top-right" richColors />
     </SessionProvider>
   );
 }

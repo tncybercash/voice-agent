@@ -25,13 +25,14 @@ vllm  # Local LLM inference server
 langchain>=0.1.0
 langchain-community>=0.1.0
 duckduckgo-search>=4.0.0  # Required for DuckDuckGoSearchRun
+ddgs  # DuckDuckGo search library (required by langchain-community)
 # chromadb>=0.4.0
 # sentence-transformers>=2.2.0  # Already installed above
 
 # Premium STT/TTS providers (require API keys)
 # livekit-plugins-deepgram    # Better noise handling
 # livekit-plugins-elevenlabs  # High-quality TTS
-# livekit-plugins-google      # Google Speech
+livekit-plugins-google        # Google Gemini and Realtime API
 # livekit-plugins-azure       # Azure Speech
 # livekit-plugins-cartesia    # Fast TTS
 # livekit-plugins-assemblyai  # Real-time STT

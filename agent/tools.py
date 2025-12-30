@@ -103,12 +103,18 @@ async def send_frontend_notification(event_type: str, data: dict):
                 "event": event_type,
                 "data": data
             }
+            logger.info(f"📤 Sending notification: {event_type} - {data}")
             await context.room.local_participant.publish_data(
                 json.dumps(notification_data).encode(),
                 reliable=True
             )
+            logger.info(f"✅ Notification sent successfully: {event_type}")
+        else:
+            logger.warning(f"⚠️ Cannot send notification - no room context available")
     except Exception as e:
         logger.warning(f"Failed to send frontend notification: {e}")
+        import traceback
+        traceback.print_exc()
 
 def get_bank_auth_url() -> str:
     """Get the bank authentication API URL"""
@@ -539,12 +545,91 @@ async def unlock_account_reset_pin(context: RunContext, uuid: str, new_pin: str)
 
 @function_tool
 async def send_email(context: RunContext, to_email: str, subject: str, body: str) -> str:
-    """Send an email using Gmail SMTP"""
+    """
+    Send an email using Gmail SMTP.
+    
+    CRITICAL: You MUST collect ALL information from the user BEFORE calling this tool:
+    1. First ASK: "What is your email address?"
+    2. WAIT for user to speak their email clearly
+    3. CONFIRM: "Just to confirm, your email is [email]?"
+    4. Only after user confirms, call this tool
+    
+    DO NOT call this tool with guessed, misheard, or placeholder emails.
+    """
     try:
+        # Validate email address - reject placeholders and invalid patterns
+        invalid_patterns = [
+            # Placeholder patterns
+            '[', ']', '{', '}', '<', '>', 
+            'your email', 'customer email', 'user email', 'email address', 
+            'recipient', 'placeholder', 'example.com', '@example',
+            # Invalid characters that indicate garbled speech
+            '/', '\\', ' ', '(', ')', '*', '!', '#', '$', '%', '^', '&',
+            # Common garbled patterns
+            'bn/', 'bn@', 'user@', 'auser', 'test@', 'email@', 'abc@',
+            'unknown', 'none', 'null', 'undefined', 'n/a',
+            # Speech recognition artifacts
+            'at the rate', 'at symbol', 'dot com', 'gmail dot', 'yahoo dot'
+        ]
+        
+        to_email_lower = to_email.lower().strip()
+        
+        # Check for placeholder patterns
+        if any(pattern in to_email_lower for pattern in invalid_patterns):
+            await send_frontend_notification("tool_error", {
+                "tool": "send_email",
+                "message": "Invalid email - cannot send",
+                "error": f"Email '{to_email}' appears invalid or garbled"
+            })
+            return json.dumps({
+                "success": False, 
+                "error": f"REJECTED: '{to_email}' is not a valid email. You must ASK the user: 'What is your email address?' then WAIT for their response, then CONFIRM it back to them before trying again.",
+                "instruction": "STOP. Do not call send_email again until you have clearly asked for and confirmed the email address with the user."
+            })
+        
+        # Validate basic email format with regex - must be standard format
+        email_regex = r'^[a-zA-Z0-9][a-zA-Z0-9._%+-]*[a-zA-Z0-9]@[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]\.[a-zA-Z]{2,}$'
+        if not re.match(email_regex, to_email) or len(to_email) < 6:
+            await send_frontend_notification("tool_error", {
+                "tool": "send_email",
+                "message": "Invalid email format",
+                "error": f"Email '{to_email}' format is invalid"
+            })
+            return json.dumps({
+                "success": False,
+                "error": f"REJECTED: '{to_email}' is not a valid email format. Ask the user clearly: 'Could you please spell out your email address?' and wait for their response.",
+                "instruction": "Valid emails look like: john@gmail.com, mary@company.co.zw. Do not guess or assume."
+            })
+        
+        # Additional check: must have reasonable local part (before @)
+        local_part = to_email.split('@')[0]
+        if len(local_part) < 2 or len(local_part) > 64:
+            await send_frontend_notification("tool_error", {
+                "tool": "send_email",
+                "message": "Invalid email - unusual format",
+                "error": f"Email '{to_email}' has unusual format"
+            })
+            return json.dumps({
+                "success": False,
+                "error": f"REJECTED: '{to_email}' doesn't look like a real email. Please ask the user to repeat their email address clearly.",
+                "instruction": "Ask: 'Could you please say your email address again, spelling it out if needed?'"
+            })
+        
         gmail_user = os.getenv("GMAIL_USER")
         gmail_password = os.getenv("GMAIL_APP_PASSWORD")
         if not gmail_user or not gmail_password:
+            await send_frontend_notification("tool_error", {
+                "tool": "send_email",
+                "message": "Email service not configured",
+                "error": "Missing GMAIL_USER or GMAIL_APP_PASSWORD"
+            })
             return json.dumps({"success": False, "error": "Email configuration not set up"})
+
+        # Notify frontend that email is being sent
+        await send_frontend_notification("tool_started", {
+            "tool": "send_email",
+            "message": f"Sending email to {to_email}"
+        })
 
         msg = MIMEMultipart()
         msg['From'] = gmail_user
@@ -559,9 +644,24 @@ async def send_email(context: RunContext, to_email: str, subject: str, body: str
         server.sendmail(gmail_user, to_email, text)
         server.quit()
 
+        # Notify success
+        await send_frontend_notification("tool_success", {
+            "tool": "send_email",
+            "message": f"Email sent successfully to {to_email}",
+            "recipient": to_email
+        })
+
         return json.dumps({"success": True, "message": f"Email sent to {to_email}"})
     except Exception as e:
         logger.error(f"Error sending email: {str(e)}")
+        
+        # Notify error
+        await send_frontend_notification("tool_error", {
+            "tool": "send_email",
+            "message": "Failed to send email",
+            "error": str(e)
+        })
+        
         return json.dumps({"success": False, "error": "Failed to send email"})
 
 @function_tool
