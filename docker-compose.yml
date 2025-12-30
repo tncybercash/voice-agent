@@ -2,7 +2,7 @@ services:
   speaches:
     image: ghcr.io/speaches-ai/speaches:latest-cpu
     ports:
-      - "8000:8000"
+      - "8002:8000"
     volumes:
       - hf-hub-cache-cpu:/home/ubuntu/.cache/huggingface/hub
       - ./speaches-init.sh:/home/ubuntu/speaches-init.sh:ro
@@ -15,7 +15,7 @@ services:
   speaches-gpu:
     image: ghcr.io/speaches-ai/speaches:latest-cuda
     ports:
-      - "8001:8000"
+      - "8003:8000"
     volumes:
       - hf-hub-cache-gpu:/home/ubuntu/.cache/huggingface/hub
       - ./speaches-gpu-init.sh:/home/ubuntu/speaches-init.sh:ro
@@ -32,6 +32,34 @@ services:
               count: all
               capabilities: [gpu]
 
+  # vLLM service commented out - using local pip installation instead
+  # Uncomment below if you want to use Docker version
+  # vllm:
+  #   image: vllm/vllm-openai:latest
+  #   ports:
+  #     - "8000:8000"
+  #   volumes:
+  #     - vllm-cache:/root/.cache/huggingface
+  #   environment:
+  #     - HUGGING_FACE_HUB_TOKEN=${HUGGING_FACE_HUB_TOKEN:-}
+  #   command: >
+  #     --model unsloth/Llama-3.2-1B-Instruct
+  #     --port 8000
+  #     --host 0.0.0.0
+  #     --max-num-seqs 20
+  #     --dtype auto
+  #     --gpu-memory-utilization 0.5
+  #     --max-model-len 4096
+  #   networks:
+  #     - agent_network
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             count: all
+  #             capabilities: [gpu]
+
   livekit:
     image: livekit/livekit-server:latest
     ports:
@@ -44,6 +72,7 @@ services:
 volumes:
   hf-hub-cache-cpu:
   hf-hub-cache-gpu:
+  vllm-cache:
 
 networks:
   agent_network:

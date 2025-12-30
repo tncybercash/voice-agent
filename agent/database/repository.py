@@ -1,0 +1,411 @@
+"""
+Repository layer for database operations.
+Provides async CRUD operations for all models.
+"""
+import json
+import logging
+from datetime import datetime
+from typing import Optional, List, Dict, Any
+from uuid import uuid4
+
+from .connection import DatabasePool, get_db_pool
+from .models import (
+    AgentInstruction,
+    AgentSession,
+    ConversationMessage,
+    RAGDocument,
+    SystemConfig,
+    LLMProvider,
+    SessionStatus
+)
+
+logger = logging.getLogger("repository")
+
+
+class AgentInstructionRepository:
+    """Repository for agent instructions"""
+    
+    def __init__(self, pool: DatabasePool):
+        self.pool = pool
+    
+    async def get_active_instruction(self, is_local_mode: bool = False) -> Optional[AgentInstruction]:
+        """Get the currently active agent instruction"""
+        query = """
+            SELECT id, name, instructions, is_active, is_local_mode, 
+                   initial_greeting, language, created_at, updated_at
+            FROM agent_instructions
+            WHERE is_active = true AND is_local_mode = $1
+            ORDER BY updated_at DESC
+            LIMIT 1
+        """
+        row = await self.pool.fetchrow(query, is_local_mode)
+        if row:
+            return AgentInstruction(
+                id=row['id'],
+                name=row['name'],
+                instructions=row['instructions'],
+                is_active=row['is_active'],
+                is_local_mode=row['is_local_mode'],
+                initial_greeting=row['initial_greeting'],
+                language=row['language'],
+                created_at=row['created_at'],
+                updated_at=row['updated_at']
+            )
+        return None
+    
+    async def get_by_id(self, instruction_id: int) -> Optional[AgentInstruction]:
+        """Get instruction by ID"""
+        query = """
+            SELECT id, name, instructions, is_active, is_local_mode,
+                   initial_greeting, language, created_at, updated_at
+            FROM agent_instructions
+            WHERE id = $1
+        """
+        row = await self.pool.fetchrow(query, instruction_id)
+        if row:
+            return AgentInstruction(
+                id=row['id'],
+                name=row['name'],
+                instructions=row['instructions'],
+                is_active=row['is_active'],
+                is_local_mode=row['is_local_mode'],
+                initial_greeting=row['initial_greeting'],
+                language=row['language'],
+                created_at=row['created_at'],
+                updated_at=row['updated_at']
+            )
+        return None
+    
+    async def create(self, name: str, instructions: str, is_local_mode: bool = False,
+                     initial_greeting: str = None, language: str = "en") -> int:
+        """Create a new agent instruction"""
+        query = """
+            INSERT INTO agent_instructions (name, instructions, is_local_mode, initial_greeting, language)
+            VALUES ($1, $2, $3, $4, $5)
+            RETURNING id
+        """
+        return await self.pool.fetchval(query, name, instructions, is_local_mode, initial_greeting, language)
+    
+    async def update(self, instruction_id: int, instructions: str, 
+                     initial_greeting: str = None) -> bool:
+        """Update an existing instruction"""
+        query = """
+            UPDATE agent_instructions
+            SET instructions = $2, initial_greeting = $3, updated_at = NOW()
+            WHERE id = $1
+        """
+        result = await self.pool.execute(query, instruction_id, instructions, initial_greeting)
+        return result == "UPDATE 1"
+    
+    async def set_active(self, instruction_id: int, is_local_mode: bool) -> bool:
+        """Set an instruction as active (deactivates others of same mode)"""
+        async with self.pool.transaction() as conn:
+            # Deactivate all of same mode
+            await conn.execute(
+                "UPDATE agent_instructions SET is_active = false WHERE is_local_mode = $1",
+                is_local_mode
+            )
+            # Activate the selected one
+            await conn.execute(
+                "UPDATE agent_instructions SET is_active = true WHERE id = $1",
+                instruction_id
+            )
+        return True
+
+
+class SessionRepository:
+    """Repository for user sessions - handles concurrent user isolation"""
+    
+    def __init__(self, pool: DatabasePool):
+        self.pool = pool
+    
+    async def create_session(
+        self,
+        room_id: str,
+        participant_id: str,
+        agent_instruction_id: int,
+        llm_provider: LLMProvider
+    ) -> str:
+        """Create a new session for a user"""
+        session_id = str(uuid4())
+        query = """
+            INSERT INTO agent_sessions 
+            (id, room_id, participant_id, agent_instruction_id, llm_provider, status, context)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            RETURNING id
+        """
+        await self.pool.execute(
+            query, session_id, room_id, participant_id, 
+            agent_instruction_id, llm_provider.value, SessionStatus.ACTIVE.value, '{}'
+        )
+        logger.info(f"Created session {session_id} for participant {participant_id}")
+        return session_id
+    
+    async def get_session(self, session_id: str) -> Optional[AgentSession]:
+        """Get session by ID"""
+        query = """
+            SELECT id, room_id, participant_id, agent_instruction_id, llm_provider,
+                   status, context, message_count, created_at, last_activity, ended_at
+            FROM agent_sessions
+            WHERE id = $1
+        """
+        row = await self.pool.fetchrow(query, session_id)
+        if row:
+            return AgentSession(
+                id=row['id'],
+                room_id=row['room_id'],
+                participant_id=row['participant_id'],
+                agent_instruction_id=row['agent_instruction_id'],
+                llm_provider=LLMProvider(row['llm_provider']),
+                status=SessionStatus(row['status']),
+                context=json.loads(row['context']) if row['context'] else {},
+                message_count=row['message_count'],
+                created_at=row['created_at'],
+                last_activity=row['last_activity'],
+                ended_at=row['ended_at']
+            )
+        return None
+    
+    async def get_active_session_by_room(self, room_id: str) -> Optional[AgentSession]:
+        """Get active session for a room"""
+        query = """
+            SELECT id, room_id, participant_id, agent_instruction_id, llm_provider,
+                   status, context, message_count, created_at, last_activity, ended_at
+            FROM agent_sessions
+            WHERE room_id = $1 AND status = 'active'
+            ORDER BY created_at DESC
+            LIMIT 1
+        """
+        row = await self.pool.fetchrow(query, room_id)
+        if row:
+            return AgentSession(
+                id=row['id'],
+                room_id=row['room_id'],
+                participant_id=row['participant_id'],
+                agent_instruction_id=row['agent_instruction_id'],
+                llm_provider=LLMProvider(row['llm_provider']),
+                status=SessionStatus(row['status']),
+                context=json.loads(row['context']) if row['context'] else {},
+                message_count=row['message_count'],
+                created_at=row['created_at'],
+                last_activity=row['last_activity'],
+                ended_at=row['ended_at']
+            )
+        return None
+    
+    async def update_activity(self, session_id: str) -> None:
+        """Update last activity timestamp"""
+        query = """
+            UPDATE agent_sessions
+            SET last_activity = NOW(), message_count = message_count + 1
+            WHERE id = $1
+        """
+        await self.pool.execute(query, session_id)
+    
+    async def update_context(self, session_id: str, context: Dict[str, Any]) -> None:
+        """Update session context (for storing auth tokens, user data, etc)"""
+        query = """
+            UPDATE agent_sessions
+            SET context = $2, last_activity = NOW()
+            WHERE id = $1
+        """
+        await self.pool.execute(query, session_id, json.dumps(context))
+    
+    async def end_session(self, session_id: str) -> None:
+        """Mark session as ended"""
+        query = """
+            UPDATE agent_sessions
+            SET status = 'ended', ended_at = NOW()
+            WHERE id = $1
+        """
+        await self.pool.execute(query, session_id)
+        logger.info(f"Ended session {session_id}")
+    
+    async def get_active_session_count(self) -> int:
+        """Get count of active sessions"""
+        query = "SELECT COUNT(*) FROM agent_sessions WHERE status = 'active'"
+        return await self.pool.fetchval(query)
+
+
+class ConversationRepository:
+    """Repository for conversation messages"""
+    
+    def __init__(self, pool: DatabasePool):
+        self.pool = pool
+    
+    async def add_message(
+        self,
+        session_id: str,
+        role: str,
+        content: str,
+        metadata: Dict[str, Any] = None
+    ) -> int:
+        """Add a message to the conversation"""
+        query = """
+            INSERT INTO conversation_messages (session_id, role, content, metadata)
+            VALUES ($1, $2, $3, $4)
+            RETURNING id
+        """
+        return await self.pool.fetchval(
+            query, session_id, role, content, 
+            json.dumps(metadata) if metadata else '{}'
+        )
+    
+    async def get_conversation_history(
+        self,
+        session_id: str,
+        limit: int = 50
+    ) -> List[ConversationMessage]:
+        """Get conversation history for a session"""
+        query = """
+            SELECT id, session_id, role, content, metadata, created_at
+            FROM conversation_messages
+            WHERE session_id = $1
+            ORDER BY created_at ASC
+            LIMIT $2
+        """
+        rows = await self.pool.fetch(query, session_id, limit)
+        return [
+            ConversationMessage(
+                id=row['id'],
+                session_id=row['session_id'],
+                role=row['role'],
+                content=row['content'],
+                metadata=json.loads(row['metadata']) if row['metadata'] else {},
+                created_at=row['created_at']
+            )
+            for row in rows
+        ]
+
+
+class RAGDocumentRepository:
+    """Repository for RAG documents with vector search"""
+    
+    def __init__(self, pool: DatabasePool):
+        self.pool = pool
+    
+    async def upsert_document(
+        self,
+        filename: str,
+        content: str,
+        chunk_index: int = 0,
+        total_chunks: int = 1,
+        embedding: List[float] = None,
+        metadata: Dict[str, Any] = None
+    ) -> int:
+        """Insert or update a document chunk"""
+        query = """
+            INSERT INTO rag_documents (filename, content, chunk_index, total_chunks, embedding, metadata)
+            VALUES ($1, $2, $3, $4, $5::vector, $6)
+            ON CONFLICT (filename, chunk_index) 
+            DO UPDATE SET content = $2, embedding = $5::vector, metadata = $6, updated_at = NOW()
+            RETURNING id
+        """
+        # Convert embedding list to pgvector format string
+        embedding_str = str(embedding) if embedding else None
+        return await self.pool.fetchval(
+            query, filename, content, chunk_index, total_chunks,
+            embedding_str, json.dumps(metadata) if metadata else '{}'
+        )
+    
+    async def search_similar(
+        self,
+        query_embedding: List[float],
+        limit: int = 5,
+        similarity_threshold: float = 0.3
+    ) -> List[Dict[str, Any]]:
+        """Search for similar documents using vector similarity.
+        Returns list of dicts with document data and similarity score."""
+        query = """
+            SELECT id, filename, content, chunk_index, total_chunks, metadata, created_at, updated_at,
+                   1 - (embedding <=> $1::vector) as similarity
+            FROM rag_documents
+            WHERE embedding IS NOT NULL
+            AND 1 - (embedding <=> $1::vector) > $3
+            ORDER BY embedding <=> $1::vector
+            LIMIT $2
+        """
+        # Convert embedding list to pgvector format string
+        embedding_str = str(query_embedding)
+        rows = await self.pool.fetch(query, embedding_str, limit, similarity_threshold)
+        return [
+            {
+                "id": row['id'],
+                "filename": row['filename'],
+                "content": row['content'],
+                "chunk_index": row['chunk_index'],
+                "total_chunks": row['total_chunks'],
+                "metadata": json.loads(row['metadata']) if row['metadata'] else {},
+                "created_at": row['created_at'],
+                "updated_at": row['updated_at'],
+                "similarity": float(row['similarity'])  # Include similarity score
+            }
+            for row in rows
+        ]
+    
+    async def get_by_filename(self, filename: str) -> List[RAGDocument]:
+        """Get all chunks for a file"""
+        query = """
+            SELECT id, filename, content, chunk_index, total_chunks, metadata, created_at, updated_at
+            FROM rag_documents
+            WHERE filename = $1
+            ORDER BY chunk_index
+        """
+        rows = await self.pool.fetch(query, filename)
+        return [
+            RAGDocument(
+                id=row['id'],
+                filename=row['filename'],
+                content=row['content'],
+                chunk_index=row['chunk_index'],
+                total_chunks=row['total_chunks'],
+                metadata=json.loads(row['metadata']) if row['metadata'] else {},
+                created_at=row['created_at'],
+                updated_at=row['updated_at']
+            )
+            for row in rows
+        ]
+    
+    async def delete_by_filename(self, filename: str) -> int:
+        """Delete all chunks for a file"""
+        result = await self.pool.execute(
+            "DELETE FROM rag_documents WHERE filename = $1",
+            filename
+        )
+        return int(result.split()[-1])
+    
+    async def get_all_filenames(self) -> List[str]:
+        """Get list of all indexed filenames"""
+        rows = await self.pool.fetch(
+            "SELECT DISTINCT filename FROM rag_documents ORDER BY filename"
+        )
+        return [row['filename'] for row in rows]
+
+
+class ConfigRepository:
+    """Repository for system configuration"""
+    
+    def __init__(self, pool: DatabasePool):
+        self.pool = pool
+    
+    async def get(self, key: str) -> Optional[str]:
+        """Get a config value by key"""
+        row = await self.pool.fetchrow(
+            "SELECT value FROM system_config WHERE key = $1",
+            key
+        )
+        return row['value'] if row else None
+    
+    async def set(self, key: str, value: str, description: str = None) -> None:
+        """Set a config value"""
+        query = """
+            INSERT INTO system_config (key, value, description)
+            VALUES ($1, $2, $3)
+            ON CONFLICT (key) DO UPDATE SET value = $2, description = $3, updated_at = NOW()
+        """
+        await self.pool.execute(query, key, value, description)
+    
+    async def get_all(self) -> Dict[str, str]:
+        """Get all config values"""
+        rows = await self.pool.fetch("SELECT key, value FROM system_config")
+        return {row['key']: row['value'] for row in rows}
