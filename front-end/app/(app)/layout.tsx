@@ -1,6 +1,6 @@
 import { headers } from 'next/headers';
-import { getAppConfig } from '@/lib/utils';
 import { ThemeToggle } from '@/components/app/theme-toggle';
+import { getAppConfig } from '@/lib/utils';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -16,10 +16,10 @@ export default async function Layout({ children }: LayoutProps) {
         <div className="flex items-center gap-3">
           {/* Light mode icon */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img 
-            src="/Icon_light.png" 
-            alt={`${companyName} Icon`} 
-            className="block size-10 dark:hidden" 
+          <img
+            src="/Icon_light.png"
+            alt={`${companyName} Icon`}
+            className="block size-10 dark:hidden"
           />
           {/* Dark mode icon */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -29,7 +29,7 @@ export default async function Layout({ children }: LayoutProps) {
             className="hidden size-10 dark:block"
           />
           {/* Theme Toggle */}
-          <ThemeToggle className="bg-background/80 backdrop-blur-sm rounded-full p-1 border border-border/50" />
+          <ThemeToggle className="bg-background/80 border-border/50 rounded-full border p-1 backdrop-blur-sm" />
         </div>
       </header>
 

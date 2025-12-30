@@ -20,12 +20,13 @@ aiohttp>=3.9.0  # Async HTTP client for LLM providers
 httpx>=0.25.0  # Alternative async HTTP client (used for Ollama embeddings)
 vllm  # Local LLM inference server
 
-# Enhanced features (optional - uncomment to enable)
-# LangChain for conversation memory and RAG
-# langchain>=0.1.0
-# langchain-community>=0.1.0
+# Enhanced features
+# LangChain for web search and RAG tools
+langchain>=0.1.0
+langchain-community>=0.1.0
+duckduckgo-search>=4.0.0  # Required for DuckDuckGoSearchRun
 # chromadb>=0.4.0
-# sentence-transformers>=2.2.0
+# sentence-transformers>=2.2.0  # Already installed above
 
 # Premium STT/TTS providers (require API keys)
 # livekit-plugins-deepgram    # Better noise handling

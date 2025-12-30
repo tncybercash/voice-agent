@@ -45,7 +45,7 @@ export const ChatEntry = ({
         {name && <strong>{name}</strong>}
         {messageOrigin === 'remote' && !name && (
           <strong className="text-gold flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
+            <span className="bg-gold h-1.5 w-1.5 animate-pulse rounded-full" />
             Assistant
           </strong>
         )}
@@ -60,9 +60,9 @@ export const ChatEntry = ({
       <span
         className={cn(
           'max-w-[85%] rounded-[20px] p-3 text-sm leading-relaxed',
-          messageOrigin === 'local' 
-            ? 'bg-muted ml-auto text-foreground' 
-            : 'mr-auto bg-gold/10 border border-gold/20 text-foreground'
+          messageOrigin === 'local'
+            ? 'bg-muted text-foreground ml-auto'
+            : 'bg-gold/10 border-gold/20 text-foreground mr-auto border'
         )}
       >
         {message}

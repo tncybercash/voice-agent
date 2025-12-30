@@ -190,7 +190,8 @@
   }
 
   @keyframes gold-breathe {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 0.6;
       transform: scale(1);
     }
@@ -201,7 +202,8 @@
   }
 
   @keyframes gold-breathe-active {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 0.7;
       transform: scale(1);
     }
@@ -213,7 +215,14 @@
 
   /* Gold gradient background - linear and professional */
   .bg-gold-gradient {
-    background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dark) 100%);
-    box-shadow: 0 0 40px 0 var(--gold-glow), inset 0 0 20px 0 var(--gold-glow);
+    background: linear-gradient(
+      180deg,
+      var(--gold-light) 0%,
+      var(--gold) 50%,
+      var(--gold-dark) 100%
+    );
+    box-shadow:
+      0 0 40px 0 var(--gold-glow),
+      inset 0 0 20px 0 var(--gold-glow);
   }
 }

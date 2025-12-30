@@ -150,13 +150,18 @@ class VoiceAgent(Agent):
         """Set RAG service for context augmentation"""
         self.rag_service = rag_service
     
-    async def _augment_chat_context(self, turn_ctx, user_message: str):
+    async def _augment_chat_context(self, turn_ctx, user_message: str) -> str:
         """
         Augment the chat context with RAG context based on user message.
         
         IMPORTANT: We modify turn_ctx directly because that's what LiveKit uses
         for the LLM generation. Just calling update_instructions() is NOT enough!
+        
+        Returns:
+            str: The RAG context that was added (empty string if no context found)
         """
+        rag_context = ""
+        
         if self.rag_service:
             try:
                 logger.info(f"🔍 Searching RAG for query: '{user_message}'")
@@ -165,9 +170,10 @@ class VoiceAgent(Agent):
                     base_instructions=self.base_instructions
                 )
                 
-                # Log whether context was added
+                # Extract just the RAG context (remove base instructions)
                 if len(augmented) > len(self.base_instructions):
-                    context_added = len(augmented) - len(self.base_instructions)
+                    rag_context = augmented[len(self.base_instructions):]
+                    context_added = len(rag_context)
                     logger.info(f"✓ RAG context added ({context_added} chars) for: {user_message[:50]}...")
                     
                     # Log if USSD code is in context (for debugging)
@@ -212,6 +218,8 @@ class VoiceAgent(Agent):
                 traceback.print_exc()
         else:
             logger.warning("RAG service not available for augmentation")
+        
+        return rag_context
     
     async def on_user_turn_completed(
         self, turn_ctx, new_message
@@ -246,10 +254,33 @@ class VoiceAgent(Agent):
         logger.info(f"👤 User turn completed: '{user_text}'")
         self._last_user_message = user_text
         
+        # Check if user is giving permission to search web
+        if hasattr(self.user_session, 'waiting_for_search_permission'):
+            if self.user_session.waiting_for_search_permission:
+                user_lower = user_text.lower()
+                if any(word in user_lower for word in ['yes', 'yeah', 'sure', 'okay', 'ok', 'go ahead', 'please']):
+                    self.user_session.web_search_approved = True
+                    self.user_session.waiting_for_search_permission = False
+                    logger.info("✅ User approved web search")
+                elif any(word in user_lower for word in ['no', 'nope', 'don\'t', 'not']):
+                    self.user_session.web_search_approved = False
+                    self.user_session.waiting_for_search_permission = False
+                    logger.info("❌ User declined web search")
+        
         # Only augment with RAG for banking-related questions
         # General chat doesn't need knowledge base search
         if user_text and is_banking_question(user_text):
-            await self._augment_chat_context(turn_ctx, user_text)
+            rag_context = await self._augment_chat_context(turn_ctx, user_text)
+            
+            # If RAG found nothing, ask permission to search web
+            if not rag_context or len(rag_context.strip()) == 0:
+                logger.info("⚠️ RAG found no information, asking permission to search web")
+                self.user_session.waiting_for_search_permission = True
+                self.user_session.pending_search_query = user_text
+                # Add instruction to ask permission
+                permission_note = "\n\nIMPORTANT: The knowledge base doesn't have information about this question. You MUST politely say: 'I don't have that information in my knowledge base. Would you like me to search the internet for this information?' Then WAIT for user permission before using search_web tool."
+                if hasattr(turn_ctx, 'messages') and len(turn_ctx.messages) > 0:
+                    turn_ctx.messages[0].content = turn_ctx.messages[0].content + permission_note
         elif user_text:
             logger.info("⏭ Skipping RAG for general conversation")
         

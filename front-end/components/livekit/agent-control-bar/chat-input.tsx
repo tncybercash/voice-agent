@@ -77,7 +77,7 @@ export function ChatInput({
     >
       <form
         onSubmit={handleSubmit}
-        className="mb-3 flex grow items-end gap-2 rounded-md pl-1 text-sm bg-transparent"
+        className="mb-3 flex grow items-end gap-2 rounded-md bg-transparent pl-1 text-sm"
       >
         <input
           autoFocus
@@ -87,7 +87,7 @@ export function ChatInput({
           placeholder="Type something..."
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="h-8 flex-1 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 bg-transparent text-foreground placeholder:text-muted-foreground"
+          className="text-foreground placeholder:text-muted-foreground h-8 flex-1 bg-transparent focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         />
         <Button
           size="icon"

@@ -212,15 +212,29 @@ class SessionRepository:
         """
         await self.pool.execute(query, session_id, json.dumps(context))
     
-    async def end_session(self, session_id: str) -> None:
-        """Mark session as ended"""
-        query = """
-            UPDATE agent_sessions
-            SET status = 'ended', ended_at = NOW()
-            WHERE id = $1
+    async def end_session(self, session_id: str, duration_seconds: int = None) -> None:
         """
-        await self.pool.execute(query, session_id)
-        logger.info(f"Ended session {session_id}")
+        Mark session as ended and save duration
+        
+        Args:
+            session_id: Session ID to end
+            duration_seconds: Optional duration in seconds to save
+        """
+        if duration_seconds is not None:
+            query = """
+                UPDATE agent_sessions
+                SET status = 'ended', ended_at = NOW(), duration_seconds = $2
+                WHERE id = $1
+            """
+            await self.pool.execute(query, session_id, duration_seconds)
+        else:
+            query = """
+                UPDATE agent_sessions
+                SET status = 'ended', ended_at = NOW()
+                WHERE id = $1
+            """
+            await self.pool.execute(query, session_id)
+        logger.info(f"Ended session {session_id} (duration: {duration_seconds}s)")
     
     async def get_active_session_count(self) -> int:
         """Get count of active sessions"""

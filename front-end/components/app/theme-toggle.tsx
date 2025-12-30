@@ -14,17 +14,17 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
   return (
     <div
       className={cn(
-        'text-foreground bg-background flex flex-row gap-1 overflow-hidden rounded-full border border-gold/30 p-1',
+        'text-foreground bg-background border-gold/30 flex flex-row gap-1 overflow-hidden rounded-full border p-1',
         className
       )}
     >
       <span className="sr-only">Color scheme toggle</span>
-      <button 
-        type="button" 
-        onClick={() => setTheme('light')} 
+      <button
+        type="button"
+        onClick={() => setTheme('light')}
         suppressHydrationWarning
         className={cn(
-          'cursor-pointer p-2 rounded-full transition-colors',
+          'cursor-pointer rounded-full p-2 transition-colors',
           theme === 'light' ? 'bg-gold/20' : 'hover:bg-gold/10'
         )}
       >
@@ -36,12 +36,12 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
           className={cn(theme !== 'light' && 'opacity-40')}
         />
       </button>
-      <button 
-        type="button" 
-        onClick={() => setTheme('dark')} 
+      <button
+        type="button"
+        onClick={() => setTheme('dark')}
         suppressHydrationWarning
         className={cn(
-          'cursor-pointer p-2 rounded-full transition-colors',
+          'cursor-pointer rounded-full p-2 transition-colors',
           theme === 'dark' ? 'bg-gold/20' : 'hover:bg-gold/10'
         )}
       >

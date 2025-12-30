@@ -51,6 +51,15 @@ class UserSession:
     auth_token: Optional[str] = None
     user_data: Dict[str, Any] = field(default_factory=dict)
     conversation_history: list = field(default_factory=list)
+    
+    # Web search permission tracking
+    waiting_for_search_permission: bool = False
+    web_search_approved: bool = False
+    pending_search_query: Optional[str] = None
+    
+    def get_duration_seconds(self) -> int:
+        """Calculate session duration in seconds"""
+        return int((datetime.utcnow() - self.created_at).total_seconds())
 
 
 class SessionManager:
@@ -320,6 +329,9 @@ class SessionManager:
         async with self._lock:
             session = self._sessions.pop(session_id, None)
             if session:
+                # Calculate duration
+                duration_seconds = session.get_duration_seconds()
+                
                 # Generate conversation summary if requested
                 if generate_summary and session.conversation_history:
                     try:
@@ -331,11 +343,11 @@ class SessionManager:
                 if session.room_id in self._room_to_session:
                     del self._room_to_session[session.room_id]
                 
-                # Mark as ended in database
+                # Mark as ended in database with duration
                 session_repo = SessionRepository(self._db_pool)
-                await session_repo.end_session(session_id)
+                await session_repo.end_session(session_id, duration_seconds)
                 
-                logger.info(f"Ended session {session_id} (messages: {len(session.conversation_history)})")
+                logger.info(f"Ended session {session_id} (duration: {duration_seconds}s, messages: {len(session.conversation_history)})")
     
     async def _generate_and_save_summary(self, session: UserSession) -> None:
         """Generate and save conversation summary"""
