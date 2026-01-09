@@ -33,15 +33,17 @@ from session_manager import get_session_manager, UserSession
 from providers import get_llm_provider_manager, LLMProviderType
 from database import get_db_pool
 
+# MCP Client imports - use Streamable HTTP for session-based connection
+from mcp_client.server import MCPServerStreamableHttp
+from mcp_client.agent_tools import MCPToolsIntegration
+
 # Explicitly import tools to pass to AgentSession
 from tools import (
-    send_email,
     search_web
 )
 
-# Create tools list for AgentSession
+# Create tools list for AgentSession - ONLY search_web + knowledge_base_* from MCP
 AGENT_TOOLS = [
-    send_email,
     search_web
 ]
 
@@ -55,21 +57,18 @@ AGENT_TOOLS = [
 _db_initialized: bool = False
 _initialization_lock = None  # Will be created per event loop
 
-# TODO: MCP Server Integration
-# When MCP server is ready, knowledge base queries will be handled through
-# the MCP server's query tool. The agent will call the MCP tool to retrieve
-# relevant context instead of using local RAG.
+# MCP Server Integration
+_mcp_servers: list = []  # List of connected MCP servers
+_mcp_tools: list = []  # Dynamic tools from MCP servers
+_mcp_initialized: bool = False
 
 
 async def ensure_services_initialized():
     """
-    Ensure database services are initialized (once per worker process).
+    Ensure database and MCP services are initialized (once per worker process).
     This runs in the worker's event loop, avoiding event loop conflicts.
-    
-    Note: RAG functionality has been removed. Knowledge base queries will
-    be handled via MCP server tools in the future.
     """
-    global _db_initialized, _initialization_lock
+    global _db_initialized, _initialization_lock, _mcp_servers, _mcp_tools, _mcp_initialized
     
     # Create lock if needed (per event loop)
     if _initialization_lock is None:
@@ -77,7 +76,7 @@ async def ensure_services_initialized():
     
     async with _initialization_lock:
         # Skip if already initialized in this process
-        if _db_initialized:
+        if _db_initialized and _mcp_initialized:
             return
         
         logger.info("=" * 50)
@@ -85,16 +84,101 @@ async def ensure_services_initialized():
         logger.info("=" * 50)
         
         # Initialize database connection
-        try:
-            await get_db_pool()
-            _db_initialized = True
-            logger.info("✓ Database connection established")
-        except Exception as e:
-            logger.error(f"✗ Database initialization failed: {e}")
+        if not _db_initialized:
+            try:
+                await get_db_pool()
+                _db_initialized = True
+                logger.info("✓ Database connection established")
+            except Exception as e:
+                logger.error(f"✗ Database initialization failed: {e}")
         
-        # TODO: Initialize MCP server connection here when available
-        # This will allow the agent to query the knowledge base through MCP tools
-        logger.info("ℹ️ Knowledge base queries will be handled via MCP server tools")
+        # Initialize MCP server connection
+        if not _mcp_initialized:
+            mcp_url = os.getenv("MCP_SERVER_URL", "")
+            if mcp_url:
+                try:
+                    logger.info(f"🔌 Connecting to MCP server: {mcp_url}")
+                    
+                    # Use Streamable HTTP client (supports session management required by Spring Boot MCP)
+                    # Increased timeouts to handle longer idle periods between tool calls
+                    mcp_server = MCPServerStreamableHttp(
+                        params={
+                            "url": mcp_url,
+                            "timeout": 60,  # Increased from 30 to 60 seconds
+                            "sse_read_timeout": 1800  # Increased from 300 (5 min) to 1800 (30 min)
+                        },
+                        cache_tools_list=True,
+                        name="Spring Boot MCP Server"
+                    )
+                    await mcp_server.connect()
+                    _mcp_servers.append(mcp_server)
+                    
+                    # Fetch and prepare tools
+                    logger.info("🛠️ Fetching tools from MCP server...")
+                    tools = await MCPToolsIntegration.prepare_dynamic_tools(
+                        _mcp_servers,
+                        convert_schemas_to_strict=True,
+                        auto_connect=False
+                    )
+                    
+                    # Filter to ONLY knowledge_base and search_web tools
+                    from livekit.agents.llm import RawFunctionTool, FunctionTool as LKFunctionTool
+                    filtered_tools = []
+                    all_tool_names = []
+                    kept_tool_names = []
+                    logger.info(f"🔍 Filtering {len(tools)} MCP tools...")
+                    
+                    for i, t in enumerate(tools):
+                        tool_name = None
+                        
+                        try:
+                            # LiveKit stores tool metadata in __livekit_raw_tool_info
+                            if hasattr(t, '__dict__') and '__livekit_raw_tool_info' in t.__dict__:
+                                tool_info = t.__dict__['__livekit_raw_tool_info']
+                                tool_name = tool_info.name
+                                
+                        except Exception as e:
+                            logger.warning(f"⚠️ Error extracting tool name from tool {i}: {e}")
+                            continue
+                        
+                        # Track all tool names
+                        if tool_name:
+                            all_tool_names.append(tool_name)
+                            
+                            # Only keep knowledge_base_* and search_web tools
+                            if tool_name.startswith('knowledge_base_') or tool_name == 'search_web':
+                                logger.info(f"✅ KEEPING: {tool_name}")
+                                filtered_tools.append(t)
+                                kept_tool_names.append(tool_name)
+                    
+                    # Log summary
+                    logger.info(f"📋 All {len(all_tool_names)} MCP tool names: {', '.join(sorted(all_tool_names)[:15])}...")
+                    logger.info(f"✅ Kept {len(kept_tool_names)} tools: {kept_tool_names}")
+                    
+                    _mcp_tools.extend(filtered_tools)
+                    _mcp_initialized = True
+                    
+                    # Get tool names for logging
+                    tool_names = []
+                    for t in filtered_tools:
+                        try:
+                            if isinstance(t, (RawFunctionTool, LKFunctionTool)):
+                                tool_names.append(t.info.name)
+                            elif hasattr(t, 'info') and hasattr(t.info, 'name'):
+                                tool_names.append(t.info.name)
+                            else:
+                                tool_names.append(getattr(t, '__name__', 'unknown'))
+                        except Exception:
+                            tool_names.append(getattr(t, '__name__', 'unknown'))
+                    logger.info(f"✓ MCP server connected with {len(filtered_tools)} filtered tools: {tool_names}")
+                    logger.info(f"ℹ️ Total tools received: {len(tools)}, Filtered to: {len(filtered_tools)}")
+                except Exception as e:
+                    logger.error(f"✗ MCP server initialization failed: {e}")
+                    import traceback
+                    traceback.print_exc()
+            else:
+                logger.info("ℹ️ MCP_SERVER_URL not set, skipping MCP initialization")
+                _mcp_initialized = True  # Mark as initialized to prevent retries
         
         logger.info("=" * 50)
         logger.info("Services initialized!")
@@ -207,11 +291,24 @@ class VoiceAgent(Agent):
 
 async def get_agent_instructions(is_local_mode: bool = True) -> tuple[str, str]:
     """
-    Get agent instructions from database.
-    Falls back to prompt.py if database is unavailable.
+    Get agent instructions using enterprise layered architecture.
+    
+    Layers:
+    - Layer 1: Identity/Persona (from DATABASE - business customizable)
+    - Layer 2: Compliance Rules (from CODE - versioned, auditable)
+    - Layer 3: Tool Selection Rules (from CODE - technical routing)
+    - Layer 4: Communication Guidelines (from CODE - voice standards)
     
     Returns: (instructions, initial_greeting)
     """
+    from prompt import (
+        compose_instructions,
+        AGENT_INSTRUCTIONS, 
+        AGENT_INSTRUCTIONS_LOCAL,
+        DEFAULT_GREETING,
+        DEFAULT_GREETING_LOCAL
+    )
+    
     try:
         db_pool = await get_db_pool()
         from database.repository import AgentInstructionRepository
@@ -220,16 +317,25 @@ async def get_agent_instructions(is_local_mode: bool = True) -> tuple[str, str]:
         instruction = await repo.get_active_instruction(is_local_mode)
         
         if instruction:
-            logger.info(f"Loaded instructions from database: {instruction.name}")
-            return instruction.instructions, instruction.initial_greeting
+            logger.info(f"Loaded identity from database: {instruction.name}")
+            # Compose: Database identity + Code-controlled rules
+            full_instructions = compose_instructions(
+                identity=instruction.instructions,  # From database
+                include_compliance=True,            # From code
+                include_tool_rules=True,            # From code
+                include_communication=True          # From code
+            )
+            greeting = instruction.initial_greeting or (DEFAULT_GREETING_LOCAL if is_local_mode else DEFAULT_GREETING)
+            logger.info("Composed enterprise instructions: DB identity + code rules")
+            return full_instructions, greeting
     except Exception as e:
         logger.warning(f"Failed to load instructions from database: {e}")
     
-    # Fallback to prompt.py
-    from prompt import AGENT_INSTRUCTIONS, AGENT_INSTRUCTIONS_LOCAL
+    # Fallback to prompt.py (pre-composed with all layers)
     instructions = AGENT_INSTRUCTIONS_LOCAL if is_local_mode else AGENT_INSTRUCTIONS
+    greeting = DEFAULT_GREETING_LOCAL if is_local_mode else DEFAULT_GREETING
     logger.info("Using fallback instructions from prompt.py")
-    return instructions, None
+    return instructions, greeting
 
 
 # ============================================
@@ -572,16 +678,20 @@ You can see the user through their camera and see their screen when shared.
     
     # Create agent with session context
     agent = VoiceAgent(user_session)
-    # TODO: When MCP server is ready, pass MCP client to agent for knowledge base queries
-    # agent.set_mcp_client(mcp_client)
     
-    # Create session with explicit tools list
+    # Combine static tools with dynamic MCP tools
+    all_tools = AGENT_TOOLS.copy()
+    if _mcp_tools:
+        logger.info(f"Adding {len(_mcp_tools)} MCP tools to agent")
+        all_tools.extend(_mcp_tools)
+    
+    # Create session with tools list (includes MCP tools if connected)
     session = AgentSession(
         stt=stt,
         llm=llm,
         tts=tts,
         vad=vad,
-        tools=AGENT_TOOLS,
+        tools=all_tools,
         allow_interruptions=True,
     )
     

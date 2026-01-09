@@ -8,6 +8,7 @@ from anyio.streams.memory import MemoryObjectReceiveStream, MemoryObjectSendStre
 import mcp.types
 from mcp.types import CallToolResult, JSONRPCMessage, Tool as MCPTool
 from mcp.client.sse import sse_client
+from mcp.client.streamable_http import streamablehttp_client
 from mcp.client.session import ClientSession
 
 # Base class for MCP servers
@@ -181,6 +182,70 @@ class MCPServerSse(_MCPServerWithClientSession):
     def name(self) -> str:
         """A readable name for the server."""
         return self._name
+
+
+# Streamable HTTP server implementation (supports session management)
+MCPServerStreamableHttpParams = Dict[str, Any]
+
+class MCPServerStreamableHttp(_MCPServerWithClientSession):
+    """MCP server implementation that uses the Streamable HTTP transport with session support."""
+
+    def __init__(
+        self,
+        params: MCPServerStreamableHttpParams,
+        cache_tools_list: bool = False,
+        name: Optional[str] = None,
+    ):
+        """Create a new MCP server based on the Streamable HTTP transport.
+
+        Args:
+            params: The params that configure the server including the URL, headers,
+                   timeout, and other HTTP settings.
+            cache_tools_list: Whether to cache the tools list.
+            name: A readable name for the server.
+        """
+        super().__init__(cache_tools_list)
+        self.params = params
+        self._name = name or f"Streamable HTTP Server at {self.params.get('url', 'unknown')}"
+        self._get_session_id = None  # Session ID getter from streamable HTTP
+
+    def create_streams(
+        self,
+    ) -> AbstractAsyncContextManager[
+        Tuple[
+            MemoryObjectReceiveStream[JSONRPCMessage | Exception],
+            MemoryObjectSendStream[JSONRPCMessage],
+        ]
+    ]:
+        """Create the streams for the server."""
+        return streamablehttp_client(
+            url=self.params["url"],
+            headers=self.params.get("headers"),
+            timeout=self.params.get("timeout", 30),
+            sse_read_timeout=self.params.get("sse_read_timeout", 60 * 5),
+        )
+
+    async def connect(self):
+        """Connect to the server using Streamable HTTP transport."""
+        try:
+            # streamablehttp_client returns (read, write, get_session_id) - 3 values
+            transport = await self.exit_stack.enter_async_context(self.create_streams())
+            read, write, get_session_id = transport
+            self._get_session_id = get_session_id
+            session = await self.exit_stack.enter_async_context(ClientSession(read, write))
+            await session.initialize()
+            self.session = session
+            self.logger.info(f"Connected to MCP server: {self.name}")
+        except Exception as e:
+            self.logger.error(f"Error initializing MCP server: {e}")
+            await self.cleanup()
+            raise
+
+    @property
+    def name(self) -> str:
+        """A readable name for the server."""
+        return self._name
+
 
 # Stdio server implementation
 class MCPServerStdio(MCPServer):

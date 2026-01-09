@@ -1,18 +1,15 @@
 import asyncio
 import logging
 import json
-import inspect
-import typing
-from typing import Any, List, Dict, Callable, Optional, Awaitable, Sequence, Tuple, Type, Union, cast
-from uuid import uuid4
+from typing import Any, List, Dict, Callable
 
 # Import from the MCP module
 from .util import MCPUtil, FunctionTool
 from .server import MCPServer, MCPServerSse
-from livekit.agents import ChatContext, AgentSession, JobContext, FunctionTool as Tool
-from mcp import CallToolRequest
 
 logger = logging.getLogger("mcp-agent-tools")
+# Set to INFO to see tool schemas
+logger.setLevel(logging.DEBUG)
 
 class MCPToolsIntegration:
     """
@@ -71,61 +68,46 @@ class MCPToolsIntegration:
         return prepared_tools
 
     @staticmethod
-    def _create_decorated_tool(tool: FunctionTool) -> Callable:
+    def _create_tool_invoker(tool_name: str, tool_invoke):
+        """Factory function to create a tool invoker with proper closure capture."""
+        async def invoke(raw_arguments: dict) -> str:
+            input_json = json.dumps(raw_arguments)
+            logger.info(f"Invoking tool '{tool_name}' with args: {raw_arguments}")
+            result_str = await tool_invoke(None, input_json)
+            logger.info(f"Tool '{tool_name}' result: {result_str[:200] if result_str else 'None'}...")
+            return result_str
+        return invoke
+
+    @staticmethod
+    def _create_decorated_tool(tool: FunctionTool):
         """
-        Creates a decorated function for a single MCP tool that can be used with LiveKit agents.
+        Creates a RawFunctionTool for a single MCP tool that can be used with LiveKit agents.
+        Uses RawFunctionTool to preserve the original JSON schema from the MCP server,
+        which works better with Google Realtime and other providers.
 
         Args:
             tool: The FunctionTool instance to convert
 
         Returns:
-            A decorated async function that can be added to a LiveKit agent's tools
+            A RawFunctionTool that can be added to a LiveKit agent's tools
         """
-        # Get function_tool decorator from LiveKit
-        # Import locally to avoid circular imports
         from livekit.agents.llm import function_tool
-
-        # Create parameters list from JSON schema
-        params = []
-        annotations = {}
-        schema_props = tool.params_json_schema.get("properties", {})
-        schema_required = set(tool.params_json_schema.get("required", []))
-        type_map = {
-            "string": str, "integer": int, "number": float,
-            "boolean": bool, "array": list, "object": dict,
+        
+        # Build the raw schema for the tool
+        raw_schema = {
+            "name": tool.name,
+            "description": tool.description or "",
+            "parameters": tool.params_json_schema,
         }
+        
+        # Log the schema for debugging
+        logger.info(f"Creating tool '{tool.name}' with schema params: {tool.params_json_schema}")
+        
+        # Create the invoker function using factory pattern for proper closure
+        invoker = MCPToolsIntegration._create_tool_invoker(tool.name, tool.on_invoke_tool)
 
-        # Build parameters from the schema properties
-        for p_name, p_details in schema_props.items():
-            json_type = p_details.get("type", "string")
-            py_type = type_map.get(json_type, typing.Any)
-            annotations[p_name] = py_type
-
-            # Use inspect.Parameter.empty for required params, None otherwise
-            default = inspect.Parameter.empty if p_name in schema_required else p_details.get("default", None)
-            params.append(inspect.Parameter(
-                name=p_name,
-                kind=inspect.Parameter.KEYWORD_ONLY,
-                annotation=py_type,
-                default=default
-            ))
-
-        # Define the actual function that will be called by the agent
-        async def tool_impl(**kwargs):
-            input_json = json.dumps(kwargs)
-            logger.info(f"Invoking tool '{tool.name}' with args: {kwargs}")
-            result_str = await tool.on_invoke_tool(None, input_json)
-            logger.info(f"Tool '{tool.name}' result: {result_str}")
-            return result_str
-
-        # Set function metadata
-        tool_impl.__signature__ = inspect.Signature(parameters=params)
-        tool_impl.__name__ = tool.name
-        tool_impl.__doc__ = tool.description
-        tool_impl.__annotations__ = {'return': str, **annotations}
-
-        # Apply the decorator and return
-        return function_tool()(tool_impl)
+        # Apply the decorator with raw_schema and return RawFunctionTool
+        return function_tool(raw_schema=raw_schema)(invoker)
 
     @staticmethod
     async def register_with_agent(agent, mcp_servers: List[MCPServer],

@@ -134,20 +134,12 @@ class SessionManager:
                 )
                 logger.info(f"Created new anonymous profile: {profile_id}")
             
-            # Get instructions from database
-            instruction_repo = AgentInstructionRepository(self._db_pool)
-            instruction = await instruction_repo.get_active_instruction(is_local_mode)
-            
-            if not instruction:
-                # Fallback to default instructions
-                from prompt import AGENT_INSTRUCTIONS, AGENT_INSTRUCTIONS_LOCAL
-                instructions = AGENT_INSTRUCTIONS_LOCAL if is_local_mode else AGENT_INSTRUCTIONS
-                initial_greeting = None
-                instruction_id = 0
-            else:
-                instructions = instruction.instructions
-                initial_greeting = instruction.initial_greeting
-                instruction_id = instruction.id
+            # USE STATIC INSTRUCTIONS FROM prompt.py (NO DATABASE LOOKUP)
+            from prompt import AGENT_INSTRUCTIONS
+            instructions = AGENT_INSTRUCTIONS
+            initial_greeting = "Hello! I'm Batsi from TN CyberTech Bank. How can I help you today?"
+            instruction_id = None  # NULL = static instructions from prompt.py
+            logger.info("Using static instructions from prompt.py (no database)")
             
             # Determine LLM provider
             if llm_provider is None:
@@ -159,12 +151,12 @@ class SessionManager:
                 else:
                     llm_provider = LLMProviderType.OLLAMA
             
-            # Create session in database WITH profile_id
+            # Create session in database (for message persistence) with NULL instruction_id
             session_repo = SessionRepository(self._db_pool)
             session_id = await session_repo.create_session(
                 room_id=room_id,
                 participant_id=participant_id,
-                agent_instruction_id=instruction_id,
+                agent_instruction_id=instruction_id,  # NULL = static instructions
                 llm_provider=LLMProviderEnum(llm_provider.value),
                 profile_id=profile_id  # Link to user profile
             )
@@ -177,9 +169,10 @@ class SessionManager:
                 instructions=instructions,
                 initial_greeting=initial_greeting,
                 llm_provider=llm_provider,
-                profile_id=profile_id,  # Store profile ID in session
+                profile_id=profile_id,  # Store profile ID
                 is_authenticated=False  # Start as anonymous
             )
+            logger.info(f"✓ Session created in database with static instructions")
             
             self._sessions[session_id] = session
             self._room_to_session[room_id] = session_id

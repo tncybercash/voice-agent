@@ -13,6 +13,11 @@ psycopg2-binary>=2.9.0  # For connection utilities
 # Async file operations
 aiofiles>=23.0.0
 
+# MCP (Model Context Protocol) Client
+mcp>=1.0.0  # Model Context Protocol client library
+anyio>=4.0.0  # Async I/O for MCP streams
+httpx-sse>=0.4.0  # SSE support for MCP HTTP connections
+
 # NOTE: RAG dependencies have been removed (sentence-transformers, docling, httpx for embeddings)
 # Knowledge base queries will be handled via MCP server tools.
 # If you need to re-enable local RAG, uncomment the following:
