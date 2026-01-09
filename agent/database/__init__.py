@@ -1,9 +1,13 @@
-"""Database package initialization"""
+"""Database package initialization
+
+Note: RAG-related functionality has been removed from this module.
+Knowledge base queries will be handled via MCP server tools.
+The RAGDocument model is kept for backward compatibility but is deprecated.
+"""
 from .models import (
     AgentInstruction,
     AgentSession,
     ConversationMessage,
-    RAGDocument,
     SystemConfig,
     LLMProvider,
     SessionStatus
@@ -18,7 +22,6 @@ __all__ = [
     "AgentInstruction",
     "AgentSession",
     "ConversationMessage",
-    "RAGDocument",
     "SystemConfig",
     "LLMProvider",
     "SessionStatus",

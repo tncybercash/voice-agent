@@ -1,7 +1,10 @@
 """
-Enhanced Voice AI Agent with database-backed configuration,
-concurrent session management, and RAG support.
+Enhanced Voice AI Agent with database-backed configuration
+and concurrent session management.
 Optimized for 20+ concurrent users with isolated conversations.
+
+Note: RAG functionality has been removed from this module.
+Knowledge base queries will be handled via MCP server tools in the future.
 """
 import logging
 import os
@@ -29,7 +32,6 @@ logger.setLevel(logging.INFO)
 from session_manager import get_session_manager, UserSession
 from providers import get_llm_provider_manager, LLMProviderType
 from database import get_db_pool
-from database.rag import RAGIndexer, RAGService, EmbeddingService
 
 # Explicitly import tools to pass to AgentSession
 from tools import (
@@ -44,77 +46,30 @@ AGENT_TOOLS = [
 ]
 
 
-def is_banking_question(text: str) -> bool:
-    """
-    Detect if a user's question is banking-related and requires RAG knowledge base.
-    Returns True only for banking-specific queries.
-    Uses fuzzy matching for common variations and misspellings.
-    """
-    text_lower = text.lower()
-    # Remove punctuation and extra spaces for better matching
-    text_normalized = ''.join(c if c.isalnum() or c.isspace() else ' ' for c in text_lower)
-    text_normalized = ' '.join(text_normalized.split())
-    
-    # Banking-related keywords with common variations
-    banking_keywords = [
-        # Account operations
-        'balance', 'account', 'transfer', 'deposit', 'withdraw', 'cardless',
-        'statement', 'transaction', 'money', 'payment', 'send money',
-        
-        # USSD and codes (all variations)
-        'ussd', 'uss d', 'us sd', 'u s s d', 'decode', 'de code',
-        '*236', '*236#', 'star 236', 'dial', 'code',
-        'short code', 'banking code', 'mobile code',
-        
-        # Digital banking channels
-        'digital', 'online', 'mobile', 'app', 'website', 'portal',
-        'internet banking', 'e-banking', 'channel', 'platform',
-        
-        # Banking services
-        'loan', 'interest', 'fee', 'charge', 'branch', 'atm',
-        'card', 'debit', 'credit', 'visa', 'mastercard',
-        'pin', 'password', 'otp', 'verification',
-        
-        # Account management
-        'open account', 'close account', 'new account', 'register',
-        'activate', 'deactivate', 'suspend', 'freeze',
-        
-        # Financial products
-        'limit', 'overdraft', 'savings', 'checking', 'current',
-        'fixed deposit', 'foreign exchange', 'forex', 'rate',
-        
-        # Service
-        'hours', 'contact', 'customer service', 'office', 'support',
-        'help', 'assistance', 'bank', 'banking'
-    ]
-    
-    # Check if any banking keyword is in the question
-    for keyword in banking_keywords:
-        if keyword in text_normalized:
-            logger.info(f"🏦 Banking question detected (keyword: '{keyword}'): {text[:50]}...")
-            return True
-    
-    # Additional pattern matching for codes
-    if '*' in text or 'star' in text_lower:
-        logger.info(f"🏦 Banking question detected (code pattern): {text[:50]}...")
-        return True
-    
-    logger.info(f"💬 General question detected (no RAG needed): {text[:50]}...")
-    return False
+# Note: Banking question detection was previously handled by is_banking_question()
+# This functionality will be replaced by MCP server knowledge base queries.
+# TODO: Implement MCP server query tool integration for knowledge base lookups
 
 
 # Global references for pre-initialized services
-_rag_service: RAGService = None
 _db_initialized: bool = False
 _initialization_lock = None  # Will be created per event loop
+
+# TODO: MCP Server Integration
+# When MCP server is ready, knowledge base queries will be handled through
+# the MCP server's query tool. The agent will call the MCP tool to retrieve
+# relevant context instead of using local RAG.
 
 
 async def ensure_services_initialized():
     """
-    Ensure database and RAG services are initialized (once per worker process).
+    Ensure database services are initialized (once per worker process).
     This runs in the worker's event loop, avoiding event loop conflicts.
+    
+    Note: RAG functionality has been removed. Knowledge base queries will
+    be handled via MCP server tools in the future.
     """
-    global _rag_service, _db_initialized, _initialization_lock
+    global _db_initialized, _initialization_lock
     
     # Create lock if needed (per event loop)
     if _initialization_lock is None:
@@ -122,14 +77,14 @@ async def ensure_services_initialized():
     
     async with _initialization_lock:
         # Skip if already initialized in this process
-        if _db_initialized and _rag_service is not None:
+        if _db_initialized:
             return
         
         logger.info("=" * 50)
         logger.info("Initializing agent services...")
         logger.info("=" * 50)
         
-        # 1. Initialize database connection
+        # Initialize database connection
         try:
             await get_db_pool()
             _db_initialized = True
@@ -137,16 +92,9 @@ async def ensure_services_initialized():
         except Exception as e:
             logger.error(f"✗ Database initialization failed: {e}")
         
-        # 2. Initialize RAG service and index documents
-        if os.getenv("RAG_ENABLED", "true").lower() == "true":
-            try:
-                _rag_service = await setup_rag_service()
-                if _rag_service:
-                    logger.info("✓ RAG service ready with indexed documents")
-                else:
-                    logger.warning("✗ RAG service not available")
-            except Exception as e:
-                logger.error(f"✗ RAG initialization failed: {e}")
+        # TODO: Initialize MCP server connection here when available
+        # This will allow the agent to query the knowledge base through MCP tools
+        logger.info("ℹ️ Knowledge base queries will be handled via MCP server tools")
         
         logger.info("=" * 50)
         logger.info("Services initialized!")
@@ -155,105 +103,36 @@ async def ensure_services_initialized():
 
 class VoiceAgent(Agent):
     """
-    Voice AI Agent with database-backed instructions and RAG support.
+    Voice AI Agent with database-backed instructions.
     Each instance gets isolated session context.
+    
+    Note: RAG functionality has been removed. Knowledge base queries will
+    be handled via MCP server tools when implemented.
     """
     
     def __init__(self, session: UserSession) -> None:
         super().__init__(instructions=session.instructions)
         self.user_session = session
-        self.rag_service = None
-        self.base_instructions = session.instructions
         self._last_user_message = None
     
-    def set_rag_service(self, rag_service: RAGService):
-        """Set RAG service for context augmentation"""
-        self.rag_service = rag_service
-    
-    async def _augment_chat_context(self, turn_ctx, user_message: str) -> str:
-        """
-        Augment the chat context with RAG context based on user message.
-        
-        IMPORTANT: We modify turn_ctx directly because that's what LiveKit uses
-        for the LLM generation. Just calling update_instructions() is NOT enough!
-        
-        Returns:
-            str: The RAG context that was added (empty string if no context found)
-        """
-        rag_context = ""
-        
-        if self.rag_service:
-            try:
-                logger.info(f"🔍 Searching RAG for query: '{user_message}'")
-                augmented = await self.rag_service.augment_prompt(
-                    user_query=user_message,
-                    base_instructions=self.base_instructions
-                )
-                
-                # Extract just the RAG context (remove base instructions)
-                if len(augmented) > len(self.base_instructions):
-                    rag_context = augmented[len(self.base_instructions):]
-                    context_added = len(rag_context)
-                    logger.info(f"✓ RAG context added ({context_added} chars) for: {user_message[:50]}...")
-                    
-                    # Log if USSD code is in context (for debugging)
-                    if "*236#" in augmented:
-                        logger.info("✓ USSD code *236# found in augmented instructions!")
-                    else:
-                        logger.warning("⚠ USSD code *236# NOT found in augmented instructions")
-                    
-                    # CRITICAL: Update the chat context's system message directly!
-                    # This is what the LLM actually sees
-                    if turn_ctx.items:
-                        # Find and update the system message
-                        for i, item in enumerate(turn_ctx.items):
-                            if hasattr(item, 'role') and item.role == 'system':
-                                # Create new system message with augmented instructions
-                                # Note: content must be a list for ChatMessage
-                                from livekit.agents import llm as llm_mod
-                                new_system_msg = llm_mod.ChatMessage(
-                                    id=item.id,
-                                    role='system',
-                                    content=[augmented]  # Must be a list!
-                                )
-                                turn_ctx.items[i] = new_system_msg
-                                logger.info("✓ Updated system message in chat context with RAG")
-                                break
-                        else:
-                            # No system message found, prepend one
-                            from livekit.agents import llm as llm_mod
-                            new_system_msg = llm_mod.ChatMessage(
-                                id='rag_system',
-                                role='system', 
-                                content=[augmented]  # Must be a list!
-                            )
-                            turn_ctx.items.insert(0, new_system_msg)
-                            logger.info("✓ Added new system message to chat context with RAG")
-                else:
-                    logger.info(f"⚠ No relevant RAG context found for: {user_message[:50]}...")
-                    
-            except Exception as e:
-                logger.warning(f"Failed to augment with RAG: {e}")
-                import traceback
-                traceback.print_exc()
-        else:
-            logger.warning("RAG service not available for augmentation")
-        
-        return rag_context
+    # TODO: MCP Server Integration Point
+    # When MCP server is ready, add a method to query the knowledge base:
+    # async def query_knowledge_base(self, query: str) -> str:
+    #     """Query the MCP server's knowledge base tool for relevant context."""
+    #     # Call MCP server query tool here
+    #     pass
     
     async def on_user_turn_completed(
         self, turn_ctx, new_message
     ) -> None:
         """
         Override: Called when user has finished speaking, BEFORE the LLM responds.
-        This is the perfect hook for RAG augmentation.
         
-        IMPORTANT: We modify turn_ctx directly (which is a mutable copy of chat_ctx)
-        because that's what gets passed to _generate_reply. Just calling
-        update_instructions() alone doesn't work!
+        Note: RAG augmentation has been removed. Knowledge base queries will
+        be handled via MCP server tools when implemented.
         
         Args:
-            turn_ctx: The mutable chat context for this turn (MODIFY THIS!)
+            turn_ctx: The mutable chat context for this turn
             new_message: The new user message
         """
         # Get the user's message text
@@ -298,46 +177,21 @@ class VoiceAgent(Agent):
                                 turn_ctx.items[i] = new_system_msg
                                 logger.info("✓ Added search_web execution instruction to system message")
                                 break
-                    return  # Don't do RAG search, let tool execute
+                    return
                     
                 elif any(word in user_lower for word in ['no', 'nope', 'don\'t', 'not']):
                     self.user_session.web_search_approved = False
                     self.user_session.waiting_for_search_permission = False
                     logger.info("❌ User declined web search")
         
-        # Determine if this is a banking question
-        is_banking = is_banking_question(user_text)
+        # TODO: MCP Server Integration Point
+        # When MCP server is ready, query knowledge base here:
+        # kb_context = await self.query_knowledge_base(user_text)
+        # Then augment turn_ctx with the retrieved context
         
-        if is_banking:
-            # Banking question - use RAG first, then ask permission if no info found
-            logger.info(f"🏦 Banking question detected: {user_text[:50]}...")
-            rag_context = await self._augment_chat_context(turn_ctx, user_text)
-            
-            # If RAG found nothing, ask permission to search web
-            if not rag_context or len(rag_context.strip()) == 0:
-                logger.info("⚠️ RAG found no information, asking permission to search web")
-                self.user_session.waiting_for_search_permission = True
-                self.user_session.pending_search_query = user_text
-                # Add instruction to ask permission
-                permission_note = "\n\nIMPORTANT: I don't have information about this in my current knowledge. You MUST politely say: 'I'm not sure about that specific detail. Would you like me to search online for more information?' Then WAIT for user permission before using search_web tool."
-                if hasattr(turn_ctx, 'items') and len(turn_ctx.items) > 0:
-                    for i, item in enumerate(turn_ctx.items):
-                        if hasattr(item, 'role') and item.role == 'system':
-                            from livekit.agents import llm as llm_mod
-                            current_content = item.content[0] if isinstance(item.content, list) else item.content
-                            new_system_msg = llm_mod.ChatMessage(
-                                id=item.id,
-                                role='system',
-                                content=[current_content + permission_note]
-                            )
-                            turn_ctx.items[i] = new_system_msg
-                            break
-        else:
-            # Non-banking question - allow automatic web search
-            logger.info(f"💬 General question detected (no RAG needed): {user_text[:50]}...")
-            # Set web search as approved for general queries
-            self.user_session.web_search_approved = True
-            logger.info("✅ Auto-approved web search for general query")
+        # For now, allow web search for all queries
+        self.user_session.web_search_approved = True
+        logger.info("✅ Web search available for query")
         
         # Save user message to database (now enabled with user profiles)
         try:
@@ -378,61 +232,19 @@ async def get_agent_instructions(is_local_mode: bool = True) -> tuple[str, str]:
     return instructions, None
 
 
-async def setup_rag_service() -> RAGService:
-    """Initialize RAG service with document indexing"""
-    global _rag_service
-    
-    # Return cached service if already initialized
-    if _rag_service is not None:
-        logger.info("Returning cached RAG service")
-        return _rag_service
-    
-    try:
-        db_pool = await get_db_pool()
-        
-        # Set up embedding service - use Ollama by default for better accuracy
-        embedding_provider = os.getenv("EMBEDDING_PROVIDER", "ollama")
-        embedding_model = os.getenv("EMBEDDING_MODEL", "nomic-embed-text:latest")
-        ollama_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-        
-        logger.info(f"Setting up RAG with embedding provider: {embedding_provider}, model: {embedding_model}")
-        
-        embedding_service = EmbeddingService(
-            provider=embedding_provider, 
-            model=embedding_model,
-            ollama_url=ollama_url
-        )
-        
-        # Initialize embedding service
-        await embedding_service.initialize()
-        logger.info(f"Embedding service initialized: {embedding_provider}/{embedding_model} (dim={embedding_service.dimension})")
-        
-        # Set up RAG indexer
-        docs_path = Path(__file__).parent / "docs"
-        indexer = RAGIndexer(
-            docs_path=str(docs_path),
-            db_pool=db_pool,
-            embedding_service=embedding_service,
-            chunk_size=int(os.getenv("RAG_CHUNK_SIZE", "1000")),
-            chunk_overlap=int(os.getenv("RAG_CHUNK_OVERLAP", "200"))
-        )
-        
-        # Index documents NOW (not in background) so they're ready before users connect
-        logger.info(f"Indexing documents from {docs_path}...")
-        await indexer.index_directory()
-        logger.info("Document indexing complete!")
-        
-        # Start directory watcher (optional)
-        if os.getenv("RAG_WATCH_DIRECTORY", "false").lower() == "true":
-            asyncio.create_task(indexer.watch_directory(interval=60))
-        
-        _rag_service = RAGService(indexer)
-        logger.info(f"RAG service initialized, docs path: {docs_path}")
-        return _rag_service
-        
-    except Exception as e:
-        logger.error(f"Failed to setup RAG service: {e}")
-        return None
+# ============================================
+# TODO: MCP SERVER INTEGRATION
+# ============================================
+# When the MCP server is ready, knowledge base queries will be handled
+# through the MCP server's query tool. The agent will call:
+#
+# async def query_mcp_knowledge_base(query: str) -> str:
+#     """Query the MCP server's knowledge base tool for relevant context."""
+#     # Implementation will connect to MCP server and invoke the query tool
+#     pass
+#
+# This will replace the local RAG service that was previously used here.
+# ============================================
 
 
 # ============================================
@@ -506,7 +318,10 @@ async def entrypoint(ctx: JobContext):
         logger.info(f"Created session: {user_session.session_id}")
         
         # Add vision capabilities to instructions if using Google Realtime
-        if llm_provider == LLMProviderType.GOOGLE_REALTIME:
+        # Note: Ollama vision models don't work with LiveKit's video streaming (requires custom frame capture)
+        is_vision_model = (llm_provider == LLMProviderType.GOOGLE_REALTIME)
+        
+        if is_vision_model:
             vision_instructions = """
 
 VISION CAPABILITIES:
@@ -518,7 +333,8 @@ You can see the user through their camera and see their screen when shared.
 - If you notice the user seems confused or struggling, offer helpful observations
 """
             user_session.instructions += vision_instructions
-            logger.info("Added vision capabilities to instructions (Google Realtime)")
+            logger.info(f"Added vision capabilities to instructions (Google Realtime)")
+            
             
     except Exception as e:
         logger.error(f"Failed to create session from database: {e}")
@@ -613,7 +429,10 @@ EXAMPLES:
 """
         
         # Add vision capabilities to instructions if using Google Realtime
-        if llm_provider == LLMProviderType.GOOGLE_REALTIME:
+        # Note: Ollama vision models don't work with LiveKit's video streaming
+        is_vision_model = (llm_provider == LLMProviderType.GOOGLE_REALTIME)
+        
+        if is_vision_model:
             vision_instructions = """
 
 VISION CAPABILITIES:
@@ -635,13 +454,10 @@ You can see the user through their camera and see their screen when shared.
             llm_provider=llm_provider
         )
     
-    # Use pre-initialized RAG service from prewarm
-    global _rag_service
-    rag_service = _rag_service
-    if rag_service:
-        logger.info("Using pre-initialized RAG service")
-    else:
-        logger.warning("RAG service not available (not initialized at startup)")
+    # TODO: MCP Server Integration
+    # When MCP server is ready, initialize connection here for knowledge base queries
+    # mcp_client = await connect_to_mcp_server()
+    logger.info("ℹ️ Knowledge base queries will be handled via MCP server tools (when available)")
     
     # Get LLM configuration from provider manager
     use_google_realtime = False
@@ -756,9 +572,8 @@ You can see the user through their camera and see their screen when shared.
     
     # Create agent with session context
     agent = VoiceAgent(user_session)
-    if rag_service:
-        agent.set_rag_service(rag_service)
-        logger.info("✓ RAG service attached to agent (will augment on user speech)")
+    # TODO: When MCP server is ready, pass MCP client to agent for knowledge base queries
+    # agent.set_mcp_client(mcp_client)
     
     # Create session with explicit tools list
     session = AgentSession(
@@ -766,7 +581,7 @@ You can see the user through their camera and see their screen when shared.
         llm=llm,
         tts=tts,
         vad=vad,
-        tools=AGENT_TOOLS,  # Explicitly pass tools like agent_old.py
+        tools=AGENT_TOOLS,
         allow_interruptions=True,
     )
     
@@ -821,15 +636,19 @@ You can see the user through their camera and see their screen when shared.
         
         asyncio.create_task(end_session_async())
     
-    # Start the session with video input enabled for Google Realtime
-    if use_google_realtime:
-        # Google Realtime supports live video input from camera and screen share
-        logger.info("Starting session with video input enabled (Google Realtime)")
+    # Check if we should enable video input (only for Google Realtime)
+    # Note: Ollama vision models require custom frame capture code and don't work with LiveKit's video streaming
+    enable_video = use_google_realtime
+    if enable_video:
+        logger.info("Video input enabled: Google Realtime with native vision support")
+    
+    # Start the session with or without video input
+    if enable_video:
         await session.start(
             room=ctx.room,
             agent=agent,
             room_options=room_io.RoomOptions(
-                video_input=True,  # Enable video/screen share input for Gemini vision
+                video_input=True,  # Enable video/screen share input for vision models
             ),
         )
     else:

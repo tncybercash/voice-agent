@@ -681,10 +681,7 @@ async def search_web(context: RunContext, query: str) -> str:
                     "message": "Web search attempted without user permission",
                     "error": "permission_denied"
                 })
-                return json.dumps({
-                    "success": False, 
-                    "error": "User permission required. Please ask: 'Would you like me to search the internet?'"
-                })
+                return "I need your permission before searching the web. Would you like me to search online for this information?"
         
         # Notify frontend that search is starting
         await send_frontend_notification("tool_started", {
@@ -696,14 +693,22 @@ async def search_web(context: RunContext, query: str) -> str:
         search = DuckDuckGoSearchRun()
         result = search.run(query)
         
+        # Log the search results
+        logger.info(f"🔍 Search results for '{query}': {result[:200]}...")
+        
         # Notify success
         await send_frontend_notification("tool_success", {
             "tool": "search_web",
             "message": "Web search completed successfully",
-            "query": query
+            "query": query,
+            "preview": result[:100] if result else "No results found"
         })
         
-        return json.dumps({"success": True, "results": result})
+        # Return plain text results so the LLM can read them directly
+        if result and isinstance(result, str) and len(result.strip()) > 0:
+            return f"Web search results for '{query}':\n\n{result}"
+        else:
+            return f"No search results found for '{query}'. The search engine may be temporarily unavailable."
         
     except Exception as e:
         logger.error(f"Error searching web: {str(e)}")
@@ -715,4 +720,5 @@ async def search_web(context: RunContext, query: str) -> str:
             "error": str(e)
         })
         
-        return json.dumps({"success": False, "error": "Failed to search web"})
+        # Return error as plain text for the LLM to communicate to the user
+        return f"I encountered an error while searching: {str(e)}. Please try again or rephrase your question."

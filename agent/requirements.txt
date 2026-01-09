@@ -10,24 +10,26 @@ requests>=2.26.0
 asyncpg>=0.29.0
 psycopg2-binary>=2.9.0  # For connection utilities
 
-# RAG - Document indexing and vector search
-sentence-transformers>=2.2.0  # For embeddings
-aiofiles>=23.0.0  # Async file operations
-docling>=2.0.0  # Advanced document parsing (PDF, DOCX, PPTX, HTML, tables, OCR)
+# Async file operations
+aiofiles>=23.0.0
+
+# NOTE: RAG dependencies have been removed (sentence-transformers, docling, httpx for embeddings)
+# Knowledge base queries will be handled via MCP server tools.
+# If you need to re-enable local RAG, uncomment the following:
+# sentence-transformers>=2.2.0  # For embeddings
+# docling>=2.0.0  # Advanced document parsing (PDF, DOCX, PPTX, HTML, tables, OCR)
+# httpx>=0.25.0  # Async HTTP client (for Ollama embeddings)
 
 # LLM Providers - HTTP clients with connection pooling
 aiohttp>=3.9.0  # Async HTTP client for LLM providers
-httpx>=0.25.0  # Alternative async HTTP client (used for Ollama embeddings)
 vllm  # Local LLM inference server
 
 # Enhanced features
-# LangChain for web search and RAG tools
+# LangChain for web search tools
 langchain>=0.1.0
 langchain-community>=0.1.0
 duckduckgo-search>=4.0.0  # Required for DuckDuckGoSearchRun
 ddgs  # DuckDuckGo search library (required by langchain-community)
-# chromadb>=0.4.0
-# sentence-transformers>=2.2.0  # Already installed above
 
 # Premium STT/TTS providers (require API keys)
 # livekit-plugins-deepgram    # Better noise handling

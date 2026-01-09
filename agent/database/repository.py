@@ -1,6 +1,9 @@
 """
 Repository layer for database operations.
 Provides async CRUD operations for all models.
+
+Note: RAG-related repositories have been removed. Knowledge base queries
+will be handled via MCP server tools.
 """
 import json
 import logging
@@ -13,7 +16,6 @@ from .models import (
     AgentInstruction,
     AgentSession,
     ConversationMessage,
-    RAGDocument,
     SystemConfig,
     LLMProvider,
     SessionStatus
@@ -293,108 +295,9 @@ class ConversationRepository:
         ]
 
 
-class RAGDocumentRepository:
-    """Repository for RAG documents with vector search"""
-    
-    def __init__(self, pool: DatabasePool):
-        self.pool = pool
-    
-    async def upsert_document(
-        self,
-        filename: str,
-        content: str,
-        chunk_index: int = 0,
-        total_chunks: int = 1,
-        embedding: List[float] = None,
-        metadata: Dict[str, Any] = None
-    ) -> int:
-        """Insert or update a document chunk"""
-        query = """
-            INSERT INTO rag_documents (filename, content, chunk_index, total_chunks, embedding, metadata)
-            VALUES ($1, $2, $3, $4, $5::vector, $6)
-            ON CONFLICT (filename, chunk_index) 
-            DO UPDATE SET content = $2, embedding = $5::vector, metadata = $6, updated_at = NOW()
-            RETURNING id
-        """
-        # Convert embedding list to pgvector format string
-        embedding_str = str(embedding) if embedding else None
-        return await self.pool.fetchval(
-            query, filename, content, chunk_index, total_chunks,
-            embedding_str, json.dumps(metadata) if metadata else '{}'
-        )
-    
-    async def search_similar(
-        self,
-        query_embedding: List[float],
-        limit: int = 5,
-        similarity_threshold: float = 0.3
-    ) -> List[Dict[str, Any]]:
-        """Search for similar documents using vector similarity.
-        Returns list of dicts with document data and similarity score."""
-        query = """
-            SELECT id, filename, content, chunk_index, total_chunks, metadata, created_at, updated_at,
-                   1 - (embedding <=> $1::vector) as similarity
-            FROM rag_documents
-            WHERE embedding IS NOT NULL
-            AND 1 - (embedding <=> $1::vector) > $3
-            ORDER BY embedding <=> $1::vector
-            LIMIT $2
-        """
-        # Convert embedding list to pgvector format string
-        embedding_str = str(query_embedding)
-        rows = await self.pool.fetch(query, embedding_str, limit, similarity_threshold)
-        return [
-            {
-                "id": row['id'],
-                "filename": row['filename'],
-                "content": row['content'],
-                "chunk_index": row['chunk_index'],
-                "total_chunks": row['total_chunks'],
-                "metadata": json.loads(row['metadata']) if row['metadata'] else {},
-                "created_at": row['created_at'],
-                "updated_at": row['updated_at'],
-                "similarity": float(row['similarity'])  # Include similarity score
-            }
-            for row in rows
-        ]
-    
-    async def get_by_filename(self, filename: str) -> List[RAGDocument]:
-        """Get all chunks for a file"""
-        query = """
-            SELECT id, filename, content, chunk_index, total_chunks, metadata, created_at, updated_at
-            FROM rag_documents
-            WHERE filename = $1
-            ORDER BY chunk_index
-        """
-        rows = await self.pool.fetch(query, filename)
-        return [
-            RAGDocument(
-                id=row['id'],
-                filename=row['filename'],
-                content=row['content'],
-                chunk_index=row['chunk_index'],
-                total_chunks=row['total_chunks'],
-                metadata=json.loads(row['metadata']) if row['metadata'] else {},
-                created_at=row['created_at'],
-                updated_at=row['updated_at']
-            )
-            for row in rows
-        ]
-    
-    async def delete_by_filename(self, filename: str) -> int:
-        """Delete all chunks for a file"""
-        result = await self.pool.execute(
-            "DELETE FROM rag_documents WHERE filename = $1",
-            filename
-        )
-        return int(result.split()[-1])
-    
-    async def get_all_filenames(self) -> List[str]:
-        """Get list of all indexed filenames"""
-        rows = await self.pool.fetch(
-            "SELECT DISTINCT filename FROM rag_documents ORDER BY filename"
-        )
-        return [row['filename'] for row in rows]
+# NOTE: RAGDocumentRepository has been removed.
+# Knowledge base queries will be handled via MCP server tools.
+# The rag_documents table can be dropped or kept for migration purposes.
 
 
 class ConfigRepository:

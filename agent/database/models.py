@@ -1,6 +1,9 @@
 """
 Database models for the AI Voice Agent system.
-Supports PostgreSQL with pgvector for RAG embeddings.
+Supports PostgreSQL for session and conversation storage.
+
+Note: RAG-related models (RAGDocument) have been deprecated.
+Knowledge base queries will be handled via MCP server tools.
 """
 from datetime import datetime
 from typing import Optional, List
@@ -66,18 +69,10 @@ class ConversationMessage:
     created_at: datetime = field(default_factory=datetime.utcnow)
 
 
-@dataclass
-class RAGDocument:
-    """Document for RAG retrieval with vector embedding"""
-    id: int
-    filename: str
-    content: str
-    chunk_index: int = 0
-    total_chunks: int = 1
-    embedding: Optional[List[float]] = None  # Vector embedding
-    metadata: dict = field(default_factory=dict)
-    created_at: datetime = field(default_factory=datetime.utcnow)
-    updated_at: datetime = field(default_factory=datetime.utcnow)
+# NOTE: RAGDocument model has been deprecated.
+# Knowledge base queries will be handled via MCP server tools.
+# This model is kept for backward compatibility but should not be used.
+# The rag_documents table can be dropped from the database.
 
 
 @dataclass
