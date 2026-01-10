@@ -31,9 +31,10 @@ export function useLocalTrackRef(source: Track.Source) {
 
 interface TileLayoutProps {
   chatOpen: boolean;
+  showConversation?: boolean;
 }
 
-export function TileLayout({ chatOpen }: TileLayoutProps) {
+export function TileLayout({ chatOpen, showConversation = true }: TileLayoutProps) {
   const { state: agentState, videoTrack: agentVideoTrack } = useVoiceAssistant();
   const [screenShareTrack] = useTracks([Track.Source.ScreenShare]);
   const cameraTrack: TrackReference | undefined = useLocalTrackRef(Track.Source.Camera);
@@ -138,7 +139,12 @@ export function TileLayout({ chatOpen }: TileLayoutProps) {
 
       {/* Pulsating Gold Circle - Centered in content area */}
       {!isAvatar && (
-        <div className="pointer-events-none fixed inset-0 right-[350px] flex items-center justify-center md:right-[400px] lg:right-[450px]">
+        <div
+          className={cn(
+            'pointer-events-none fixed inset-0 flex items-center justify-center',
+            showConversation && 'md:right-[400px] lg:right-[450px]'
+          )}
+        >
           <AnimatePresence mode="popLayout">
             <MotionContainer
               key="agent-circle"

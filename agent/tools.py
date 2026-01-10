@@ -108,7 +108,7 @@ async def send_frontend_notification(event_type: str, data: dict):
                 json.dumps(notification_data).encode(),
                 reliable=True
             )
-            logger.info(f"✅ Notification sent successfully: {event_type}")
+            logger.info(f"[OK] Notification sent successfully: {event_type}")
         else:
             logger.warning(f"⚠️ Cannot send notification - no room context available")
     except Exception as e:

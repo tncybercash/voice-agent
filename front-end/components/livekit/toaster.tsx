@@ -12,7 +12,7 @@ export function Toaster({ ...props }: ToasterProps) {
       theme={theme as ToasterProps['theme']}
       className="toaster group"
       position="top-center"
-      offset="80px"  // Move down to align with pulsating circles
+      offset="80px" // Move down to align with pulsating circles
       icons={{
         warning: <WarningIcon weight="bold" />,
       }}

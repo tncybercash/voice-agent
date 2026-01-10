@@ -35,13 +35,13 @@ export function ToolNotificationListener() {
       try {
         const text = new TextDecoder().decode(payload);
         console.log('[ToolNotificationListener] Received data:', text);
-        
+
         const data = JSON.parse(text) as ToolNotification;
         console.log('[ToolNotificationListener] Parsed data:', data);
 
         if (data.type === 'notification') {
           console.log('[ToolNotificationListener] Processing notification event:', data.event);
-          
+
           switch (data.event) {
             case 'tool_started':
               console.log('[ToolNotificationListener] Showing info toast');
@@ -66,7 +66,7 @@ export function ToolNotificationListener() {
                 duration: 5000,
               });
               break;
-              
+
             default:
               console.log('[ToolNotificationListener] Unknown event type:', data.event);
           }

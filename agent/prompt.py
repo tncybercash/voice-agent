@@ -73,7 +73,6 @@ TOOL_SELECTION_RULES = """
 
 ### THE ONLY TOOL FOR BANK QUESTIONS:
 Use: knowledge_base_search(query="user's question")
-Don't use: knowledge_base_find_by_name, knowledge_base_find_by_filename
 
 ### Steps:
 1. User asks TN Bank question

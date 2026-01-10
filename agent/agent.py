@@ -88,16 +88,16 @@ async def ensure_services_initialized():
             try:
                 await get_db_pool()
                 _db_initialized = True
-                logger.info("✓ Database connection established")
+                logger.info("[OK] Database connection established")
             except Exception as e:
-                logger.error(f"✗ Database initialization failed: {e}")
+                logger.error(f"[ERROR] Database initialization failed: {e}")
         
         # Initialize MCP server connection
         if not _mcp_initialized:
             mcp_url = os.getenv("MCP_SERVER_URL", "")
             if mcp_url:
                 try:
-                    logger.info(f"🔌 Connecting to MCP server: {mcp_url}")
+                    logger.info(f"[MCP] Connecting to MCP server: {mcp_url}")
                     
                     # Use Streamable HTTP client (supports session management required by Spring Boot MCP)
                     # Increased timeouts to handle longer idle periods between tool calls
@@ -170,14 +170,14 @@ async def ensure_services_initialized():
                                 tool_names.append(getattr(t, '__name__', 'unknown'))
                         except Exception:
                             tool_names.append(getattr(t, '__name__', 'unknown'))
-                    logger.info(f"✓ MCP server connected with {len(filtered_tools)} filtered tools: {tool_names}")
-                    logger.info(f"ℹ️ Total tools received: {len(tools)}, Filtered to: {len(filtered_tools)}")
+                    logger.info(f"[OK] MCP server connected with {len(filtered_tools)} filtered tools: {tool_names}")
+                    logger.info(f"[INFO] Total tools received: {len(tools)}, Filtered to: {len(filtered_tools)}")
                 except Exception as e:
-                    logger.error(f"✗ MCP server initialization failed: {e}")
+                    logger.error(f"[ERROR] MCP server initialization failed: {e}")
                     import traceback
                     traceback.print_exc()
             else:
-                logger.info("ℹ️ MCP_SERVER_URL not set, skipping MCP initialization")
+                logger.info("[INFO] MCP_SERVER_URL not set, skipping MCP initialization")
                 _mcp_initialized = True  # Mark as initialized to prevent retries
         
         logger.info("=" * 50)
@@ -259,7 +259,7 @@ class VoiceAgent(Agent):
                                     content=[current_content + search_instruction]
                                 )
                                 turn_ctx.items[i] = new_system_msg
-                                logger.info("✓ Added search_web execution instruction to system message")
+                                logger.info("[OK] Added search_web execution instruction to system message")
                                 break
                     return
                     
@@ -563,7 +563,7 @@ You can see the user through their camera and see their screen when shared.
     # TODO: MCP Server Integration
     # When MCP server is ready, initialize connection here for knowledge base queries
     # mcp_client = await connect_to_mcp_server()
-    logger.info("ℹ️ Knowledge base queries will be handled via MCP server tools (when available)")
+    logger.info("[INFO] Knowledge base queries will be handled via MCP server tools (when available)")
     
     # Get LLM configuration from provider manager
     use_google_realtime = False
@@ -740,7 +740,7 @@ You can see the user through their camera and see their screen when shared.
                 session_manager = await get_session_manager()
                 # End session with summary generation enabled
                 await session_manager.end_session_by_room(ctx.room.name, generate_summary=True)
-                logger.info(f"✓ Participant disconnected, session ended with summary for room: {ctx.room.name}")
+                logger.info(f"[OK] Participant disconnected, session ended with summary for room: {ctx.room.name}")
             except Exception as e:
                 logger.error(f"Error ending session: {e}")
         

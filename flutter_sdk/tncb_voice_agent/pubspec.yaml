@@ -1,0 +1,25 @@
+name: tncb_voice_agent
+description: Flutter SDK for embedding TNCB Voice Agent in mobile applications
+version: 1.0.0
+homepage: https://github.com/tncybercash/voice-agent
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  livekit_client: ^2.1.0
+  permission_handler: ^11.0.0
+  http: ^1.1.0
+  shared_preferences: ^2.2.0
+  uuid: ^4.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
